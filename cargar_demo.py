@@ -15,15 +15,27 @@ PACIENTES_DEMO = (
 def cargar_demo(repositorio):
     creados = 0
     for indice, (dni, nombre, apellido, nacimiento, sexo) in enumerate(PACIENTES_DEMO):
-        if repositorio.buscar_paciente(dni):
-            continue
-        paciente_id = repositorio.registrar_paciente({
+        datos = {
             "dni": dni, "nombre": nombre, "apellido": apellido,
             "fecha_nacimiento": nacimiento, "sexo": sexo,
             "telefono": f"555-010{indice}", "email": f"paciente{indice + 1}@example.com",
             "domicilio": f"Calle Ficticia {100 + indice}", "obra_social": "Cobertura de demostración",
-        })
-        creados += 1
+        }
+        existente = repositorio.buscar_paciente(dni)
+        if existente:
+            # Completar signos solo para una ficha que coincide con la demo propia.
+            if any(existente[campo] != valor for campo, valor in datos.items()):
+                continue
+            paciente_id = existente["id"]
+        else:
+            paciente_id = repositorio.registrar_paciente(datos)
+            creados += 1
+        if indice < 3 and not repositorio.historial_signos(paciente_id):
+            repositorio.registrar_signos(paciente_id, {
+                "presion_sistolica": 120, "presion_diastolica": 80,
+                "frecuencia_cardiaca": 72 + indice, "temperatura": "36,5",
+                "saturacion_oxigeno": 98, "motivo_consulta": "Consulta ficticia para demostración académica",
+            })
     return creados
 
 

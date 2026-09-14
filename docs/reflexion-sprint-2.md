@@ -1,0 +1,5 @@
+# Reflexión — Sprint 2
+
+La evolución del módulo permite mantener actualizados los datos de contacto y cobertura de los pacientes y registrar signos vitales junto con el motivo de consulta. Cada registro se asocia a una ficha y recibe fecha y hora automáticamente. El historial permite recuperar las últimas mediciones registradas; la baja física conjunta evita conservar signos sin paciente asociado. La vinculación con profesionales queda prevista para Sprint 3 según la planilla, por lo que esta versión no ofrece todavía trazabilidad completa del autor clínico.
+
+La interfaz gráfica permite realizar las tareas mediante formularios, botones y selección de pacientes. La búsqueda muestra una ficha con sus datos, los mensajes informan errores de entrada y resultados, y la confirmación de baja permite revisar la identidad antes de eliminar. El acceso por botón o doble clic al historial reduce pasos de navegación. Estas decisiones buscan facilitar el uso por administrativos y médicos; su eficacia con usuarios reales deberá evaluarse y no se deduce únicamente de la apariencia de la interfaz.
