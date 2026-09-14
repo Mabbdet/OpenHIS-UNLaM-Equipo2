@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.trabajo-local/
+BD/*.db-journal
+BD/*.db-wal
+BD/*.db-shm
