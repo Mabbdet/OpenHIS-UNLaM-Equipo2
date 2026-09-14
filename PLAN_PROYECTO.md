@@ -5,7 +5,7 @@ Estado: borrador de planificación para revisión del equipo.
 ## Decisiones posteriores a la planificación inicial
 
 - Alcance actual confirmado por el usuario: Epic 1, HU-01, HU-02 y HU-03.
-- Ramas acumulativas solicitadas: `develop-Entrega1` (documentación), `develop-Entrega2` (consola) y `develop-Entrega3` (GUI, CRUD y signos vitales). `develop` conserva el punto de partida.
+- Ramas acumulativas solicitadas: `develop-Entrega1` (documentación), `develop-Entrega2` (consola) y `develop-Entrega3` (GUI, CRUD y signos vitales). Cada incremento se verifica y se integra a `develop` antes de iniciar la siguiente rama desde `develop` actualizado. Los pendientes de presentación académica se documentan por separado y no se dan por cumplidos mediante los tests.
 - Pruebas sencillas con `pytest`, sobre bases temporales.
 - Se revisó `C:/Users/Ale/Downloads/Planilla-Scrum-Profe.xlsx`, ignorando los estados. Su Sprint 3 asigna explícitamente la integración del profesional en signos vitales a HU-04/HU-05; en Sprint 2 se conserva `medico_id` preparado, sin afirmar que exista esa integración.
 - La planilla ubica HU-04 a HU-08 en Epic 2 y HU-09 a HU-11 en Epic 3. Se registra la diferencia con la numeración de la guía; no se implementan esas historias ahora.
