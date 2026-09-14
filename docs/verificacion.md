@@ -15,4 +15,21 @@ Entorno de ejecución: Windows, Python 3.14.6, Tk 8.6.15 y pytest 9.1.1. Depende
 
 Las pruebas se centran en comportamientos sencillos y utilizan bases temporales. Las verificaciones de Tk no equivalen a una revisión visual ni a pruebas con usuarios reales.
 
-Pendientes académicos: contrastar PDFs originales, completar integrantes/roles y obtener las capturas requeridas para su incorporación en Planilla Scrum → Bitácora. La integración del profesional en signos vitales está diferida a Sprint 3 conforme a la planilla. Estos pendientes no se consideran resueltos por la aprobación de tests o por los merges.
+## Entrega 4 / Sprint 3
+
+| Verificación ejecutada | Resultado |
+|---|---|
+| `.\.venv\Scripts\python.exe -m pytest -q -rs` | 48 pruebas aprobadas en 3,40 s; ninguna omitida. |
+| Catálogos y profesionales | Alta, búsqueda, modificación, desactivación de especialidad, DNI/matrícula únicos y protección de bajas verificados. |
+| Prescripciones | Alta, consulta y detalle, anulación lógica, campos obligatorios, fechas y relaciones verificadas. |
+| Migración desde el esquema anterior | Conserva ID, fecha y datos de signos; admite corregir autores históricos; nuevos signos exigen profesional válido. |
+| Regresión de GUI | Apertura de nuevas ventanas y registro de signos con selector de profesional verificados con bases temporales. |
+| Base entregada | 5 pacientes, 6 profesionales de 6 especialidades, 7 prescripciones y 3 signos; ningún signo sin profesional. |
+| Integridad de SQLite | `PRAGMA integrity_check`: `ok`; `PRAGMA foreign_key_check`: sin violaciones. |
+| Carga demo repetida | No duplica sus cinco profesionales ni sus cinco prescripciones iniciales; conserva los registros adicionales de las evidencias. |
+| Evidencias visuales | Cuatro capturas de operaciones reales: movimiento de especialidad, alta y modificación de profesional y alta de prescripción. PNG revisados y embebidos en Bitácora. |
+| Planilla Scrum | Objetivo, comentarios y responsable de Sprint 3 actualizados. Se conservan fechas, estados y fórmulas preexistentes ajenas al cambio, incluida una referencia rota heredada en `HU-UNLaM!I20`. |
+
+Los tests usan datos ficticios y bases temporales. Las capturas usan la base demo entregada; sus datos no son indicaciones terapéuticas. El renderizador de Excel omite las imágenes en su previsualización: se revisaron los PNG y se comprobaron sus archivos y anclajes dentro del XLSX exportado.
+
+Alejandro es el único integrante. La asociación al profesional en signos quedó implementada en esta entrega. Continúan pendientes la validación real de vigencia de matrícula, el contraste con los PDFs originales y las capturas de las entregas anteriores. Reportes/XML y FHIR quedan fuera del incremento actual. Los tests y el merge no acreditan esos pendientes.

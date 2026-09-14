@@ -1,6 +1,20 @@
 # Plan de proyecto — OpenHIS-UNLaM — Equipo 2
 
-Estado: borrador de planificación para revisión del equipo.
+Estado: planificación inicial conservada como historial, con actualización de Entrega 4.
+
+## Actualización — Entrega 4 / Sprint 3
+
+La solicitud posterior amplía el alcance con `Guia_Entregas_1_2_3_y_4_OpenHIS_UNLaM.md`. Alejandro es el único integrante y asume desarrollo, coordinación, documentación y pruebas; el profesor figura como Product Owner. Los pendientes y exclusiones del plan inicial que aparecen más abajo corresponden a su fecha de elaboración.
+
+- Rama `develop-Entrega4` creada desde `develop`, con integración después de las verificaciones, siguiendo el procedimiento de las entregas anteriores.
+- HU-04: especialidades, SNOMED local y fármacos; HU-05: profesionales y especialidad; asociación obligatoria del profesional en los nuevos signos vitales.
+- Prescripciones implementadas por exigencia explícita de Entrega 4, aunque HU-06 figure en Sprint 4. No se declara completa HU-06: reportes/XML y FHIR quedan para el alcance posterior.
+- La matrícula se valida como obligatoria y única. Su vigencia real queda pendiente de un procedimiento o registro institucional definido; esta salvedad de HU-05 está documentada y visible en la interfaz.
+- Resultado: 48 pruebas aprobadas sin omisiones; base con cinco pacientes, seis profesionales de seis especialidades, siete prescripciones ficticias y tres signos asociados a profesionales.
+- Cuatro capturas reales de Sprint 3 embebidas en `scrum/Planilla Scrum.xlsx`, junto con objetivos, resultados y responsable actualizados. Reflexión de dos párrafos en `docs/reflexion-sprint-3.md`.
+- La migración conserva el historial anterior. Se bloquean bajas que romperían referencias y se anulan prescripciones mediante baja lógica.
+
+El alcance y sus límites se detallan en `docs/entrega-4.md`; las verificaciones, en `docs/verificacion.md`. No se inventan fechas de ejecución a partir de los estados heredados de la plantilla. Continúan pendientes los PDFs originales y las capturas de las entregas anteriores.
 
 ## Decisiones posteriores a la planificación inicial
 

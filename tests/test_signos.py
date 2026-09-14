@@ -13,11 +13,11 @@ def test_modificacion_persiste(repositorio, datos_paciente):
     assert paciente["id"] == paciente_id
 
 
-def test_registra_signos_con_fecha_y_paciente(repositorio, datos_paciente):
+def test_registra_signos_con_fecha_y_paciente(repositorio, datos_paciente, profesional):
     paciente_id = repositorio.registrar_paciente(datos_paciente)
     registro_id = repositorio.registrar_signos(paciente_id, {
         "presion_sistolica": "120", "presion_diastolica": "80", "frecuencia_cardiaca": "72",
-        "temperatura": "36,5", "saturacion_oxigeno": "98", "motivo_consulta": "Consulta de prueba",
+        "temperatura": "36,5", "saturacion_oxigeno": "98", "motivo_consulta": "Consulta de prueba", "medico_id": profesional,
     })
     registro = repositorio.historial_signos(paciente_id)[0]
     assert registro["id"] == registro_id
@@ -26,6 +26,8 @@ def test_registra_signos_con_fecha_y_paciente(repositorio, datos_paciente):
     assert registro["temperatura"] == 36.5
     assert registro["presion_sistolica"] == 120
     assert registro["motivo_consulta"] == "Consulta de prueba"
+    assert registro["medico_id"] == profesional
+    assert registro["profesional"] == "Profesional Prueba"
 
 
 @pytest.mark.parametrize("entrada", [
@@ -40,18 +42,18 @@ def test_rechaza_signos_invalidos(repositorio, datos_paciente, entrada):
     assert repositorio.historial_signos(paciente_id) == []
 
 
-def test_historial_muestra_ultimos_diez(repositorio, datos_paciente):
+def test_historial_muestra_ultimos_diez(repositorio, datos_paciente, profesional):
     paciente_id = repositorio.registrar_paciente(datos_paciente)
-    registros = [repositorio.registrar_signos(paciente_id, {"motivo_consulta": f"Registro {i}"}) for i in range(12)]
+    registros = [repositorio.registrar_signos(paciente_id, {"motivo_consulta": f"Registro {i}", "medico_id": profesional}) for i in range(12)]
     historial = repositorio.historial_signos(paciente_id)
     assert [registro["id"] for registro in historial] == list(reversed(registros[-10:]))
 
 
-def test_eliminar_paciente_elimina_solo_sus_signos(repositorio, datos_paciente):
+def test_eliminar_paciente_elimina_solo_sus_signos(repositorio, datos_paciente, profesional):
     paciente_id = repositorio.registrar_paciente(datos_paciente)
     otro_id = repositorio.registrar_paciente({**datos_paciente, "dni": "30111223"})
-    repositorio.registrar_signos(paciente_id, {"motivo_consulta": "Consulta A"})
-    repositorio.registrar_signos(otro_id, {"motivo_consulta": "Consulta B"})
+    repositorio.registrar_signos(paciente_id, {"motivo_consulta": "Consulta A", "medico_id": profesional})
+    repositorio.registrar_signos(otro_id, {"motivo_consulta": "Consulta B", "medico_id": profesional})
     assert repositorio.eliminar_paciente(paciente_id) == 1
     assert repositorio.buscar_paciente(datos_paciente["dni"]) is None
     assert len(repositorio.historial_signos(otro_id)) == 1

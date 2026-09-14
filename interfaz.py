@@ -92,8 +92,8 @@ class VentanaSignos(tk.Toplevel):
         self.aplicacion = aplicacion
         self.paciente = paciente
         self.title("Signos vitales e historial")
-        self.geometry("890x680")
-        self.minsize(780, 600)
+        self.geometry("1050x760")
+        self.minsize(880, 700)
         self.transient(aplicacion.raiz)
         contenido = ttk.Frame(self, padding=18)
         contenido.pack(fill="both", expand=True)
@@ -101,26 +101,34 @@ class VentanaSignos(tk.Toplevel):
         formulario = ttk.LabelFrame(contenido, text="Nuevo registro", padding=12)
         formulario.pack(fill="x")
         formulario.columnconfigure(1, weight=1)
+        self.medico = tk.StringVar(self)
+        self.profesionales = {}
+        ttk.Label(formulario, text="Profesional *").grid(row=0, column=0, sticky="w", padx=(0, 12), pady=4)
+        self.selector_medico = ttk.Combobox(formulario, textvariable=self.medico, state="readonly", width=48)
+        self.selector_medico.grid(row=0, column=1, sticky="w", pady=4)
+        ttk.Button(formulario, text="Actualizar profesionales", command=self.actualizar_profesionales).grid(row=0, column=2, padx=5)
+        self.actualizar_profesionales()
         self.campos = {}
-        for fila, campo in enumerate(CAMPOS_SIGNOS):
+        for fila, campo in enumerate(CAMPOS_SIGNOS, start=1):
             ttk.Label(formulario, text=ETIQUETAS[campo]).grid(row=fila, column=0, sticky="w", padx=(0, 12), pady=3)
             variable = tk.StringVar(self)
             self.campos[campo] = variable
             ttk.Entry(formulario, textvariable=variable, width=25).grid(row=fila, column=1, sticky="w", pady=3)
-        ttk.Label(formulario, text="Motivo de consulta *").grid(row=5, column=0, sticky="nw", padx=(0, 12), pady=5)
+        ttk.Label(formulario, text="Motivo de consulta *").grid(row=6, column=0, sticky="nw", padx=(0, 12), pady=5)
         self.motivo = tk.Text(formulario, height=3, width=55, wrap="word", font=("Segoe UI", 10))
-        self.motivo.grid(row=5, column=1, sticky="ew", pady=5)
-        ttk.Label(formulario, text="* Obligatorio. Fecha y hora automáticas (UTC).").grid(row=6, column=0, columnspan=2, sticky="w", pady=5)
-        ttk.Button(formulario, text="Guardar signos vitales", command=self.guardar).grid(row=7, column=0, columnspan=2, sticky="e", pady=4)
+        self.motivo.grid(row=6, column=1, columnspan=2, sticky="ew", pady=5)
+        ttk.Label(formulario, text="* Obligatorio. Fecha y hora automáticas (UTC).").grid(row=7, column=0, columnspan=3, sticky="w", pady=5)
+        ttk.Button(formulario, text="Guardar signos vitales", command=self.guardar).grid(row=8, column=0, columnspan=3, sticky="e", pady=4)
         ttk.Label(contenido, text="Historial · últimos 10 registros", style="Seccion.TLabel").pack(anchor="w", pady=(16, 6))
         marco, self.historial = crear_tabla(contenido, [
             ("fecha", "Fecha/hora (UTC)", 150), ("presion", "Presión (mmHg)", 100),
             ("fc", "FC (lpm)", 65), ("temp", "Temp. (°C)", 80),
-            ("sat", "SatO2 (%)", 75), ("motivo", "Motivo", 240),
+            ("sat", "SatO2 (%)", 75), ("motivo", "Motivo", 200), ("profesional", "Profesional", 180),
         ], altura=7)
         marco.pack(fill="both", expand=True)
         self.resumen = tk.StringVar(self)
         ttk.Label(contenido, textvariable=self.resumen).pack(anchor="w", pady=5)
+        ttk.Button(contenido, text="Asignar profesional a registro histórico sin autor", command=self.asignar_historico).pack(anchor="w", pady=3)
         ttk.Button(contenido, text="Cerrar", command=self.destroy).pack(anchor="e")
         self.bind("<Escape>", lambda evento: self.destroy())
         self.grab_set()
@@ -136,13 +144,38 @@ class VentanaSignos(tk.Toplevel):
             self.historial.insert("", "end", iid=str(registro["id"]), values=(
                 registro["fecha_hora"], f"{mostrar('presion_sistolica')}/{mostrar('presion_diastolica')}",
                 mostrar("frecuencia_cardiaca"), mostrar("temperatura"),
-                mostrar("saturacion_oxigeno"), registro["motivo_consulta"],
+                mostrar("saturacion_oxigeno"), registro["motivo_consulta"], registro["profesional"] or "Sin autor (histórico)",
             ))
         self.resumen.set(f"{len(registros)} registro(s) mostrado(s)." if registros else "Sin registros de signos vitales.")
+
+    def actualizar_profesionales(self):
+        from ventanas_clinicas import opciones_profesionales
+        try:
+            self.profesionales = opciones_profesionales(self.aplicacion.repositorio)
+            self.selector_medico.configure(values=list(self.profesionales.values()))
+            if self.medico.get() not in self.profesionales.values():
+                self.medico.set("")
+        except sqlite3.Error as error:
+            mostrar_error(self, error)
+
+    def medico_seleccionado(self):
+        return next((identificador for identificador, etiqueta in self.profesionales.items() if etiqueta == self.medico.get()), None)
+
+    def asignar_historico(self):
+        try:
+            seleccion = self.historial.selection()
+            if not seleccion:
+                raise ErrorValidacion("Seleccione un registro histórico y su profesional en el selector superior.")
+            if messagebox.askyesno("Confirmar autor", "Confirme que el profesional seleccionado es el autor del registro histórico.", parent=self):
+                self.aplicacion.repositorio.asignar_profesional_signos(int(seleccion[0]), self.medico_seleccionado())
+                self.refrescar()
+        except (ErrorValidacion, sqlite3.Error) as error:
+            mostrar_error(self, error)
 
     def guardar(self):
         entrada = {campo: variable.get() for campo, variable in self.campos.items()}
         entrada["motivo_consulta"] = self.motivo.get("1.0", "end-1c")
+        entrada["medico_id"] = self.medico_seleccionado()
         try:
             self.aplicacion.repositorio.registrar_signos(self.paciente["id"], entrada)
             self.refrescar()
@@ -177,6 +210,11 @@ class AplicacionPacientes:
         contenido.pack(fill="both", expand=True)
         ttk.Label(contenido, text="HOSPITAL UNIVERSITARIO SAN JUSTO", style="Titulo.TLabel").pack(anchor="w")
         ttk.Label(contenido, text="Sistema de gestión de pacientes").pack(anchor="w", pady=(2, 16))
+        if modo == "signos":
+            navegacion = ttk.Frame(contenido)
+            navegacion.pack(fill="x", pady=(0, 10))
+            for texto, tipo in (("Tablas maestras", "maestras"), ("Profesionales", "profesionales"), ("Prescripciones", "prescripciones")):
+                ttk.Button(navegacion, text=texto, command=lambda t=tipo: self.abrir_modulo(t)).pack(side="left", padx=(0, 8))
         herramientas = ttk.Frame(contenido)
         herramientas.pack(fill="x", pady=(0, 12))
         ttk.Button(herramientas, text="Registrar", command=self.registrar).pack(side="left", padx=(0, 14))
@@ -274,6 +312,16 @@ class AplicacionPacientes:
 
     def registrar(self):
         return FormularioPaciente(self)
+
+    def abrir_modulo(self, tipo):
+        from ventanas_clinicas import TablasMaestrasApp, ProfesionalesApp, PrescripcionesApp
+        ventana = tk.Toplevel(self.raiz)
+        try:
+            clase = {"maestras": TablasMaestrasApp, "profesionales": ProfesionalesApp, "prescripciones": PrescripcionesApp}[tipo]
+            return clase(ventana, self.repositorio)
+        except (ErrorValidacion, sqlite3.Error) as error:
+            mostrar_error(self.raiz, error)
+            ventana.destroy()
 
     def buscar(self):
         try:
