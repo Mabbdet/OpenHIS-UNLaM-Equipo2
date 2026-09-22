@@ -1,5 +1,27 @@
 # Verificación de los incrementos
 
+## Entrega 5 / Ampliación y cierre de Sprint 3
+
+| Verificación ejecutada | Resultado |
+|---|---|
+| `.\.venv\Scripts\python.exe -m pytest -q -rs` | **66 aprobadas en 5,19 s, ninguna omitida**. |
+| Ciclos de estado | Alta, baja/anulación y reactivación de las cuatro entidades conservan ID y datos. Estados repetidos e IDs inexistentes producen un aviso. |
+| Sin cascada | Cambiar pacientes/profesionales no modifica signos ni prescripciones. Reactivar intervenciones históricas no activa las fichas relacionadas. |
+| Consultas y validaciones | Activos/inactivos/todos, búsqueda de inactivos, historial completo, DNI/matrícula únicos y rechazo de nuevas intervenciones con fichas inactivas. |
+| Migración repetida | Conservación de estados anulados, fechas, identificadores y relaciones; índices y claves foráneas verificados. |
+| GUI | Apertura de menú y cinco módulos; callbacks reales de alta, baja y reactivación con bases temporales. Ocho capturas de altas/bajas sobre datos ficticios de la base entregada. |
+| Tkinter | Una raíz por sesión de pytest y ventanas aisladas por prueba evitan las cargas repetidas de Tcl/Tk. La ejecución completa final no omitió ninguna prueba. |
+| XML y HTML | XML parseable con diagnóstico opcional y caracteres especiales; HTML escapado; estados activa/anulada, nombres únicos y conservación de receta ante error de escritura. |
+| Revisión visual | Menú, cuatro módulos y vista previa XML revisados. HTML completo revisado con MuPDF estático. Apariencia e impresión en navegador pendientes por bloqueo de la herramienta al abrir URL local. |
+| Base entregada | 6 pacientes (5 activos), 7 profesionales (6 activos), 4 signos (3 activos), 8 prescripciones (7 activas). Los cuatro registros nuevos quedaron inactivos. |
+| Conservación de Entrega 4 | Comparación contra respaldo: todos los valores de las columnas preexistentes y todas las filas anteriores siguen presentes en las siete tablas. |
+| Integridad final | `PRAGMA integrity_check`: `ok`. `PRAGMA foreign_key_check`: sin violaciones. Signo 4 y prescripción 8 conservan paciente 6 y profesional 7. |
+| Scrum | 14 imágenes embebidas: cuatro anteriores y diez nuevas. Verificados sus hashes, fórmulas, fechas, estados, hojas, combinaciones previas, paneles y validaciones. Cambios de valores limitados a objetivos/comentarios y asignación de HU a sprints. |
+
+La imagen HTML es una revisión estática, no una captura de Chrome/Edge; los motores de estilos difieren. MuPDF se usó únicamente como herramienta local de verificación y no es dependencia de la aplicación. El renderizador de la planilla omite imágenes en su vista previa: se inspeccionaron los PNG y su presencia en el XLSX. Se conserva la referencia rota heredada `HU-UNLaM!I20`, ajena a este incremento.
+
+Los apartados siguientes describen las verificaciones históricas. Las bajas físicas y el límite de historial de las primeras entregas fueron reemplazados por las reglas de Entrega 5.
+
 Entorno de ejecución: Windows, Python 3.14.6, Tk 8.6.15 y pytest 9.1.1. Dependencias de pruebas instaladas en `.venv`.
 
 | Incremento | Verificación ejecutada | Resultado |

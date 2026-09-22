@@ -1,78 +1,65 @@
 # OpenHIS-UNLaM — Equipo 2
 
-Sistema de información hospitalaria educativo desarrollado por Alejandro. Alcance actual: pacientes (HU-01 a HU-03), tablas maestras (HU-04), profesionales (HU-05, con vigencia real de matrícula pendiente) y prescripciones exigidas en Entrega 4 (avance parcial de HU-06).
-
-## Ramas por entrega
-
-Las ramas son acumulativas y locales. Cada incremento se verifica, se integra a `develop` y recién entonces se crea la siguiente rama desde `develop`. No se publica automáticamente en el remoto.
-
-| Rama | Incremento |
-|---|---|
-| `develop` | Integra las entregas verificadas. |
-| `develop-Entrega1` | Documento de Visión y plan de proyecto. |
-| `develop-Entrega2` | Consola para HU-01/HU-02, SQLite y pruebas simples con pytest. |
-| `develop-Entrega3` | Versiones gráficas, CRUD completo, HU-03 e historial. |
-| `develop-Entrega4` | Tablas maestras, profesionales, autor de signos vitales, prescripciones y evidencias del Sprint 3. |
+Sistema hospitalario educativo desarrollado por Alejandro con Python, Tkinter y SQLite. Entrega 5 amplía el Sprint 3: pacientes, profesionales, signos vitales independientes y prescripciones con bajas reversibles, XML académico y HTML imprimible.
 
 ## Ejecución
 
-Requiere Python 3.10 o posterior. La aplicación usa solamente la biblioteca estándar.
+Requiere Python 3.10 o posterior con Tkinter. La aplicación utiliza solamente la biblioteca estándar.
 
 ```powershell
-python cargar_demo.py
-python Pacientes.py
-python Pacientes_app.py
-python Pacientes2_app.pyw
-python Pacientes2b_app.pyw
+python OpenHIS_app.pyw
 ```
 
-`Pacientes.py` conserva la consola; `Pacientes_app.py` permite alta, búsqueda y listado; `Pacientes2_app.pyw` agrega modificación y baja; `Pacientes2b_app.pyw` agrega signos vitales, historial y acceso a Tablas maestras, Profesionales y Prescripciones. Esta última es el punto de entrada principal actual. Con Python configurado en Windows, la extensión `.pyw` permite abrirla sin consola.
+El menú abre Pacientes, Profesionales, Signos vitales, Prescripciones y Tablas maestras. Todos comparten `BD/Salud.db`, ubicada respecto de la raíz del proyecto. En Windows se puede abrir un `.pyw` con doble clic si Python tiene esa extensión asociada.
 
-`BD/Salud.db` incluye cinco pacientes ficticios, signos con profesional en tres de ellos, seis profesionales de seis especialidades y siete prescripciones ficticias. Incluye los registros generados para las capturas. `cargar_demo.py` puede repetirse sin duplicar sus registros ni reemplazar fichas existentes. Sus códigos, fármacos, dosis y vías son ficticios. La HC es el identificador único del paciente en SQLite.
-
-`datos.py`, `esquema.py`, `interfaz.py` y `ventanas_clinicas.py` son módulos auxiliares necesarios y deben incluirse en el paquete. La base se ubica respecto de los archivos del proyecto, independientemente de la carpeta desde la que se ejecute el programa. La GUI requiere Tkinter; para comprobar el entorno: `python -m tkinter`.
-
-Los módulos nuevos también pueden abrirse por separado:
+Los cuatro módulos también funcionan como ejecutables independientes:
 
 ```powershell
-python Tablas_maestras_app.pyw
-python Profesionales_app.pyw
-python Prescripcion_app.pyw
+python Pacientes_def_app.pyw
+python Profesionales_def_app.pyw
+python Signos_vitales_def_app.pyw
+python Prescripciones_def_app.pyw
 ```
 
-## Uso de la interfaz final
+Se conservan `Pacientes.py` (consola), `Pacientes_app.py`, `Pacientes2_app.pyw`, `Pacientes2b_app.pyw`, `Tablas_maestras_app.pyw`, `Profesionales_app.pyw` y `Prescripcion_app.pyw`. Las versiones anteriores usan las mismas reglas de datos; sus bajas ya son lógicas. `Pacientes2b_app.pyw` conserva su acceso integrado a signos.
 
-1. Registrar: completar los campos obligatorios y guardar. Se muestra la HC generada.
-2. Buscar: ingresar DNI; el resultado queda seleccionado y su ficha aparece debajo del listado. Ver todos restaura el listado completo.
-3. Modificar: seleccionar un paciente y editar teléfono, email, domicilio u obra social.
-4. Signos: seleccionar un paciente y pulsar Signos, o hacer doble clic en su fila. Elegir profesional, ingresar mediciones y motivo, y guardar; el historial se actualiza.
-5. Eliminar: seleccionar y confirmar la baja. Se eliminan físicamente el paciente y sus signos en una misma transacción, siempre que no tenga prescripciones, incluso anuladas.
-6. Tablas maestras: crear especialidades, códigos SNOMED locales y fármacos. Las especialidades se pueden modificar o desactivar.
-7. Profesionales: registrar con DNI, matrícula y especialidad activa; buscar por DNI, modificar contacto/especialidad o eliminar si no tiene signos ni prescripciones asociados.
-8. Prescripciones: seleccionar paciente, profesional y fármaco; completar dosis, vía y frecuencia. Se pueden consultar por DNI del paciente, ver el detalle y anular conservando el registro.
+## Uso
+
+1. **Pacientes:** registrar datos personales; el sistema genera la HC. Buscar por DNI, seleccionar la ficha y modificar contacto. Dar de baja conserva el registro y sus intervenciones; Reactivar recupera la misma HC.
+2. **Profesionales:** registrar DNI, matrícula y especialidad activa. Modificar contacto o especialidad. La baja informa cuántas intervenciones conservará. La matrícula debe ser única; no se comprueba su vigencia en un registro oficial.
+3. **Signos vitales:** seleccionar paciente y profesional activos, completar motivo y mediciones, y guardar. Buscar historial por DNI incluye todos sus registros, activos y anulados. Ver detalle muestra los estados de las fichas relacionadas. Anular y Reactivar cambian solamente el signo seleccionado.
+4. **Prescripciones:** seleccionar paciente, profesional y fármaco activos; diagnóstico opcional. Completar dosis, vía y frecuencia. Buscar por DNI, ver detalle, anular o reactivar. No se editan mediciones ni prescripciones ya guardadas.
+5. **Exportar:** desde el detalle de una prescripción, generar XML o HTML. El XML se muestra en una vista previa; el HTML puede abrirse en el navegador e imprimirse con Ctrl+P. Si Windows pregunta con qué aplicación abrirlo, elegir un navegador. Los archivos se guardan en `recetas/` y `reportes/` con nombres únicos; los errores de escritura no eliminan la prescripción.
+6. **Filtros:** Ver activos, Ver inactivos/anulados y Ver todos cambian los listados. Buscar por DNI encuentra fichas de ambos estados. Los documentos históricos pueden exportarse y muestran el estado que tenían al generarse.
+
+Las bajas y reactivaciones son manuales, **sin cascada**. Reactivar una intervención histórica no reactiva sus fichas relacionadas. Registrar intervenciones nuevas exige que ambas fichas estén activas, incluso si su estado cambia mientras el formulario está abierto. DNI y matrícula siguen siendo únicos entre activos e inactivos.
+
+## Datos y arquitectura
+
+La base entregada contiene seis pacientes, siete profesionales, cuatro signos y ocho prescripciones. Los registros de Entrega 5 —paciente 6, profesional 7, signo 4 y prescripción 8— quedaron inactivos; mantienen sus relaciones. Los datos y tratamientos son ficticios. `python cargar_demo.py` conserva los registros existentes, incluidos los anulados, sin duplicar su conjunto inicial.
+
+`datos.py` concentra validaciones y consultas; `esquema.py` migra la base y crea índices. `interfaz.py`, `ventanas_clinicas.py`, `signos_app.py` y `menu_app.py` construyen las ventanas. `exportaciones.py` genera los documentos. Todos estos archivos son necesarios al copiar el proyecto.
+
+La migración agrega `activo` donde falte y no reactiva registros anulados. Antes de actualizar una instalación, cerrar la aplicación y respaldar `BD/Salud.db`. Para esta entrega se respaldaron la base y la planilla originales en `.trabajo-local/entrega5/`, fuera de Git.
+
+El DNI admite números sin separadores. Nombre, apellido, nacimiento y sexo son obligatorios. Las fechas deben ser válidas; el nacimiento no puede ser futuro. El motivo de consulta es obligatorio; las mediciones vacías se guardan como NULL. No se aplican interpretaciones clínicas. El historial es completo y se ordena por fecha e ID descendentes; las fechas automáticas se identifican como UTC. Los signos históricos sin autor se conservan y pueden recibir su autor confirmado desde el acceso anterior.
+
+El XML usa `Prescription` y el espacio de nombres del ejemplo docente; **no implementa HL7 FHIR**. XML y HTML son demostraciones académicas sin validación clínica. `activo` conserva información, pero no registra quién realizó cada cambio. No se implementan autenticación, auditoría de accesos, importación de intervenciones ni validación externa de matrícula.
 
 ## Pruebas sencillas
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
-.\.venv\Scripts\python.exe -m pytest -q
+.\.venv\Scripts\python.exe -m pytest -q -rs
 ```
 
-Última ejecución: **48 pruebas aprobadas, ninguna omitida**. Usan bases temporales de pytest: pacientes, signos, catálogos, profesionales, prescripciones, validaciones, integridad referencial, migración y carga demo repetible. También se comprueba la apertura de las nuevas ventanas y el selector de profesional. No modifican `BD/Salud.db`. Los tests de GUI se omiten explícitamente si el entorno no dispone de Tk; los tests de datos siguen ejecutándose.
+Resultado de Entrega 5: **66 pruebas aprobadas, ninguna omitida**. Usan bases y carpetas temporales. Cubren migración repetida, conservación, ciclos de estado, filtros, unicidad, validaciones, XML/HTML y formularios reales. Los tests de GUI requieren Tkinter (`python -m tkinter`); una omisión por falta de Tk no cuenta como aprobación. Se comparte una raíz Tk durante la sesión de pruebas para evitar la carga repetida que provocaba intermitencias.
 
-## Validaciones
+## Ramas y documentación
 
-DNI numérico sin separadores; nombre, apellido, fecha de nacimiento y sexo obligatorios. Fecha válida con formato AAAA-MM-DD, no futura; sexo M/F según la guía. Contacto, domicilio y obra social son opcionales conforme al esquema. La validación de formato de fecha y DNI es una decisión de implementación.
+Las ramas `develop-Entrega1` a `develop-Entrega5` son acumulativas. Cada entrega se verifica y se integra localmente a `develop` antes de iniciar la siguiente. No se realiza push automático.
 
-En signos vitales, el motivo es obligatorio; las mediciones pueden dejarse vacías y se guardan como NULL. Presiones, frecuencia y saturación admiten enteros; temperatura admite decimales con punto o coma y rechaza valores no finitos. No se agregan umbrales ni interpretaciones clínicas. El historial presenta los diez últimos registros; en igualdad de fecha/hora se ordena por ID descendente. Las fechas automáticas de SQLite se muestran identificadas como UTC.
+Consultar `docs/entrega-5.md`, `docs/verificacion.md`, `docs/reflexion-entrega-5.md` y `PLAN_PROYECTO.md`. Scrum conserva las cuatro capturas de Entrega 4 y agrega ocho capturas de altas/bajas, la vista previa XML y una revisión estática del HTML. La apariencia e impresión del HTML en navegador quedan pendientes de verificación: la herramienta bloqueó abrir el archivo local. La revisión estática confirma el contenido, pero usa otro motor de estilos.
 
-Los nuevos signos requieren `medico_id` válido, relacionado con Profesionales. La migración conserva los signos históricos sin autor y permite asignarles su autor confirmado desde la ventana de signos. No inventa autores; la base demo entregada tiene todos sus signos asociados.
-
-Las matrículas son obligatorias y únicas; su vigencia real no se consulta en un registro oficial. Las prescripciones requieren relaciones válidas, dosis, vía y frecuencia; las fechas opcionales deben ser válidas y la final no puede preceder a la inicial. No se implementan reportes/XML, FHIR, control de acceso, turnos ni SMS.
-
-## Documentación y evidencias
-
-Consultar `docs/entrega-4.md`, `docs/verificacion.md`, `PLAN_PROYECTO.md` y las reflexiones de cada sprint. Entrega 4 incluye cuatro capturas reales en `evidencias/sprint3/`, embebidas en `scrum/Planilla Scrum.xlsx` → Bitácora, y la reflexión de dos párrafos en `docs/reflexion-sprint-3.md`. La copia Scrum conserva fechas y estados heredados de la plantilla; estos no certifican avance. Las capturas de las entregas anteriores siguen pendientes y no se sustituyen por estas evidencias de Sprint 3.
-
-Alejandro asume desarrollo, coordinación, documentación y pruebas; se conserva al profesor como Product Owner en la plantilla. Los PDFs originales, formato y fecha final de entrega no están confirmados. La guía ampliada de entregas 1–4 es la fuente del incremento actual.
+Alejandro asume implementación, coordinación, documentación y pruebas. Las fechas y estados heredados de Scrum se conservaron; no acreditan avance por sí solos. Los documentos de entregas anteriores describen su estado histórico.

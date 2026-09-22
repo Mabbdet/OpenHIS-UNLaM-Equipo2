@@ -1,6 +1,20 @@
 # Plan de proyecto — OpenHIS-UNLaM — Equipo 2
 
-Estado: planificación inicial conservada como historial, con actualización de Entrega 4.
+Estado: planificación inicial conservada como historial, con actualización de Entrega 5.
+
+## Actualización — Entrega 5 / Cierre de Sprint 3
+
+Fuente: `Sist-Info-Salud-5.pdf`, páginas 89–90 y ejemplos docentes. Alejandro continúa como único responsable de implementación, pruebas y documentación.
+
+- Rama `develop-Entrega5` desde `develop` en `8a12cfc`, integración local después de las verificaciones, sin push automático.
+- Bajas lógicas, reactivaciones individuales, filtros por estado y conservación de relaciones en pacientes, profesionales, signos y prescripciones. No hay cascadas de estado.
+- Cuatro ejecutables independientes y menú común `OpenHIS_app.pyw`. Historial completo de signos y validación de fichas activas para nuevas intervenciones.
+- HU-06 amplía prescripciones con XML académico y HTML imprimible. FHIR real permanece pendiente; el espacio de nombres propio no prueba interoperabilidad.
+- Resultado de pytest: 66 aprobadas sin omisiones. Ocho capturas de altas/bajas y evidencia XML agregadas a Bitácora, conservando las cuatro imágenes de Entrega 4.
+- HTML verificado mediante renderizado estático; apariencia e impresión en navegador pendientes por bloqueo de acceso local de la herramienta. La evidencia identifica esta limitación.
+- La base agrega un paciente, un profesional, un signo y una prescripción ficticios, todos finalmente inactivos. Se respaldaron base y Scrum antes de modificarlos.
+
+Matriz de requisitos y límites en `docs/entrega-5.md`; resultados en `docs/verificacion.md`; reflexión de dos párrafos en `docs/reflexion-entrega-5.md`. Las secciones anteriores se conservan como historial y no describen las reglas actuales de baja.
 
 ## Actualización — Entrega 4 / Sprint 3
 

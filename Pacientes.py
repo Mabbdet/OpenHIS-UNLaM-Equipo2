@@ -24,6 +24,7 @@ def buscar_paciente(repositorio):
     for campo in CAMPOS_PACIENTE:
         print(f"{ETIQUETAS[campo]}: {paciente[campo] or 'Sin informar'}")
     print(f"Fecha de registro (UTC): {paciente['fecha_registro']}")
+    print(f"Estado: {'Activo' if paciente['activo'] else 'Inactivo'}")
 
 
 def menu():

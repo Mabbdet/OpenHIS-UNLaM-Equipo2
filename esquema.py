@@ -58,12 +58,18 @@ def ampliar_esquema(conexion):
                 fecha_hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 presion_sistolica INTEGER, presion_diastolica INTEGER,
                 frecuencia_cardiaca INTEGER, temperatura REAL, saturacion_oxigeno INTEGER,
-                motivo_consulta TEXT, medico_id INTEGER,
+                motivo_consulta TEXT, medico_id INTEGER, activo INTEGER DEFAULT 1,
                 FOREIGN KEY (paciente_id) REFERENCES Pacientes(id),
                 FOREIGN KEY (medico_id) REFERENCES Profesionales(id)
             )
         """)
-        conexion.execute("INSERT INTO SignosVitales_nueva SELECT * FROM SignosVitales")
+        columnas = [fila["name"] for fila in conexion.execute("PRAGMA table_info(SignosVitales)")]
+        comunes = ["id", "paciente_id", "fecha_hora", "presion_sistolica", "presion_diastolica",
+                   "frecuencia_cardiaca", "temperatura", "saturacion_oxigeno", "motivo_consulta", "medico_id"]
+        if "activo" in columnas:
+            comunes.append("activo")
+        nombres = ",".join(comunes)
+        conexion.execute(f"INSERT INTO SignosVitales_nueva ({nombres}) SELECT {nombres} FROM SignosVitales")
         conexion.execute("DROP TABLE SignosVitales")
         conexion.execute("ALTER TABLE SignosVitales_nueva RENAME TO SignosVitales")
         if secuencia:
@@ -79,3 +85,25 @@ def ampliar_esquema(conexion):
         WHEN NEW.medico_id IS NULL AND OLD.medico_id IS NOT NULL
         BEGIN SELECT RAISE(ABORT, 'No se puede quitar el profesional del registro.'); END;
     """)
+    ampliar_estados(conexion)
+
+
+def ampliar_estados(conexion):
+    """Entrega 5: migración repetible; nunca restablece un estado 0 existente."""
+    for tabla in ("Pacientes", "Profesionales", "SignosVitales", "Prescripciones"):
+        columnas = {fila["name"] for fila in conexion.execute(f"PRAGMA table_info({tabla})")}
+        if "activo" not in columnas:
+            conexion.execute(f"ALTER TABLE {tabla} ADD COLUMN activo INTEGER DEFAULT 1")
+        conexion.execute(f"UPDATE {tabla} SET activo=1 WHERE activo IS NULL")
+    indices = {
+        "pacientes": ("Pacientes", {"dni": "dni", "activo": "activo", "apellido": "apellido, nombre"}),
+        "profesionales": ("Profesionales", {"dni": "dni", "matricula": "matricula", "especialidad": "especialidad_id", "activo": "activo", "apellido": "apellido, nombre"}),
+        "signos": ("SignosVitales", {"paciente": "paciente_id", "medico": "medico_id", "fecha": "fecha_hora", "activo": "activo", "paciente_activo": "paciente_id, activo"}),
+        "prescripciones": ("Prescripciones", {"paciente": "paciente_id", "profesional": "profesional_id", "farmaco": "farmaco_id", "snomed": "snomed_id", "fecha": "fecha_prescripcion", "activo": "activo", "paciente_activo": "paciente_id, activo"}),
+        "especialidades": ("Especialidades", {"codigo": "codigo", "activo": "activo", "nombre": "nombre"}),
+        "snomed": ("SnomedCT", {"codigo": "codigo", "categoria": "categoria", "termino": "termino", "activo": "activo"}),
+        "farmacos": ("Farmacos", {"codigo": "codigo", "nombre": "nombre", "activo": "activo"}),
+    }
+    for prefijo, (tabla, campos) in indices.items():
+        for sufijo, columnas in campos.items():
+            conexion.execute(f"CREATE INDEX IF NOT EXISTS idx_{prefijo}_{sufijo} ON {tabla}({columnas})")

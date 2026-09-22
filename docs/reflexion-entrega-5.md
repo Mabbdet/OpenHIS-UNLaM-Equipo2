@@ -1,0 +1,5 @@
+# Reflexión — Entrega 5
+
+En un hospital, dar de baja a un paciente o a un profesional no debería hacer desaparecer las intervenciones que ya se registraron. Esta entrega resuelve ese problema al conservar las fichas, los signos vitales y las prescripciones mediante estados reversibles. La separación del módulo de signos permite consultar el historial completo, mientras que la receta XML y el reporte HTML reúnen los datos de una prescripción para su consulta. Los ejemplos son académicos y no están validados para uso clínico.
+
+Conservar las relaciones permite comprender quién intervino, sobre qué paciente y en qué momento se registró la información. Las bajas manuales sin cascada evitan que una decisión administrativa altere silenciosamente el historial. Las pruebas de migración y reactivación ayudan a verificar esa conservación, pero el campo activo no registra quién hizo cada cambio ni reemplaza los controles de acceso o una auditoría completa. Un sistema destinado a una institución real necesitaría incorporar esos controles y validar sus documentos e interoperabilidad.

@@ -1,6 +1,28 @@
 import pytest
+import tkinter as tk
 
 from datos import Repositorio
+
+
+@pytest.fixture(scope="session")
+def motor_tk():
+    """Un intérprete Tk por sesión evita recargas intermitentes de Tcl en Windows."""
+    try:
+        raiz = tk.Tk()
+    except tk.TclError as error:
+        pytest.skip(f"Tk no disponible: {error}")
+    raiz.withdraw()
+    yield raiz
+    raiz.destroy()
+
+
+@pytest.fixture
+def raiz_tk(motor_tk):
+    ventana = tk.Toplevel(motor_tk)
+    ventana.withdraw()
+    yield ventana
+    if ventana.winfo_exists():
+        ventana.destroy()
 
 
 @pytest.fixture

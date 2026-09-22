@@ -31,7 +31,8 @@ def cargar_demo(repositorio):
         else:
             paciente_id = repositorio.registrar_paciente(datos)
             creados += 1
-        if indice < 3 and not repositorio.historial_signos(paciente_id):
+        activos = {p["id"] for p in repositorio.listar_profesionales()}
+        if indice < 3 and repositorio.obtener_paciente(paciente_id)["activo"] and profesionales[indice] in activos and not repositorio.historial_signos(paciente_id):
             repositorio.registrar_signos(paciente_id, {
                 "presion_sistolica": 120, "presion_diastolica": 80,
                 "frecuencia_cardiaca": 72 + indice, "temperatura": "36,5",
@@ -85,13 +86,14 @@ def cargar_catalogos_profesionales(repositorio):
 
 
 def cargar_prescripciones_demo(repositorio, profesionales):
-    existentes = {fila["indicaciones"] for fila in repositorio.listar_prescripciones()}
+    existentes = {fila["indicaciones"] for fila in repositorio.listar_prescripciones(activos=None)}
+    profesionales_activos = {p["id"] for p in repositorio.listar_profesionales()}
     farmacos = {fila["codigo"]: fila["id"] for fila in repositorio.listar_catalogo("farmacos", solo_activos=True)}
     snomed = next(fila["id"] for fila in repositorio.listar_catalogo("snomed") if fila["codigo"] == "DEMO-SN-1")
     for indice, paciente in enumerate(PACIENTES_DEMO, start=1):
         ficha = repositorio.buscar_paciente(paciente[0])
         marca = f"DEMO-PRES-{indice}: registro ficticio sin uso clínico"
-        if marca not in existentes and ficha and ficha["nombre"] == paciente[1] and ficha["apellido"] == paciente[2]:
+        if marca not in existentes and ficha and ficha["activo"] and profesionales[indice-1] in profesionales_activos and f"DEMO-FAR-{indice}" in farmacos and ficha["nombre"] == paciente[1] and ficha["apellido"] == paciente[2]:
             repositorio.registrar_prescripcion({"paciente_id": ficha["id"], "profesional_id": profesionales[indice-1],
                 "farmaco_id": farmacos[f"DEMO-FAR-{indice}"], "snomed_id": snomed,
                 "dosis": "Dosis de prueba", "via_administracion": "Vía de prueba", "frecuencia": "Frecuencia de prueba",

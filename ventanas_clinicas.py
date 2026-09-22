@@ -2,10 +2,12 @@
 
 import sqlite3
 import tkinter as tk
+import webbrowser
 from tkinter import messagebox, ttk
 
 from datos import CATALOGOS, ETIQUETAS, ErrorValidacion, Repositorio
 from interfaz import crear_tabla, mostrar_error
+from exportaciones import exportar_prescripcion
 
 
 TITULOS = {
@@ -99,6 +101,17 @@ class VentanaBase:
         ttk.Label(self.cuerpo, text="HOSPITAL UNIVERSITARIO SAN JUSTO", font=("Segoe UI", 17, "bold"), foreground="#16465b").pack(anchor="w")
         ttk.Label(self.cuerpo, text=titulo, font=("Segoe UI", 12)).pack(anchor="w", pady=(4, 14))
         self.estado = tk.StringVar(raiz)
+        self.activos = True
+
+    def filtros_estado(self):
+        barra = ttk.Frame(self.cuerpo)
+        barra.pack(fill="x", pady=(0, 8))
+        for texto, estado in (("Ver activos", True), ("Ver inactivos / anulados", False), ("Ver todos", None)):
+            ttk.Button(barra, text=texto, command=lambda e=estado: self.filtrar(e)).pack(side="left", padx=4)
+
+    def filtrar(self, activos):
+        self.activos = activos
+        self.intentar(self.refrescar)
 
     def intentar(self, operacion):
         try:
@@ -202,9 +215,10 @@ class ProfesionalesApp(VentanaBase):
         entrada = ttk.Entry(barra, textvariable=self.dni, width=16)
         entrada.pack(side="left", padx=4)
         entrada.bind("<Return>", lambda e: self.buscar())
-        for texto, accion in (("Buscar", self.buscar), ("Ver todos", lambda: self.intentar(self.refrescar)), ("Modificar", self.modificar), ("Eliminar", self.eliminar), ("Actualizar especialidades", self.actualizar_especialidades)):
+        for texto, accion in (("Buscar", self.buscar), ("Modificar", self.modificar), ("Dar de baja", self.eliminar), ("Reactivar", self.reactivar), ("Actualizar especialidades", self.actualizar_especialidades)):
             ttk.Button(barra, text=texto, command=accion).pack(side="left", padx=3)
-        marco, self.tabla = crear_tabla(self.cuerpo, [("id", "Registro", 65), ("dni", "DNI", 95), ("nombre", "Nombre", 130), ("apellido", "Apellido", 130), ("matricula", "Matrícula", 110), ("especialidad", "Especialidad", 190), ("telefono", "Teléfono", 110)])
+        self.filtros_estado()
+        marco, self.tabla = crear_tabla(self.cuerpo, [("id", "Registro", 65), ("dni", "DNI", 95), ("nombre", "Nombre", 130), ("apellido", "Apellido", 130), ("matricula", "Matrícula", 110), ("especialidad", "Especialidad", 160), ("telefono", "Teléfono", 110), ("activo", "Estado", 85)])
         marco.pack(fill="both", expand=True)
         self.detalle = tk.StringVar(raiz, value="Seleccione un profesional.")
         ttk.Label(self.cuerpo, textvariable=self.detalle, wraplength=950).pack(anchor="w", pady=12)
@@ -213,10 +227,12 @@ class ProfesionalesApp(VentanaBase):
         self.refrescar()
 
     def refrescar(self, seleccionar=None, filas=None):
-        self.filas = {fila["id"]: fila for fila in (self.repositorio.listar_profesionales() if filas is None else filas)}
+        if seleccionar is not None and filas is None:
+            self.activos = next(bool(p["activo"]) for p in self.repositorio.listar_profesionales(None) if p["id"] == seleccionar)
+        self.filas = {fila["id"]: fila for fila in (self.repositorio.listar_profesionales(self.activos) if filas is None else filas)}
         self.tabla.delete(*self.tabla.get_children())
         for fila in self.filas.values():
-            self.tabla.insert("", "end", iid=str(fila["id"]), values=[fila[c] or "—" for c in ("id", "dni", "nombre", "apellido", "matricula", "especialidad", "telefono")])
+            self.tabla.insert("", "end", iid=str(fila["id"]), values=[fila[c] or "—" for c in ("id", "dni", "nombre", "apellido", "matricula", "especialidad", "telefono")] + ["Activo" if fila["activo"] else "Inactivo"])
         if seleccionar is not None and self.tabla.exists(str(seleccionar)):
             self.tabla.selection_set(str(seleccionar))
             self.tabla.see(str(seleccionar))
@@ -232,7 +248,7 @@ class ProfesionalesApp(VentanaBase):
             f"Nacimiento: {fila['fecha_nacimiento']} · Sexo: {fila['sexo']} · Especialidad: {fila['especialidad']}"
             f"{' (inactiva)' if not fila['especialidad_activa'] else ''}\n"
             f"Teléfono: {fila['telefono'] or 'Sin informar'} · Email: {fila['email'] or 'Sin informar'}\n"
-            f"Fecha de registro (UTC): {fila['fecha_registro']}")
+            f"Fecha de registro (UTC): {fila['fecha_registro']} · Estado: {'Activo' if fila['activo'] else 'Inactivo'}")
 
     def registrar(self):
         def abrir():
@@ -265,10 +281,20 @@ class ProfesionalesApp(VentanaBase):
     def eliminar(self):
         def aplicar():
             fila = self.seleccionado(self.tabla, self.filas)
-            if messagebox.askyesno("Eliminar profesional", f"¿Eliminar a {fila['nombre']} {fila['apellido']}?", parent=self.raiz):
-                self.repositorio.eliminar_profesional(fila["id"])
-                self.refrescar()
-                messagebox.showinfo("Operación exitosa", "Profesional eliminado.", parent=self.raiz)
+            cuenta = self.repositorio.contar_intervenciones(fila["id"], "profesional")
+            if messagebox.askyesno("Baja lógica de profesional", f"¿Dar de baja a {fila['nombre']} {fila['apellido']}?\nSignos: {cuenta['signos']} · Prescripciones: {cuenta['prescripciones']}\nSe conservan los registros y sus estados. La baja es reversible.", parent=self.raiz):
+                self.repositorio.dar_baja_profesional(fila["id"])
+                self.refrescar(fila["id"])
+                messagebox.showinfo("Operación exitosa", "Profesional inactivo. Se conservan sus intervenciones.", parent=self.raiz)
+        self.intentar(aplicar)
+
+    def reactivar(self):
+        def aplicar():
+            fila = self.seleccionado(self.tabla, self.filas)
+            if messagebox.askyesno("Reactivar profesional", "¿Reactivar esta ficha? Sus intervenciones mantienen su estado.", parent=self.raiz):
+                self.repositorio.reactivar_profesional(fila["id"])
+                self.refrescar(fila["id"])
+                messagebox.showinfo("Operación exitosa", "Profesional reactivado.", parent=self.raiz)
         self.intentar(aplicar)
 
     def actualizar_especialidades(self):
@@ -290,8 +316,9 @@ class PrescripcionesApp(VentanaBase):
         entrada = ttk.Entry(barra, textvariable=self.dni, width=15)
         entrada.pack(side="left", padx=4)
         entrada.bind("<Return>", lambda e: self.buscar())
-        for texto, accion in (("Buscar", self.buscar), ("Ver todos", lambda: self.intentar(self.refrescar)), ("Ver detalle", self.ver_detalle), ("Anular", self.anular)):
+        for texto, accion in (("Buscar", self.buscar), ("Ver detalle", self.ver_detalle), ("Anular", self.anular), ("Reactivar", self.reactivar)):
             ttk.Button(barra, text=texto, command=accion).pack(side="left", padx=3)
+        self.filtros_estado()
         marco, self.tabla = crear_tabla(self.cuerpo, [("id", "ID", 50), ("fecha", "Fecha/hora (UTC)", 155), ("paciente", "Paciente", 180), ("profesional", "Profesional", 180), ("farmaco", "Fármaco", 150), ("estado", "Estado", 85)])
         marco.pack(fill="both", expand=True)
         ttk.Label(self.cuerpo, textvariable=self.estado).pack(anchor="w", pady=10)
@@ -300,7 +327,9 @@ class PrescripcionesApp(VentanaBase):
         self.refrescar()
 
     def refrescar(self, seleccionar=None, paciente_id=None):
-        self.filas = {fila["id"]: fila for fila in self.repositorio.listar_prescripciones(paciente_id)}
+        if seleccionar is not None:
+            self.activos = bool(self.repositorio.obtener_prescripcion(seleccionar)["activo"])
+        self.filas = {fila["id"]: fila for fila in self.repositorio.listar_prescripciones(paciente_id, self.activos)}
         self.tabla.delete(*self.tabla.get_children())
         for fila in self.filas.values():
             self.tabla.insert("", "end", iid=str(fila["id"]), values=(fila["id"], fila["fecha_prescripcion"], fila["paciente"], fila["profesional"], fila["farmaco"], "Activa" if fila["activo"] else "Anulada"))
@@ -332,6 +361,7 @@ class PrescripcionesApp(VentanaBase):
                 self.refrescar(paciente_id=-1)
                 messagebox.showinfo("Búsqueda", "Paciente no encontrado.", parent=self.raiz)
             else:
+                self.activos = None
                 self.refrescar(paciente_id=paciente["id"])
         self.intentar(aplicar)
 
@@ -347,14 +377,18 @@ class PrescripcionesApp(VentanaBase):
             texto.pack(fill="both", expand=True)
             valores = [
                 ("Prescripción", fila["id"]), ("Estado", "Activa" if fila["activo"] else "Anulada"),
-                ("Paciente", f"{fila['paciente']} · DNI {fila['paciente_dni']}"),
-                ("Profesional", f"{fila['profesional']} · Matrícula {fila['matricula']}"),
+                ("Paciente", f"{fila['paciente']} · DNI {fila['paciente_dni']} · {'Activo' if fila['paciente_activo'] else 'Inactivo'}"),
+                ("Profesional", f"{fila['profesional']} · Matrícula {fila['matricula']} · {'Activo' if fila['profesional_activo'] else 'Inactivo'}"),
                 ("Fármaco", f"{fila['farmaco']} · {fila['farmaco_codigo']}"),
                 ("SNOMED", f"{fila['snomed_codigo']} · {fila['snomed']}" if fila["snomed_id"] else "Sin informar"),
             ] + [(TITULOS[c], fila[c]) for c in ("dosis", "via_administracion", "frecuencia", "duracion", "cantidad", "indicaciones", "fecha_inicio", "fecha_fin")] + [("Fecha/hora (UTC)", fila["fecha_prescripcion"])]
             texto.insert("1.0", "\n\n".join(f"{etiqueta}: {valor if valor is not None and valor != '' else 'Sin informar'}" for etiqueta, valor in valores))
             texto.configure(state="disabled")
-            ttk.Button(ventana, text="Cerrar", command=ventana.destroy).pack(pady=8)
+            botones = ttk.Frame(ventana)
+            botones.pack(fill="x", padx=12, pady=8)
+            for formato, etiqueta in (("xml", "Generar receta XML"), ("html", "Generar reporte HTML")):
+                ttk.Button(botones, text=etiqueta, command=lambda f=formato: self.exportar(fila["id"], f, ventana)).pack(side="left", padx=5)
+            ttk.Button(botones, text="Cerrar", command=ventana.destroy).pack(side="right")
             ventana.grab_set()
             return ventana
         return self.intentar(abrir)
@@ -367,6 +401,43 @@ class PrescripcionesApp(VentanaBase):
                 self.refrescar(fila["id"])
                 messagebox.showinfo("Operación exitosa", "Prescripción anulada. Se conserva su detalle.", parent=self.raiz)
         self.intentar(aplicar)
+
+    def reactivar(self):
+        def aplicar():
+            fila = self.seleccionado(self.tabla, self.filas)
+            if messagebox.askyesno("Reactivar prescripción", "¿Reactivar solamente esta prescripción? Las fichas relacionadas mantienen su estado.", parent=self.raiz):
+                self.repositorio.reactivar_prescripcion(fila["id"])
+                self.refrescar(fila["id"])
+                messagebox.showinfo("Operación exitosa", "Prescripción reactivada.", parent=self.raiz)
+        self.intentar(aplicar)
+
+    def exportar(self, prescripcion_id, formato, padre=None):
+        padre = padre or self.raiz
+        try:
+            ruta, contenido = exportar_prescripcion(self.repositorio, prescripcion_id, formato)
+        except (ErrorValidacion, sqlite3.Error, OSError) as error:
+            messagebox.showerror("No se pudo exportar", f"No se generó el archivo. La prescripción sigue guardada.\n{error}", parent=padre)
+            return
+        if formato == "html":
+            if messagebox.askyesno("Reporte generado", f"Archivo guardado:\n{ruta}\n¿Abrir el reporte en el navegador para imprimir?", parent=padre):
+                try:
+                    if not webbrowser.open(ruta.as_uri()):
+                        raise OSError("El navegador no confirmó la apertura.")
+                except (OSError, webbrowser.Error) as error:
+                    messagebox.showinfo("Archivo guardado", f"Puede abrirlo desde:\n{ruta}\n{error}", parent=padre)
+        else:
+            ventana = tk.Toplevel(padre)
+            ventana.title("Receta XML académica generada")
+            ventana.geometry("900x650")
+            ttk.Label(ventana, text=f"Archivo guardado: {ruta}", wraplength=850).pack(padx=12, pady=10)
+            from tkinter.scrolledtext import ScrolledText
+            texto = ScrolledText(ventana, wrap="word", font=("Consolas", 10))
+            texto.pack(fill="both", expand=True, padx=12)
+            texto.insert("1.0", contenido)
+            texto.configure(state="disabled")
+            ttk.Button(ventana, text="Cerrar", command=ventana.destroy).pack(pady=8)
+            ventana.transient(padre)
+        return ruta
 
 
 def ejecutar_clinica(tipo):

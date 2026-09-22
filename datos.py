@@ -194,9 +194,10 @@ class Repositorio:
                 raise PacienteNoEncontrado("El paciente no existe. Actualice el listado.")
             return dict(fila)
 
-    def listar_pacientes(self):
+    def listar_pacientes(self, activos=True):
+        filtro, parametros = self._filtro_estado(activos)
         with self.conectar() as conexion:
-            return [dict(fila) for fila in conexion.execute("SELECT * FROM Pacientes ORDER BY apellido, nombre, id")]
+            return [dict(fila) for fila in conexion.execute("SELECT * FROM Pacientes WHERE 1=1" + filtro + " ORDER BY apellido, nombre, id", parametros)]
 
     def modificar_paciente(self, paciente_id, entrada):
         datos = {campo: str(entrada.get(campo) or "").strip() for campo in CAMPOS_EDITABLES}
@@ -210,24 +211,59 @@ class Repositorio:
                 raise PacienteNoEncontrado("El paciente no existe. Actualice el listado.")
 
     def eliminar_paciente(self, paciente_id):
-        # Ambas operaciones se confirman juntas o se revierten juntas.
+        """Compatibilidad con entradas anteriores: desde E5 la baja siempre es lógica."""
+        return self.dar_baja_paciente(paciente_id)
+
+    @staticmethod
+    def _filtro_estado(activos, alias=""):
+        if activos is None:
+            return "", ()
+        if activos is not True and activos is not False:
+            raise ErrorValidacion("El filtro debe ser activos, inactivos o todos.")
+        return f" AND {alias}activo=?", (int(activos),)
+
+    def _cambiar_estado(self, tabla, registro_id, activo):
+        if tabla not in ("Pacientes", "Profesionales", "SignosVitales", "Prescripciones"):
+            raise ValueError("Tabla no admitida")
         with self.conectar() as conexion:
-            if conexion.execute("SELECT 1 FROM Prescripciones WHERE paciente_id=?", (paciente_id,)).fetchone():
-                raise ErrorValidacion("El paciente tiene prescripciones, incluso anuladas. No se puede eliminar su ficha.")
-            cantidad = conexion.execute("DELETE FROM SignosVitales WHERE paciente_id = ?", (paciente_id,)).rowcount
-            cursor = conexion.execute("DELETE FROM Pacientes WHERE id = ?", (paciente_id,))
-            if cursor.rowcount != 1:
-                raise PacienteNoEncontrado("El paciente no existe. Actualice el listado.")
-            return cantidad
+            fila = conexion.execute(f"SELECT activo FROM {tabla} WHERE id=?", (registro_id,)).fetchone()
+            if fila is None:
+                raise ErrorValidacion("El registro no existe.")
+            if fila["activo"] == activo:
+                raise ErrorValidacion("El registro ya estaba activo." if activo else "El registro ya estaba inactivo o anulado.")
+            conexion.execute(f"UPDATE {tabla} SET activo=? WHERE id=?", (activo, registro_id))
+        return registro_id
+
+    def dar_baja_paciente(self, paciente_id):
+        return self._cambiar_estado("Pacientes", paciente_id, 0)
+
+    def reactivar_paciente(self, paciente_id):
+        return self._cambiar_estado("Pacientes", paciente_id, 1)
+
+    def contar_intervenciones(self, registro_id, tipo="paciente"):
+        columnas = {"paciente": ("paciente_id", "paciente_id"), "profesional": ("medico_id", "profesional_id")}
+        signo, receta = columnas[tipo]
+        with self.conectar() as conexion:
+            return {
+                "signos": conexion.execute(f"SELECT COUNT(*) FROM SignosVitales WHERE {signo}=?", (registro_id,)).fetchone()[0],
+                "prescripciones": conexion.execute(f"SELECT COUNT(*) FROM Prescripciones WHERE {receta}=?", (registro_id,)).fetchone()[0],
+            }
+
+    @staticmethod
+    def _paciente_activo(conexion, paciente_id):
+        fila = conexion.execute("SELECT activo FROM Pacientes WHERE id=?", (paciente_id,)).fetchone()
+        if fila is None:
+            raise PacienteNoEncontrado("El paciente no existe. Actualice el listado.")
+        if not fila["activo"]:
+            raise ErrorValidacion("El paciente está inactivo. Reactívelo antes de registrar una nueva intervención.")
 
     def registrar_signos(self, paciente_id, entrada):
         datos = validar_signos(entrada)
         datos["paciente_id"] = paciente_id
         with self.conectar() as conexion:
-            if conexion.execute("SELECT id FROM Pacientes WHERE id = ?", (paciente_id,)).fetchone() is None:
-                raise PacienteNoEncontrado("El paciente no existe. Actualice el listado.")
+            self._paciente_activo(conexion, paciente_id)
             datos["medico_id"] = identificador(entrada.get("medico_id"), "un profesional")
-            self._profesional_existente(conexion, datos["medico_id"])
+            self._profesional_existente(conexion, datos["medico_id"], activo=True)
             cursor = conexion.execute("""
                 INSERT INTO SignosVitales
                 (paciente_id, presion_sistolica, presion_diastolica, frecuencia_cardiaca,
@@ -237,16 +273,38 @@ class Repositorio:
             """, datos)
             return cursor.lastrowid
 
-    def historial_signos(self, paciente_id):
+    def historial_signos(self, paciente_id, activos=None, limite=None):
         self.obtener_paciente(paciente_id)
+        return self.listar_signos(paciente_id, activos=activos, limite=limite)
+
+    def listar_signos(self, paciente_id=None, activos=True, limite=None):
+        filtro, parametros = self._filtro_estado(activos, "s.")
+        if paciente_id is not None:
+            filtro += " AND s.paciente_id=?"
+            parametros += (paciente_id,)
+        if limite is not None:
+            limite = identificador(limite, "un límite")
         with self.conectar() as conexion:
             return [dict(fila) for fila in conexion.execute("""
                 SELECT s.*, p.nombre || ' ' || p.apellido AS profesional,
-                    p.matricula AS matricula
+                    p.matricula, p.activo AS profesional_activo,
+                    a.nombre || ' ' || a.apellido AS paciente, a.dni AS paciente_dni,
+                    a.activo AS paciente_activo
                 FROM SignosVitales s LEFT JOIN Profesionales p ON p.id=s.medico_id
-                WHERE s.paciente_id = ?
-                ORDER BY s.fecha_hora DESC, s.id DESC LIMIT 10
-            """, (paciente_id,))]
+                JOIN Pacientes a ON a.id=s.paciente_id WHERE 1=1
+            """ + filtro + " ORDER BY s.fecha_hora DESC, s.id DESC" + (" LIMIT ?" if limite else ""), parametros + ((limite,) if limite else ()))]
+
+    def obtener_signo(self, registro_id):
+        for fila in self.listar_signos(activos=None):
+            if fila["id"] == registro_id:
+                return fila
+        raise ErrorValidacion("El registro de signos no existe.")
+
+    def anular_signo(self, registro_id):
+        return self._cambiar_estado("SignosVitales", registro_id, 0)
+
+    def reactivar_signo(self, registro_id):
+        return self._cambiar_estado("SignosVitales", registro_id, 1)
 
     def asignar_profesional_signos(self, registro_id, profesional_id):
         profesional_id = identificador(profesional_id, "un profesional")
@@ -302,9 +360,12 @@ class Repositorio:
             raise ErrorValidacion("Seleccione una especialidad activa.")
 
     @staticmethod
-    def _profesional_existente(conexion, profesional_id):
-        if not conexion.execute("SELECT 1 FROM Profesionales WHERE id=?", (profesional_id,)).fetchone():
+    def _profesional_existente(conexion, profesional_id, activo=False):
+        fila = conexion.execute("SELECT activo FROM Profesionales WHERE id=?", (profesional_id,)).fetchone()
+        if fila is None:
             raise ErrorValidacion("El profesional seleccionado no existe.")
+        if activo and not fila["activo"]:
+            raise ErrorValidacion("El profesional está inactivo. Reactívelo antes de registrar una nueva intervención.")
 
     def registrar_profesional(self, entrada):
         datos = validar_paciente(entrada)
@@ -324,13 +385,13 @@ class Repositorio:
                 raise ErrorValidacion("Ya existe un profesional con esa matrícula.") from error
             raise
 
-    def listar_profesionales(self):
+    def listar_profesionales(self, activos=True):
+        filtro, parametros = self._filtro_estado(activos, "p.")
         with self.conectar() as conexion:
             return [dict(fila) for fila in conexion.execute("""
                 SELECT p.*, e.nombre AS especialidad, e.activo AS especialidad_activa
-                FROM Profesionales p JOIN Especialidades e ON e.id=p.especialidad_id
-                ORDER BY p.apellido, p.nombre, p.id
-            """)]
+                FROM Profesionales p JOIN Especialidades e ON e.id=p.especialidad_id WHERE 1=1
+            """ + filtro + " ORDER BY p.apellido, p.nombre, p.id", parametros)]
 
     def buscar_profesional(self, dni):
         dni = validar_dni(dni)
@@ -356,13 +417,13 @@ class Repositorio:
             conexion.execute("UPDATE Profesionales SET telefono=:telefono,email=:email,especialidad_id=:especialidad_id WHERE id=:id", datos)
 
     def eliminar_profesional(self, profesional_id):
-        try:
-            with self.conectar() as conexion:
-                cursor = conexion.execute("DELETE FROM Profesionales WHERE id=?", (profesional_id,))
-                if cursor.rowcount != 1:
-                    raise ErrorValidacion("El profesional no existe.")
-        except sqlite3.IntegrityError as error:
-            raise ErrorValidacion("El profesional tiene signos vitales o prescripciones asociados y no puede eliminarse.") from error
+        return self.dar_baja_profesional(profesional_id)
+
+    def dar_baja_profesional(self, profesional_id):
+        return self._cambiar_estado("Profesionales", profesional_id, 0)
+
+    def reactivar_profesional(self, profesional_id):
+        return self._cambiar_estado("Profesionales", profesional_id, 1)
 
     def registrar_prescripcion(self, entrada):
         campos = ("dosis", "via_administracion", "frecuencia", "duracion", "indicaciones", "fecha_inicio", "fecha_fin")
@@ -382,9 +443,8 @@ class Repositorio:
         if datos["fecha_inicio"] and datos["fecha_fin"] and datos["fecha_fin"] < datos["fecha_inicio"]:
             raise ErrorValidacion("La fecha de fin no puede ser anterior a la de inicio.")
         with self.conectar() as conexion:
-            if not conexion.execute("SELECT 1 FROM Pacientes WHERE id=?", (datos["paciente_id"],)).fetchone():
-                raise ErrorValidacion("El paciente seleccionado no existe.")
-            self._profesional_existente(conexion, datos["profesional_id"])
+            self._paciente_activo(conexion, datos["paciente_id"])
+            self._profesional_existente(conexion, datos["profesional_id"], activo=True)
             for tabla, campo, etiqueta in (("Farmacos", "farmaco_id", "fármaco"), ("SnomedCT", "snomed_id", "término SNOMED")):
                 if datos[campo] is not None and not conexion.execute(f"SELECT 1 FROM {tabla} WHERE id=? AND activo=1", (datos[campo],)).fetchone():
                     raise ErrorValidacion(f"Seleccione un {etiqueta} activo y existente.")
@@ -395,29 +455,44 @@ class Repositorio:
                     :frecuencia,:duracion,:cantidad,:indicaciones,:fecha_inicio,:fecha_fin)
             """, datos).lastrowid
 
-    def listar_prescripciones(self, paciente_id=None):
-        filtro = " WHERE r.paciente_id=?" if paciente_id is not None else ""
+    def listar_prescripciones(self, paciente_id=None, activos=True):
+        filtro, parametros = self._filtro_estado(activos, "r.")
+        if paciente_id is not None:
+            filtro += " AND r.paciente_id=?"
+            parametros += (paciente_id,)
         with self.conectar() as conexion:
             return [dict(fila) for fila in conexion.execute("""
                 SELECT r.*, p.nombre || ' ' || p.apellido AS paciente, p.dni AS paciente_dni,
+                    p.nombre AS paciente_nombre, p.apellido AS paciente_apellido,
+                    p.fecha_nacimiento AS paciente_fecha_nac, p.sexo AS paciente_sexo,
+                    p.telefono AS paciente_telefono, p.email AS paciente_email,
+                    p.domicilio AS paciente_domicilio, p.obra_social AS paciente_obra_social,
+                    p.activo AS paciente_activo,
                     m.nombre || ' ' || m.apellido AS profesional, m.matricula,
+                    m.nombre AS profesional_nombre, m.apellido AS profesional_apellido,
+                    m.dni AS profesional_dni, m.email AS profesional_email,
+                    m.activo AS profesional_activo, e.nombre AS especialidad,
                     f.nombre AS farmaco, f.codigo AS farmaco_codigo,
+                    f.principio_activo AS farmaco_principio, f.presentacion AS farmaco_presentacion,
+                    f.concentracion AS farmaco_concentracion,
                     s.termino AS snomed, s.codigo AS snomed_codigo
                 FROM Prescripciones r JOIN Pacientes p ON p.id=r.paciente_id
                 JOIN Profesionales m ON m.id=r.profesional_id
                 JOIN Farmacos f ON f.id=r.farmaco_id
+                JOIN Especialidades e ON e.id=m.especialidad_id
                 LEFT JOIN SnomedCT s ON s.id=r.snomed_id
-            """ + filtro + " ORDER BY r.fecha_prescripcion DESC, r.id DESC", (paciente_id,) if paciente_id is not None else ())]
+                WHERE 1=1
+            """ + filtro + " ORDER BY r.fecha_prescripcion DESC, r.id DESC", parametros)]
 
     def obtener_prescripcion(self, prescripcion_id):
         # Volumen educativo: reutilizar la consulta con joins mantiene un único detalle.
-        for fila in self.listar_prescripciones():
+        for fila in self.listar_prescripciones(activos=None):
             if fila["id"] == prescripcion_id:
                 return fila
         raise ErrorValidacion("La prescripción no existe.")
 
     def anular_prescripcion(self, prescripcion_id):
-        with self.conectar() as conexion:
-            cursor = conexion.execute("UPDATE Prescripciones SET activo=0 WHERE id=? AND activo=1", (prescripcion_id,))
-            if cursor.rowcount != 1:
-                raise ErrorValidacion("La prescripción no existe o ya fue anulada.")
+        return self._cambiar_estado("Prescripciones", prescripcion_id, 0)
+
+    def reactivar_prescripcion(self, prescripcion_id):
+        return self._cambiar_estado("Prescripciones", prescripcion_id, 1)

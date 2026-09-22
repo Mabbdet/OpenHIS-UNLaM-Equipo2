@@ -44,7 +44,7 @@ def test_profesional_alta_busqueda_modificacion_y_baja(repositorio, profesional)
     ficha = Repositorio(repositorio.ruta).buscar_profesional("20111222")
     assert ficha["telefono"] == "555-0101" and ficha["especialidad_id"] == otra
     repositorio.eliminar_profesional(profesional)
-    assert repositorio.buscar_profesional("20111222") is None
+    assert repositorio.buscar_profesional("20111222")["activo"] == 0
 
 
 @pytest.mark.parametrize("cambio,mensaje", [({"matricula": "OTRA"}, "DNI"), ({"dni": "20111223"}, "matrícula")])
@@ -76,8 +76,8 @@ def test_signos_requieren_profesional_existente(repositorio, datos_paciente, med
 def test_profesional_con_signos_no_se_elimina(repositorio, datos_paciente, profesional):
     paciente = repositorio.registrar_paciente(datos_paciente)
     repositorio.registrar_signos(paciente, {"medico_id": profesional, "motivo_consulta": "Prueba"})
-    with pytest.raises(ErrorValidacion, match="no puede eliminarse"):
-        repositorio.eliminar_profesional(profesional)
+    repositorio.eliminar_profesional(profesional)
+    assert repositorio.buscar_profesional("20111222")["activo"] == 0
     assert repositorio.historial_signos(paciente)[0]["medico_id"] == profesional
 
 
@@ -98,7 +98,8 @@ def test_prescripcion_alta_detalle_busqueda_anulacion(repositorio, prescripcion)
     assert repositorio.listar_prescripciones(9999) == []
     repositorio.anular_prescripcion(registro_id)
     assert repositorio.obtener_prescripcion(registro_id)["activo"] == 0
-    assert len(repositorio.listar_prescripciones()) == 1
+    assert len(repositorio.listar_prescripciones(activos=None)) == 1
+    assert repositorio.listar_prescripciones() == []
 
 
 @pytest.mark.parametrize("campo,valor", [("paciente_id",999), ("profesional_id",999), ("farmaco_id",999), ("snomed_id",999), ("dosis"," "), ("cantidad","-1"), ("fecha_inicio","2026-02-30")])
@@ -111,10 +112,10 @@ def test_prescripcion_rechaza_datos_invalidos(repositorio, prescripcion, campo, 
 def test_prescripciones_conservan_paciente_y_profesional(repositorio, prescripcion):
     registro_id = repositorio.registrar_prescripcion(prescripcion)
     repositorio.anular_prescripcion(registro_id)
-    with pytest.raises(ErrorValidacion):
-        repositorio.eliminar_paciente(prescripcion["paciente_id"])
-    with pytest.raises(ErrorValidacion):
-        repositorio.eliminar_profesional(prescripcion["profesional_id"])
+    repositorio.eliminar_paciente(prescripcion["paciente_id"])
+    repositorio.eliminar_profesional(prescripcion["profesional_id"])
+    assert repositorio.obtener_prescripcion(registro_id)["paciente_activo"] == 0
+    assert repositorio.obtener_prescripcion(registro_id)["profesional_activo"] == 0
     assert repositorio.obtener_prescripcion(registro_id)["activo"] == 0
 
 
@@ -151,12 +152,8 @@ def test_migracion_conserva_signos_historicos(repositorio, datos_paciente, profe
 
 
 @pytest.mark.parametrize("clase", [TablasMaestrasApp, ProfesionalesApp, PrescripcionesApp])
-def test_nuevas_ventanas_cargan(repositorio, clase):
-    try:
-        raiz = tk.Tk()
-    except tk.TclError as error:
-        pytest.skip(str(error))
-    raiz.withdraw()
+def test_nuevas_ventanas_cargan(repositorio, clase, raiz_tk):
+    raiz = raiz_tk
     try:
         cargar_demo(repositorio)
         app = clase(raiz, repositorio)
@@ -167,15 +164,11 @@ def test_nuevas_ventanas_cargan(repositorio, clase):
         raiz.destroy()
 
 
-def test_formulario_signos_exige_y_guarda_profesional(repositorio, datos_paciente, profesional, monkeypatch):
+def test_formulario_signos_exige_y_guarda_profesional(repositorio, datos_paciente, profesional, monkeypatch, raiz_tk):
     errores = []
     monkeypatch.setattr('interfaz.messagebox.showerror', lambda *args, **kwargs: errores.append(args))
     monkeypatch.setattr('interfaz.messagebox.showinfo', lambda *args, **kwargs: None)
-    try:
-        raiz = tk.Tk()
-    except tk.TclError as error:
-        pytest.skip(str(error))
-    raiz.withdraw()
+    raiz = raiz_tk
     try:
         paciente = repositorio.registrar_paciente(datos_paciente)
         app = AplicacionPacientes(raiz, repositorio)

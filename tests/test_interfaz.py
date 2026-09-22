@@ -5,13 +5,9 @@ import pytest
 from interfaz import AplicacionPacientes
 
 
-@pytest.mark.parametrize("modo,acciones", [("basico", 0), ("crud", 2), ("signos", 3)])
-def test_interfaz_carga_y_busca_paciente(repositorio, datos_paciente, modo, acciones):
-    try:
-        raiz = tk.Tk()
-    except tk.TclError as error:
-        pytest.skip(f"Tk no está disponible en este entorno: {error}")
-    raiz.withdraw()
+@pytest.mark.parametrize("modo,acciones", [("basico", 0), ("crud", 3), ("signos", 4)])
+def test_interfaz_carga_y_busca_paciente(repositorio, datos_paciente, modo, acciones, raiz_tk):
+    raiz = raiz_tk
     try:
         paciente_id = repositorio.registrar_paciente(datos_paciente)
         app = AplicacionPacientes(raiz, repositorio, modo=modo)

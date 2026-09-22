@@ -42,23 +42,25 @@ def test_rechaza_signos_invalidos(repositorio, datos_paciente, entrada):
     assert repositorio.historial_signos(paciente_id) == []
 
 
-def test_historial_muestra_ultimos_diez(repositorio, datos_paciente, profesional):
+def test_historial_completo_y_limite_opcional(repositorio, datos_paciente, profesional):
     paciente_id = repositorio.registrar_paciente(datos_paciente)
     registros = [repositorio.registrar_signos(paciente_id, {"motivo_consulta": f"Registro {i}", "medico_id": profesional}) for i in range(12)]
     historial = repositorio.historial_signos(paciente_id)
-    assert [registro["id"] for registro in historial] == list(reversed(registros[-10:]))
+    assert [registro["id"] for registro in historial] == list(reversed(registros))
+    assert len(repositorio.historial_signos(paciente_id, limite=10)) == 10
 
 
-def test_eliminar_paciente_elimina_solo_sus_signos(repositorio, datos_paciente, profesional):
+def test_baja_paciente_conserva_sus_signos(repositorio, datos_paciente, profesional):
     paciente_id = repositorio.registrar_paciente(datos_paciente)
     otro_id = repositorio.registrar_paciente({**datos_paciente, "dni": "30111223"})
     repositorio.registrar_signos(paciente_id, {"motivo_consulta": "Consulta A", "medico_id": profesional})
     repositorio.registrar_signos(otro_id, {"motivo_consulta": "Consulta B", "medico_id": profesional})
-    assert repositorio.eliminar_paciente(paciente_id) == 1
-    assert repositorio.buscar_paciente(datos_paciente["dni"]) is None
+    assert repositorio.eliminar_paciente(paciente_id) == paciente_id
+    assert repositorio.buscar_paciente(datos_paciente["dni"])["activo"] == 0
+    assert repositorio.obtener_paciente(otro_id)["activo"] == 1
     assert len(repositorio.historial_signos(otro_id)) == 1
     with repositorio.conectar() as conexion:
-        assert conexion.execute("SELECT COUNT(*) FROM SignosVitales WHERE paciente_id=?", (paciente_id,)).fetchone()[0] == 0
+        assert conexion.execute("SELECT COUNT(*) FROM SignosVitales WHERE paciente_id=? AND activo=1", (paciente_id,)).fetchone()[0] == 1
 
 
 def test_no_registra_signos_sin_paciente(repositorio):

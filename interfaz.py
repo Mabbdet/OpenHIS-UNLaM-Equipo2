@@ -119,11 +119,11 @@ class VentanaSignos(tk.Toplevel):
         self.motivo.grid(row=6, column=1, columnspan=2, sticky="ew", pady=5)
         ttk.Label(formulario, text="* Obligatorio. Fecha y hora automáticas (UTC).").grid(row=7, column=0, columnspan=3, sticky="w", pady=5)
         ttk.Button(formulario, text="Guardar signos vitales", command=self.guardar).grid(row=8, column=0, columnspan=3, sticky="e", pady=4)
-        ttk.Label(contenido, text="Historial · últimos 10 registros", style="Seccion.TLabel").pack(anchor="w", pady=(16, 6))
+        ttk.Label(contenido, text="Historial completo · activos y anulados", style="Seccion.TLabel").pack(anchor="w", pady=(16, 6))
         marco, self.historial = crear_tabla(contenido, [
             ("fecha", "Fecha/hora (UTC)", 150), ("presion", "Presión (mmHg)", 100),
             ("fc", "FC (lpm)", 65), ("temp", "Temp. (°C)", 80),
-            ("sat", "SatO2 (%)", 75), ("motivo", "Motivo", 200), ("profesional", "Profesional", 180),
+            ("sat", "SatO2 (%)", 75), ("motivo", "Motivo", 200), ("profesional", "Profesional", 180), ("estado", "Estado", 85),
         ], altura=7)
         marco.pack(fill="both", expand=True)
         self.resumen = tk.StringVar(self)
@@ -145,6 +145,7 @@ class VentanaSignos(tk.Toplevel):
                 registro["fecha_hora"], f"{mostrar('presion_sistolica')}/{mostrar('presion_diastolica')}",
                 mostrar("frecuencia_cardiaca"), mostrar("temperatura"),
                 mostrar("saturacion_oxigeno"), registro["motivo_consulta"], registro["profesional"] or "Sin autor (histórico)",
+                "Activo" if registro["activo"] else "Anulado",
             ))
         self.resumen.set(f"{len(registros)} registro(s) mostrado(s)." if registros else "Sin registros de signos vitales.")
 
@@ -195,6 +196,7 @@ class AplicacionPacientes:
         self.raiz = raiz
         self.repositorio = repositorio if repositorio is not None else Repositorio()
         self.modo = modo
+        self.activos = True
         raiz.title("OpenHIS-UNLaM · Gestión de pacientes")
         raiz.geometry("1050x680")
         raiz.minsize(850, 580)
@@ -224,10 +226,13 @@ class AplicacionPacientes:
         busqueda.pack(side="left", padx=(0, 6))
         busqueda.bind("<Return>", lambda evento: self.buscar())
         ttk.Button(herramientas, text="Buscar", command=self.buscar).pack(side="left", padx=4)
-        ttk.Button(herramientas, text="Ver todos", command=self.refrescar).pack(side="left", padx=4)
+        filtros = ttk.Frame(contenido)
+        filtros.pack(fill="x", pady=(0, 8))
+        for etiqueta, estado in (("Ver activos", True), ("Ver inactivos", False), ("Ver todos", None)):
+            ttk.Button(filtros, text=etiqueta, command=lambda e=estado: self.filtrar(e)).pack(side="left", padx=4)
         self.botones_seleccion = []
         if modo in ("crud", "signos"):
-            for texto, accion in (("Modificar", self.modificar), ("Eliminar", self.eliminar)):
+            for texto, accion in (("Modificar", self.modificar), ("Dar de baja", self.eliminar), ("Reactivar", self.reactivar)):
                 boton = ttk.Button(herramientas, text=texto, command=accion, state="disabled")
                 boton.pack(side="left", padx=4)
                 self.botones_seleccion.append(boton)
@@ -238,7 +243,7 @@ class AplicacionPacientes:
         marco, self.tabla = crear_tabla(contenido, [
             ("hc", "HC", 60), ("dni", "DNI", 100), ("nombre", "Nombre", 155),
             ("apellido", "Apellido", 155), ("telefono", "Teléfono", 130),
-            ("obra", "Obra social", 210),
+            ("obra", "Obra social", 180), ("activo", "Estado", 85),
         ])
         marco.pack(fill="both", expand=True)
         self.tabla.bind("<<TreeviewSelect>>", self.mostrar_detalle)
@@ -263,7 +268,7 @@ class AplicacionPacientes:
         for paciente in pacientes:
             self.tabla.insert("", "end", iid=str(paciente["id"]), values=(
                 paciente["id"], paciente["dni"], paciente["nombre"], paciente["apellido"],
-                paciente["telefono"] or "—", paciente["obra_social"] or "—",
+                paciente["telefono"] or "—", paciente["obra_social"] or "—", "Activo" if paciente["activo"] else "Inactivo",
             ))
         self.estado.set(f"{len(pacientes)} paciente(s) mostrado(s).")
         if seleccionar is not None and self.tabla.exists(str(seleccionar)):
@@ -274,10 +279,16 @@ class AplicacionPacientes:
 
     def refrescar(self, seleccionar=None):
         try:
-            self._listar(self.repositorio.listar_pacientes(), seleccionar)
+            if seleccionar is not None:
+                self.activos = bool(self.repositorio.obtener_paciente(seleccionar)["activo"])
+            self._listar(self.repositorio.listar_pacientes(self.activos), seleccionar)
             self.dni.set("")
         except sqlite3.Error as error:
             mostrar_error(self.raiz, error)
+
+    def filtrar(self, activos):
+        self.activos = activos
+        self.refrescar()
 
     def seleccionado(self):
         seleccion = self.tabla.selection()
@@ -307,7 +318,7 @@ class AplicacionPacientes:
             f"Teléfono: {valor('telefono')}    |    Email: {valor('email')}\n"
             f"Domicilio: {valor('domicilio')}\n"
             f"Obra social: {valor('obra_social')}\n"
-            f"Fecha de registro (UTC): {paciente['fecha_registro']}"
+            f"Fecha de registro (UTC): {paciente['fecha_registro']}    |    Estado: {'Activo' if paciente['activo'] else 'Inactivo'}"
         )
 
     def registrar(self):
@@ -341,17 +352,29 @@ class AplicacionPacientes:
     def eliminar(self):
         try:
             paciente = self.seleccionado()
+            cuenta = self.repositorio.contar_intervenciones(paciente["id"])
             confirmado = messagebox.askyesno(
-                "Confirmar eliminación",
-                f"¿Eliminar a {paciente['nombre']} {paciente['apellido']} (HC {paciente['id']})?\n"
-                "Se eliminarán también todos sus registros de signos vitales. Esta acción no se puede deshacer.",
+                "Confirmar baja lógica",
+                f"¿Dar de baja a {paciente['nombre']} {paciente['apellido']} (HC {paciente['id']})?\n"
+                f"Signos asociados: {cuenta['signos']} · Prescripciones: {cuenta['prescripciones']}\n"
+                "Se conservan todos los registros y sus estados. Puede reactivar la ficha después.",
                 parent=self.raiz,
             )
             if not confirmado:
                 return
-            cantidad = self.repositorio.eliminar_paciente(paciente["id"])
-            self.refrescar()
-            messagebox.showinfo("Eliminación exitosa", f"Paciente eliminado. Registros de signos vitales eliminados: {cantidad}.", parent=self.raiz)
+            self.repositorio.dar_baja_paciente(paciente["id"])
+            self.refrescar(paciente["id"])
+            messagebox.showinfo("Baja exitosa", "Paciente inactivo. Sus signos y prescripciones se conservan sin cambios.", parent=self.raiz)
+        except (ErrorValidacion, sqlite3.Error) as error:
+            mostrar_error(self.raiz, error)
+
+    def reactivar(self):
+        try:
+            paciente = self.seleccionado()
+            if messagebox.askyesno("Reactivar paciente", "¿Reactivar solamente esta ficha? Las intervenciones mantienen su estado.", parent=self.raiz):
+                self.repositorio.reactivar_paciente(paciente["id"])
+                self.refrescar(paciente["id"])
+                messagebox.showinfo("Operación exitosa", "Paciente reactivado.", parent=self.raiz)
         except (ErrorValidacion, sqlite3.Error) as error:
             mostrar_error(self.raiz, error)
 
