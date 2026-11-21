@@ -1,5 +1,13 @@
 # Plan de proyecto — OpenHIS-UNLaM — Equipo 2
 
+## Actualización — Entrega 10 / Cierre técnico del Epic 2
+
+Trabajo del 21/11/2026 (Argentina), rama `develop-Entrega10` desde `0b31f12`. Fuente: `Sist-Info-Salud-10.pdf`, páginas 7–27 y 42–45. HU-08/HU-09/HU-10: tercera pestaña DICOM con imagen y metadatos completos, conversión vinculada a fichas, auditoría de visualizaciones e importación FHIR con análisis previo y confirmación explícita. Las observaciones se agrupan sin sobrescribir registros históricos; los fármacos se reutilizan por código o nombre.
+
+142 pruebas aprobadas sin omisiones. El análisis real mantuvo idéntico el archivo SQLite; la confirmación agregó una fila de signos para cuatro Observations. La base conserva todas las filas anteriores. Cuatro capturas y cierre incorporados a Scrum, conservando veinte imágenes previas y fórmulas. Detalle en `docs/entrega-10.md`; reflexión en `docs/reflexion-entrega-10.md`.
+
+Antes de empezar se publicaron `develop-Entrega5`, `develop-Entrega7`, `develop-Entrega9` y `develop`, sin coautoría ni menciones adicionales. Entrega 10 se verifica y se integra localmente a `develop`, conservando las correcciones anteriores sin commit y los archivos Arduino. Su publicación no es automática. Epic 3 (turnos e HCE) permanece pendiente. Las secciones siguientes describen estados históricos.
+
 ## Actualización — Entrega 9 / Sprint 5
 
 HU-08, HU-09 y HU-10 implementadas desde `develop` en `b6a31ab`, en la rama `develop-Entrega9`. Consulta consolidada con auditoría Q; Bundle FHIR R4 JSON/XML con importación transaccional y no duplicación por DNI; conversión JPG/PNG a Secondary Capture y anonimización básica con verificación de años, sexo, UID y píxeles.

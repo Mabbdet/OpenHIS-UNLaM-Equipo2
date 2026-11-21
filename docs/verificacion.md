@@ -1,5 +1,13 @@
 # Verificación de los incrementos
 
+## Entrega 10 — Visor DICOM y confirmación FHIR
+
+**142 pruebas aprobadas, ninguna omitida**, en 97,25 s, con `.venv/Scripts/python.exe -m pytest -q -rs -p no:cacheprovider`. Incluye las 121 anteriores y 21 nuevas: análisis sin escritura, cancelación/confirmación gráfica, archivo/base/permisos modificados, agrupación y contradicciones de Observations, dosis estructuradas y reutilización de fármacos, píxeles 8/16 bits, signed, MONOCHROME1, endian y RGB planar, archivos sin imagen/comprimidos y metadatos con secuencias.
+
+Demostración real: `verificacion_preanalisis.json` prueba SHA-256 idéntico de Salud.db antes/después de analizar; la confirmación creó un SignosVitales y cuatro referencias externas, reutilizando paciente/profesional. El visor mantuvo intacto el DICOM y registró Q con usuario autenticado. Se revisaron las cuatro capturas y sus vistas dentro de Scrum. El callback gráfico de confirmación se probó con respuesta negativa y afirmativa; la captura del resultado muestra el resumen real guardado por la demostración.
+
+Comparación con el respaldo previo: todos los registros y valores anteriores siguen presentes, salvo la actualización esperada de Usuarios.ultimo_acceso. SQLite: integridad `ok` y ninguna violación de claves foráneas. Base final: 6 pacientes, 8 profesionales, 5 signos, 9 prescripciones, 2 prácticas y 11 referencias FHIR. Scrum conserva hojas, fórmulas, combinaciones y veinte imágenes previas; agrega cuatro imágenes y el cierre de Entrega 10. La referencia rota histórica HU-UNLaM!I20 permanece fuera del incremento. Evidencias en `evidencias/entrega10/`; límites en `docs/entrega-10.md`.
+
 ## Entrega 9 — Intervenciones, FHIR y DICOM
 
 **121 pruebas aprobadas, ninguna omitida**, con `.venv/Scripts/python.exe -m pytest -q -rs -p no:cacheprovider`. Incluye 96 pruebas anteriores con la matriz de permisos ampliada, y 25 casos nuevos: ida/vuelta JSON/XML, persistencia y asociaciones, DNI inactivos, profesional externo incompleto, reimportaciones, duplicación de Observation, errores de formato/referencias/fechas/unidades, XML hostil, permisos y rollback si falla auditoría.

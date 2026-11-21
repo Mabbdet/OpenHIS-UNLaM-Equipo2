@@ -1,0 +1,14 @@
+{
+  "confirmacion_explicita": true,
+  "resultado": {
+    "creados": {
+      "SignosVitales": 1
+    },
+    "reutilizados": {
+      "Pacientes": 1,
+      "Profesionales": 1
+    },
+    "omitidos": 0,
+    "conflictos": []
+  }
+}

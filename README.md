@@ -1,6 +1,21 @@
 # OpenHIS-UNLaM — Equipo 2
 
-## Estado actual — Entrega 9 / Sprint 5
+## Estado actual — Entrega 10 / Cierre técnico del Epic 2
+
+Visor DICOM con metadatos completos y vista previa de imágenes sin comprimir; conversión con datos de pacientes/profesionales. FHIR incorpora análisis sin escritura, revisión de acciones y confirmación explícita antes de importar, con agrupación de mediciones. **142 pruebas aprobadas, ninguna omitida.**
+
+```powershell
+python -m pip install -r requirements.txt
+python OpenHIS_app.pyw
+```
+
+Se conservan las cuentas de demostración y los permisos descritos abajo. El menú integra las versiones actuales; `_Herramientas_DICOM_Visor.pyw` abre las tres pestañas DICOM con login. En FHIR: analizar archivo, revisar JSON y acciones, confirmar e importar. Cancelar no modifica la base; los cambios del archivo o de los datos relevantes exigen repetir el análisis.
+
+Imagen sintética y DICOM en `IMAGENES/RX/`; entrada FHIR en `intercambio/e10_recibido_sintetico.json`. Cuatro capturas y verificaciones de archivos intactos en `evidencias/entrega10/`, también embebidas en Scrum. El visor es básico y la anonimización requiere revisar identificadores en los píxeles.
+
+Alcance, instrucciones y límites: [Entrega 10](docs/entrega-10.md). Reflexión: [reflexion-entrega-10.md](docs/reflexion-entrega-10.md). Se publicaron las ramas de las entregas 5, 7 y 9 y `develop` antes de iniciar este incremento. Entrega 10 se integra localmente; su push no es automático. Continúan pendientes turnos e HCE de la entrega final.
+
+## Referencia histórica — Entrega 9 / Sprint 5
 
 Consulta consolidada y auditada de intervenciones, intercambio FHIR R4 JSON/XML con importación efectiva y herramientas DICOM de conversión/anonimización básica. **121 pruebas aprobadas, ninguna omitida.**
 

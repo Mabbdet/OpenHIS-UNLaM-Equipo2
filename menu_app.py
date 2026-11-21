@@ -9,6 +9,7 @@ from interfaz import AplicacionPacientes, mostrar_error
 from seguridad import Seguridad, PERMISOS
 from seguridad_app import AuditoriaApp, LoginApp, UsuariosApp
 from entrega9_app import IntervencionesApp, FHIRApp, DICOMApp
+from entrega10_app import FHIRConfirmApp, DICOMVisorApp
 from signos_app import SignosApp
 from ventanas_clinicas import ProfesionalesApp, PrescripcionesApp, TablasMaestrasApp, VentanaBase
 
@@ -16,7 +17,7 @@ MODULOS = {"Pacientes": lambda raiz, repo: AplicacionPacientes(raiz, repo, modo=
            "Profesionales": ProfesionalesApp, "Signos vitales": SignosApp,
            "Prescripciones": PrescripcionesApp, "Tablas maestras": TablasMaestrasApp,
            "Usuarios": UsuariosApp, "Auditoría": AuditoriaApp,
-           'Intervenciones': IntervencionesApp, 'FHIR': FHIRApp, 'DICOM': DICOMApp}
+           'Intervenciones': IntervencionesApp, 'FHIR': FHIRConfirmApp, 'DICOM': DICOMVisorApp}
 
 
 class MenuApp(VentanaBase):
@@ -38,7 +39,7 @@ class MenuApp(VentanaBase):
                 self.botones[nombre] = boton
         if al_salir:
             ttk.Button(self.cuerpo, text="Cerrar sesión", command=al_salir).pack(fill="x", pady=12)
-        ttk.Label(self.cuerpo, text="Proyecto académico · Alejandro · Entrega 9", foreground="#526773").pack(anchor="w", pady=12)
+        ttk.Label(self.cuerpo, text="Proyecto académico · Alejandro · Entrega 10", foreground="#526773").pack(anchor="w", pady=12)
 
     def abrir(self, nombre):
         self.repositorio.autorizar(nombre)

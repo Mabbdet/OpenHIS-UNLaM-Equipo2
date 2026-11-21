@@ -1,0 +1,90 @@
+{
+  "actual": {
+    "hojas": [
+      "HU-UNLaM",
+      "Bitácora",
+      "Referencias"
+    ],
+    "imagenes_anteriores": 20,
+    "imagenes_finales": 24,
+    "valores_previos_actualizados": [
+      "HU-UNLaM!K38",
+      "HU-UNLaM!K46",
+      "HU-UNLaM!K47",
+      "Bitácora!F18",
+      "Bitácora!G18"
+    ],
+    "formulas_previas_conservadas": true,
+    "imagenes_previas_conservadas": true
+  },
+  "indice": {
+    "hojas": [
+      "HU-UNLaM",
+      "Bitácora",
+      "Referencias"
+    ],
+    "imagenes_anteriores": 20,
+    "imagenes_finales": 24,
+    "valores_previos_actualizados": [
+      "HU-UNLaM!K38",
+      "HU-UNLaM!K46",
+      "HU-UNLaM!K47",
+      "Bitácora!F18",
+      "Bitácora!G18"
+    ],
+    "formulas_previas_conservadas": true,
+    "imagenes_previas_conservadas": true
+  },
+  "base": {
+    "integridad": "ok",
+    "claves_foraneas": [],
+    "filas_previas_conservadas": true,
+    "excepcion": "Usuarios.ultimo_acceso",
+    "conteos": {
+      "Pacientes": {
+        "antes": 6,
+        "despues": 6
+      },
+      "Especialidades": {
+        "antes": 8,
+        "despues": 8
+      },
+      "SnomedCT": {
+        "antes": 1,
+        "despues": 1
+      },
+      "Farmacos": {
+        "antes": 6,
+        "despues": 6
+      },
+      "Prescripciones": {
+        "antes": 9,
+        "despues": 9
+      },
+      "SignosVitales": {
+        "antes": 4,
+        "despues": 5
+      },
+      "Usuarios": {
+        "antes": 4,
+        "despues": 4
+      },
+      "Auditoria": {
+        "antes": 49,
+        "despues": 63
+      },
+      "Profesionales": {
+        "antes": 8,
+        "despues": 8
+      },
+      "Practicas": {
+        "antes": 2,
+        "despues": 2
+      },
+      "RecursosFHIR": {
+        "antes": 7,
+        "despues": 11
+      }
+    }
+  }
+}

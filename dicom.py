@@ -2,10 +2,10 @@
 
 from io import BytesIO
 from pathlib import Path
-from datetime import date
+from datetime import date, datetime
 import hashlib
 
-from PIL import Image
+from PIL import Image, ImageOps
 import pydicom
 from pydicom.dataset import FileDataset, FileMetaDataset
 from pydicom.uid import ExplicitVRLittleEndian, SecondaryCaptureImageStorage, generate_uid
@@ -59,7 +59,7 @@ def _guardar(repo, ds, destino, descripcion):
     return path
 
 
-def convertir(repo, origen, destino, nacimiento='', estudio='', sexo=''):
+def convertir(repo, origen, destino, nacimiento='', estudio='', sexo='', *, metadatos=None):
     repo.autorizar('DICOM')
     nacimiento,estudio=_anio(nacimiento),_anio(estudio)
     if sexo not in ('','M','F','O'): raise ErrorValidacion('Sexo DICOM no válido.')
@@ -68,7 +68,7 @@ def convertir(repo, origen, destino, nacimiento='', estudio='', sexo=''):
     with Image.open(p) as imagen:
         if imagen.format not in ('PNG','JPEG') or imagen.width*imagen.height>40_000_000:
             raise ErrorValidacion('Use una imagen JPG/PNG de hasta 40 millones de píxeles.')
-        imagen=imagen.convert('L')
+        imagen=ImageOps.exif_transpose(imagen).convert('L')
         datos=imagen.tobytes();ancho,alto=imagen.size
     ds=_nuevo()
     ds.Rows=alto;ds.Columns=ancho;ds.SamplesPerPixel=1;ds.PhotometricInterpretation='MONOCHROME2'
@@ -76,6 +76,34 @@ def convertir(repo, origen, destino, nacimiento='', estudio='', sexo=''):
     ds.PixelData=datos+(b'\0' if len(datos)%2 else b'')
     ds.PatientBirthDate=nacimiento+'0101' if nacimiento else ''
     ds.StudyDate=estudio+'0101' if estudio else '';ds.PatientSex=sexo
+    if metadatos is not None:
+        campos={'patient_name':'PatientName','patient_id':'PatientID','study_description':'StudyDescription',
+                'series_description':'SeriesDescription','study_id':'StudyID','accession_number':'AccessionNumber',
+                'referring_physician':'ReferringPhysicianName','performing_physician':'PerformingPhysicianName',
+                'institution':'InstitutionName','institution_address':'InstitutionAddress','modality':'Modality'}
+        for clave,atributo in campos.items():
+            valor=str(metadatos.get(clave) or '').strip()
+            if valor:
+                maximo=1024 if clave=='institution_address' else 16 if clave in ('study_id','accession_number','modality') else 64
+                if len(valor)>maximo:raise ErrorValidacion(f'{clave}: máximo {maximo} caracteres.')
+                setattr(ds,atributo,valor)
+        for clave,atributo in [('birth_date','PatientBirthDate'),('study_date','StudyDate')]:
+            valor=str(metadatos.get(clave) or '').strip()
+            if valor:
+                try:parsed=date.fromisoformat(valor)
+                except ValueError:raise ErrorValidacion('Use fechas completas AAAA-MM-DD.') from None
+                if parsed.isoformat()!=valor or (clave=='birth_date' and parsed>date.today()):
+                    raise ErrorValidacion('Fecha de nacimiento inválida o futura.')
+                setattr(ds,atributo,parsed.strftime('%Y%m%d'))
+        hora=str(metadatos.get('study_time') or '').strip()
+        if hora:
+            try:ds.StudyTime=datetime.strptime(hora,'%H:%M').strftime('%H%M%S')
+            except ValueError:raise ErrorValidacion('Use hora HH:MM.') from None
+        sexo_meta=str(metadatos.get('sex') or '')
+        if sexo_meta not in ('','M','F','O'):raise ErrorValidacion('Sexo DICOM no válido.')
+        ds.PatientSex=sexo_meta
+        ds.PatientIdentityRemoved='NO'
+        if 'DeidentificationMethod' in ds:del ds.DeidentificationMethod
     return _guardar(repo,ds,destino,'Conversión JPG/PNG a Secondary Capture')
 
 

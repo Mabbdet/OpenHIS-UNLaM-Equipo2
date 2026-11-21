@@ -5,6 +5,9 @@ validador de todos los perfiles FHIR ni un cliente de servidores remotos.
 """
 
 from datetime import date, datetime, timezone
+from contextlib import nullcontext
+from dataclasses import dataclass
+import sqlite3
 from hashlib import sha256
 import json
 import math
@@ -69,9 +72,10 @@ def _xml(recurso):
     return ET.tostring(root, encoding='utf-8', xml_declaration=True).decode('utf-8')
 
 
-def leer(archivo):
+def leer(archivo, _contenido=None):
     p = Path(archivo)
-    if p.stat().st_size > 5_000_000:
+    contenido=p.read_bytes() if _contenido is None else _contenido
+    if len(contenido) > 5_000_000:
         raise ErrorValidacion('El intercambio supera el límite de 5 MB.')
     try:
         if p.suffix.lower() == '.json':
@@ -82,10 +86,10 @@ def leer(archivo):
                         raise ValueError('Clave JSON repetida')
                     d[k] = v
                 return d
-            datos = json.loads(p.read_text(encoding='utf-8-sig'), object_pairs_hook=sin_duplicados,
+            datos = json.loads(contenido.decode('utf-8-sig'), object_pairs_hook=sin_duplicados,
                                parse_constant=lambda x: (_ for _ in ()).throw(ValueError(x)))
         elif p.suffix.lower() == '.xml':
-            root = fromstring(p.read_bytes(), forbid_dtd=True)
+            root = fromstring(contenido, forbid_dtd=True)
             def convertir(e,padre=''):
                 if not e.tag.startswith('{'+NS+'}'):
                     raise ValueError('Namespace ajeno a FHIR')
@@ -265,15 +269,18 @@ def importar(repo, archivo, origen):
         raise ErrorValidacion('Estructura o tipo de dato no compatible con el perfil FHIR soportado.') from error
 
 
-def _importar(repo, archivo, origen):
+def _importar(repo, archivo, origen, _conexion=None, _bundle=None, _huella_esperada=None):
     from seguridad import _auditar
     repo.autorizar('FHIR')
     origen=str(origen).strip()
     if not origen: raise ErrorValidacion('Identifique la institución de origen del intercambio.')
-    bundle=leer(archivo);mapa=validar(bundle);s=repo._servicio
+    bundle=leer(archivo) if _bundle is None else _bundle
+    mapa=validar(bundle);s=repo._servicio
     resultado={'creados':{},'reutilizados':{},'omitidos':0,'conflictos':[]}
-    with s._repo.conectar() as c:
+    with (s._repo.conectar() if _conexion is None else nullcontext(_conexion)) as c:
         c.execute('BEGIN IMMEDIATE');actor=s._actor(c,repo._sesion,'FHIR')
+        if _huella_esperada is not None and huella_base(c)!=_huella_esperada:
+            raise ErrorValidacion('La base cambió después del análisis. Analice nuevamente antes de importar.')
         resueltos={}
         def insertar(tabla,datos):
             datos['usuario_alta_id']=actor['id']
@@ -311,6 +318,19 @@ def _importar(repo, archivo, origen):
         for key,r in mapa.items():
             if r['resourceType'] in ('Patient','Practitioner'):
                 resueltos[key]=resueltos[r['resourceType']+'/'+r['id']]
+        grupos={}
+        for e in bundle['entry']:
+            r=e['resource']
+            if r['resourceType']!='Observation':continue
+            if c.execute('SELECT 1 FROM RecursosFHIR WHERE origen=? AND tipo=? AND id_externo=?',(origen,'Observation',r['id'])).fetchone():continue
+            pid=resueltos[r['subject']['reference']]
+            pro=resueltos[r['performer'][0]['reference']]
+            momento=fecha(r['effectiveDateTime']);activo=int(r['status']!='entered-in-error')
+            g=grupos.setdefault((pid,pro,momento,activo),{'valores':{},'ids':{},'resueltos':None})
+            campo=LOINC[r['code']['coding'][0]['code']][0];valor=r['valueQuantity']['value']
+            if campo in g['valores'] and g['valores'][campo]!=valor:
+                raise ErrorValidacion('Observations del mismo paciente, profesional y fecha contienen valores contradictorios.')
+            g['valores'][campo]=valor;g['ids'][r['id']]=campo
         for e in bundle['entry']:
             r=e['resource'];t=r['resourceType']
             if t in ('Patient','Practitioner'): continue
@@ -334,22 +354,91 @@ def _importar(repo, archivo, origen):
                 nombre=cc.get('text') or coding.get('display')
                 if not nombre: raise ErrorValidacion('MedicationRequest requiere medicamento.')
                 codigo='FHIR-'+sha256((coding.get('system','')+'|'+coding.get('code',nombre)).encode()).hexdigest()[:24]
-                farmaco=catalogo('Farmacos',codigo,nombre)
+                existente=c.execute('SELECT id FROM Farmacos WHERE codigo=?',(coding.get('code',''),)).fetchone()
+                if existente is None:existente=c.execute('SELECT id FROM Farmacos WHERE lower(nombre)=lower(?)',(nombre,)).fetchone()
+                farmaco=existente[0] if existente else catalogo('Farmacos',codigo,nombre)
                 dos=r.get('dosageInstruction',[{}])[0]
+                dosis=dos.get('text') or ''
+                if not dosis:
+                    q=next(iter(dos.get('doseAndRate',[])),{}).get('doseQuantity',{})
+                    if q.get('value') is not None:dosis=f"{q['value']} {q.get('unit','')}".strip()
+                if not dosis:raise ErrorValidacion('MedicationRequest requiere dosis o indicaciones explícitas.')
+                via=dos.get('route',{}).get('text') or next(iter(dos.get('route',{}).get('coding',[])),{}).get('display') or 'No informada'
+                frecuencia=dos.get('timing',{}).get('code',{}).get('text') or ''
+                if not frecuencia:
+                    rep=dos.get('timing',{}).get('repeat',{})
+                    if rep:frecuencia=f"{rep.get('frequency','')} veces cada {rep.get('period','')} {rep.get('periodUnit','')}".strip()
                 tabla='Prescripciones';i=insertar(tabla,dict(paciente_id=pid,profesional_id=pro,farmaco_id=farmaco,
-                    dosis=dos.get('text') or 'No informada',via_administracion=dos.get('route',{}).get('text') or 'No informada',
-                    frecuencia=dos.get('timing',{}).get('code',{}).get('text') or 'No informada',
+                    dosis=dosis,via_administracion=via,
+                    frecuencia=frecuencia or 'No informada',
                     cantidad=r.get('dispenseRequest',{}).get('quantity',{}).get('value'),
                     indicaciones='\n'.join(n.get('text','') for n in r.get('note',[])),fecha_prescripcion=fecha(r['authoredOn']),activo=activo))
             else:
-                campo=LOINC[r['code']['coding'][0]['code']][0];valor=r['valueQuantity']['value'];momento=fecha(r['effectiveDateTime'])
-                # Se compara una fecha normalizada y la medición; no se duplica por cambiar el ID externo.
-                filas=c.execute(f'SELECT id,fecha_hora FROM SignosVitales WHERE paciente_id=? AND {campo}=?',(pid,valor)).fetchall()
-                existente=next((f['id'] for f in filas if fecha(f['fecha_hora'])==momento),None)
-                tabla='SignosVitales'
-                if existente: i=existente;resultado['omitidos']+=1
-                else: i=insertar(tabla,dict(paciente_id=pid,medico_id=pro,fecha_hora=momento,**{campo:valor},motivo_consulta='Observación FHIR externa',activo=activo))
+                momento=fecha(r['effectiveDateTime']);grupo=grupos[(pid,pro,momento,activo)]
+                if grupo['resueltos'] is None:
+                    resueltos_obs={};pendientes={}
+                    for campo,valor in grupo['valores'].items():
+                        filas=c.execute(f'SELECT id,fecha_hora FROM SignosVitales WHERE paciente_id=? AND {campo}=?',(pid,valor)).fetchall()
+                        existente=next((f['id'] for f in filas if fecha(f['fecha_hora'])==momento),None)
+                        if existente:resueltos_obs[campo]=(existente,True)
+                        else:pendientes[campo]=valor
+                    if pendientes:
+                        nuevo_id=insertar('SignosVitales',dict(paciente_id=pid,medico_id=pro,fecha_hora=momento,**pendientes,motivo_consulta='Observaciones FHIR agrupadas',activo=activo))
+                        for campo in pendientes:resueltos_obs[campo]=(nuevo_id,False)
+                    grupo['resueltos']=resueltos_obs
+                tabla='SignosVitales';i,omitido=grupo['resueltos'][grupo['ids'][r['id']]]
+                if omitido:resultado['omitidos']+=1
             c.execute('INSERT INTO RecursosFHIR (origen,tipo,id_externo,tabla_local,registro_id,contenido) VALUES (?,?,?,?,?,?)',
                       (origen,t,r['id'],tabla,i,serial))
         _auditar(c,actor,'RecursosFHIR',None,'I',nuevo=resultado,referencia=archivo)
     return resultado
+
+
+def huella_base(c):
+    tablas=('Pacientes','Profesionales','Especialidades','Farmacos','SnomedCT','SignosVitales','Prescripciones','Practicas','RecursosFHIR','sqlite_sequence')
+    datos={t:[dict(f) for f in c.execute(f'SELECT * FROM {t} ORDER BY rowid')] for t in tablas if t!='sqlite_sequence'}
+    datos['secuencias']=[tuple(f) for f in c.execute("SELECT name,seq FROM sqlite_sequence WHERE name!='Auditoria' ORDER BY name")]
+    datos['usuarios']=[tuple(f) for f in c.execute('SELECT id,rol,activo,version_sesion FROM Usuarios ORDER BY id')]
+    return sha256(json.dumps(datos,sort_keys=True,ensure_ascii=False).encode()).hexdigest()
+
+
+@dataclass(frozen=True)
+class PlanImportacion:
+    archivo: str
+    origen: str
+    huella_archivo: str
+    huella_bd: str
+    resumen: dict
+    contenido_json: str
+
+
+def preparar_importacion(repo, archivo, origen):
+    """Simula sobre un backup en RAM; no escribe ni audita en la base real."""
+    repo.autorizar('FHIR')
+    contenido=Path(archivo).read_bytes();bundle=leer(archivo,contenido)
+    memoria=sqlite3.connect(':memory:');memoria.row_factory=sqlite3.Row
+    try:
+        with repo._servicio._repo.conectar() as c:c.backup(memoria)
+        memoria.execute('PRAGMA foreign_keys=ON')
+        huella=huella_base(memoria)
+        ultimo=memoria.execute('SELECT COALESCE(MAX(id),0) FROM Auditoria').fetchone()[0]
+        resumen=_importar(repo,archivo,origen,_conexion=memoria,_bundle=bundle)
+        resumen['acciones']=[{'tabla':f['tabla_afectada'],'accion':f['tipo_accion'],
+            'datos':json.loads(f['datos_nuevos']) if f['datos_nuevos'] else None}
+            for f in memoria.execute("SELECT * FROM Auditoria WHERE id>? AND tabla_afectada!='RecursosFHIR' ORDER BY id",(ultimo,))]
+        return PlanImportacion(str(Path(archivo).resolve()),str(origen).strip(),sha256(contenido).hexdigest(),huella,resumen,json.dumps(bundle,ensure_ascii=False,indent=2))
+    except (KeyError,TypeError,AttributeError,IndexError,OverflowError) as error:
+        raise ErrorValidacion('El archivo no cumple el contrato FHIR soportado.') from error
+    finally:
+        memoria.close()
+
+
+def confirmar_importacion(repo, plan, *, confirmado):
+    repo.autorizar('FHIR')
+    if not confirmado:return None
+    if not isinstance(plan,PlanImportacion):raise ErrorValidacion('Analice primero el archivo.')
+    contenido=Path(plan.archivo).read_bytes()
+    if sha256(contenido).hexdigest()!=plan.huella_archivo:
+        raise ErrorValidacion('El archivo cambió después del análisis. Analícelo nuevamente.')
+    bundle=leer(plan.archivo,contenido)
+    return _importar(repo,plan.archivo,plan.origen,_bundle=bundle,_huella_esperada=plan.huella_bd)
