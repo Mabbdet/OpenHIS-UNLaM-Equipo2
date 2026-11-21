@@ -18,6 +18,9 @@ from esquema_seguridad import TABLAS_AUDITADAS
 
 ROLES = ("admin", "medico", "enfermero", "administrativo")
 PERMISOS = {
+    'Intervenciones': ('admin','medico','enfermero'),
+    'FHIR': ('admin',),
+    'DICOM': ('admin','medico','enfermero'),
     "Pacientes": ROLES,
     "Profesionales": ("admin", "administrativo"),
     "Signos vitales": ("admin", "medico", "enfermero"),

@@ -124,12 +124,12 @@ class AuditoriaApp(VentanaBase):
         barra.pack(fill="x", pady=8)
         self.tabla_filtro, self.accion = tk.StringVar(raiz), tk.StringVar(raiz)
         ttk.Label(barra, text="Tabla:").pack(side="left")
-        ttk.Combobox(barra, textvariable=self.tabla_filtro, values=("", "Usuarios", "Pacientes", "Profesionales", "SignosVitales", "Prescripciones", "Especialidades", "Farmacos", "SnomedCT"), state="readonly", width=20).pack(side="left", padx=6)
+        ttk.Combobox(barra, textvariable=self.tabla_filtro, values=("", "Usuarios", "Pacientes", "Profesionales", "SignosVitales", "Prescripciones", "Especialidades", "Farmacos", "SnomedCT", "Practicas", "RecursosFHIR", "DICOM"), state="readonly", width=20).pack(side="left", padx=6)
         ttk.Label(barra, text="Acción:").pack(side="left")
-        ttk.Combobox(barra, textvariable=self.accion, values=("", "A", "M", "B", "R", "L", "X", "E", "I", "C"), state="readonly", width=5).pack(side="left", padx=6)
+        ttk.Combobox(barra, textvariable=self.accion, values=("", "A", "M", "B", "R", "L", "X", "E", "I", "C", "Q"), state="readonly", width=5).pack(side="left", padx=6)
         ttk.Button(barra, text="Actualizar", command=lambda: self.intentar(self.refrescar)).pack(side="left", padx=8)
         ttk.Button(barra, text="Ver detalle", command=lambda: self.intentar(self.detalle)).pack(side="left", padx=8)
-        ttk.Label(self.cuerpo, text="A Alta · M Modificación · B Baja · R Reactivación · L Login · X Logout · E Exportación. Fechas en UTC.").pack(anchor="w", pady=8)
+        ttk.Label(self.cuerpo, text="A Alta · M Modificación · B Baja · R Reactivación · L Login · X Logout · E Exportación · I Importación · C Conflicto · Q Consulta. UTC.").pack(anchor="w", pady=8)
         marco, self.tabla = crear_tabla(self.cuerpo, (("id", "ID", 55), ("fecha", "Fecha UTC", 190),
             ("usuario", "Usuario autor", 180), ("tabla", "Tabla", 180),
             ("registro", "Registro", 80), ("accion", "Acción", 80)))

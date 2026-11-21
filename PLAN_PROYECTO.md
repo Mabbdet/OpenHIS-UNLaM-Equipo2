@@ -1,5 +1,13 @@
 # Plan de proyecto — OpenHIS-UNLaM — Equipo 2
 
+## Actualización — Entrega 9 / Sprint 5
+
+HU-08, HU-09 y HU-10 implementadas desde `develop` en `b6a31ab`, en la rama `develop-Entrega9`. Consulta consolidada con auditoría Q; Bundle FHIR R4 JSON/XML con importación transaccional y no duplicación por DNI; conversión JPG/PNG a Secondary Capture y anonimización básica con verificación de años, sexo, UID y píxeles.
+
+Se completaron las pruebas de los tres módulos y la regresión: 121 aprobadas sin omisiones. Cuatro capturas reales y resultados incorporados a Scrum. Demostración con institución externa sintética; no se realizó envío por correo. Trabajo iniciado el 20/11/2026 y cerrado el 21/11/2026 (Argentina). Las etapas de Entrega 10 y final permanecen pendientes.
+
+Detalle y límites en `docs/entrega-9.md`; reflexión en `docs/reflexion-entrega-9.md`. Se conservaron las correcciones previas sin commit y los archivos Arduino. Integración local a develop después de verificar, sin push automático.
+
 ## Actualización — Entrega 7 / Sprint 4 / HU-07
 
 Fuente: `Sist-Info-Salud-7.pdf`, páginas 4–10, 37–44 y 175–176. Login, gestión de usuarios, cuatro roles y auditoría implementados. Cada alta identifica al usuario autenticado; las operaciones y su log se confirman juntas. Hash PBKDF2-HMAC-SHA256 con sal, sesiones en memoria, protección del último admin y revocación de sesiones.

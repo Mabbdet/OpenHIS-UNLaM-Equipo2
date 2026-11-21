@@ -1,0 +1,15 @@
+{
+  "pixeles_identicos": true,
+  "sha256_pixeles": "231b8ff322bd8c079183256ed53e54088b7dc90bf76fcde4b94d333ce32e9449",
+  "privados_restantes": 0,
+  "PatientBirthDate": "19840101",
+  "StudyDate": "20260101",
+  "PatientSex": "F",
+  "uid_regenerados": {
+    "StudyInstanceUID": true,
+    "SeriesInstanceUID": true,
+    "SOPInstanceUID": true
+  },
+  "uid_archivo_coherente": true,
+  "limite": "Sin revisión automática de texto incrustado en píxeles; solo imágenes de un cuadro sin compresión."
+}

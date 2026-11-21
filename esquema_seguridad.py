@@ -16,7 +16,7 @@ def ampliar_seguridad(conexion):
         CREATE TABLE IF NOT EXISTS Auditoria (
             id INTEGER PRIMARY KEY AUTOINCREMENT, usuario_id INTEGER NOT NULL,
             usuario_nombre TEXT, tabla_afectada TEXT NOT NULL, registro_id INTEGER,
-            tipo_accion TEXT NOT NULL CHECK(tipo_accion IN ('A','M','B','R','L','X','E','I','C')),
+            tipo_accion TEXT NOT NULL CHECK(tipo_accion IN ('A','M','B','R','L','X','E','I','C','Q')),
             descripcion TEXT, datos_anteriores TEXT, datos_nuevos TEXT,
             fecha_hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             origen_sistema TEXT, origen_id_externo TEXT, payload_referencia TEXT,

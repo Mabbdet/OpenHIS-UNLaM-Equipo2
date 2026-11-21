@@ -1,0 +1,26 @@
+{
+  "importacion": {
+    "creados": {
+      "Especialidades": 1,
+      "Profesionales": 1,
+      "Practicas": 1,
+      "Farmacos": 1,
+      "Prescripciones": 1
+    },
+    "reutilizados": {
+      "Pacientes": 1
+    },
+    "omitidos": 5,
+    "conflictos": []
+  },
+  "reimportacion": {
+    "creados": {},
+    "reutilizados": {
+      "Pacientes": 1,
+      "Profesionales": 1
+    },
+    "omitidos": 7,
+    "conflictos": []
+  },
+  "paciente_id": 3
+}

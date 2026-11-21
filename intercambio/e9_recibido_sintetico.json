@@ -1,0 +1,299 @@
+{
+  "resourceType": "Bundle",
+  "id": "f7e1118a-c9d7-4f36-a7e2-33e0bf07d03c",
+  "identifier": {
+    "system": "urn:hospital-externo:sintetico",
+    "value": "c434a2c9-1bc6-4537-b08d-223b49c76c26"
+  },
+  "type": "collection",
+  "timestamp": "2026-11-21T02:54:18.191044+00:00",
+  "entry": [
+    {
+      "fullUrl": "https://openhis.example.invalid/fhir/Patient/p-3",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "p-3",
+        "identifier": [
+          {
+            "system": "urn:openhis:dni",
+            "value": "42123456"
+          }
+        ],
+        "active": true,
+        "name": [
+          {
+            "family": "López",
+            "given": [
+              "Ana"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1999-02-18"
+      }
+    },
+    {
+      "fullUrl": "https://openhis.example.invalid/fhir/Practitioner/pr-3",
+      "resource": {
+        "resourceType": "Practitioner",
+        "id": "pr-3",
+        "identifier": [
+          {
+            "system": "urn:openhis:dni",
+            "value": "99222003"
+          }
+        ],
+        "active": true,
+        "name": [
+          {
+            "family": "Externo ficticio",
+            "given": [
+              "Profesional"
+            ]
+          }
+        ],
+        "qualification": [
+          {
+            "identifier": [
+              {
+                "value": "EXT-E9-pr-3"
+              }
+            ],
+            "code": {
+              "text": "Pediatría"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "https://openhis.example.invalid/fhir/ServiceRequest/sr-1",
+      "resource": {
+        "resourceType": "ServiceRequest",
+        "id": "sr-1",
+        "status": "active",
+        "intent": "order",
+        "code": {
+          "coding": [
+            {
+              "system": "urn:openhis:practicas",
+              "code": "E9-PRAC-01",
+              "display": "Práctica sintética de intercambio Equipo 2"
+            }
+          ],
+          "text": "Práctica sintética de intercambio Equipo 2"
+        },
+        "subject": {
+          "reference": "Patient/p-3"
+        },
+        "authoredOn": "2026-11-21T02:54:18Z",
+        "requester": {
+          "reference": "Practitioner/pr-3"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://openhis.example.invalid/fhir/MedicationRequest/mr-3",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "mr-3",
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "urn:openhis:farmacos",
+              "code": "DEMO-FAR-3"
+            }
+          ],
+          "text": "Fármaco ficticio 3"
+        },
+        "subject": {
+          "reference": "Patient/p-3"
+        },
+        "authoredOn": "2026-09-14T01:55:44Z",
+        "requester": {
+          "reference": "Practitioner/pr-3"
+        },
+        "dosageInstruction": [
+          {
+            "text": "Dosis de prueba",
+            "timing": {
+              "code": {
+                "text": "Frecuencia de prueba"
+              }
+            },
+            "route": {
+              "text": "Vía de prueba"
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "quantity": {
+            "value": 1
+          }
+        },
+        "note": [
+          {
+            "text": "DEMO-PRES-3: registro ficticio sin uso clínico"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "https://openhis.example.invalid/fhir/Observation/obs-3-8480-6",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-3-8480-6",
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8480-6"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/p-3"
+        },
+        "effectiveDateTime": "2026-09-14T00:38:06Z",
+        "performer": [
+          {
+            "reference": "Practitioner/pr-3"
+          }
+        ],
+        "valueQuantity": {
+          "value": 120,
+          "unit": "mm[Hg]",
+          "system": "http://unitsofmeasure.org",
+          "code": "mm[Hg]"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://openhis.example.invalid/fhir/Observation/obs-3-8462-4",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-3-8462-4",
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8462-4"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/p-3"
+        },
+        "effectiveDateTime": "2026-09-14T00:38:06Z",
+        "performer": [
+          {
+            "reference": "Practitioner/pr-3"
+          }
+        ],
+        "valueQuantity": {
+          "value": 80,
+          "unit": "mm[Hg]",
+          "system": "http://unitsofmeasure.org",
+          "code": "mm[Hg]"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://openhis.example.invalid/fhir/Observation/obs-3-8867-4",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-3-8867-4",
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8867-4"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/p-3"
+        },
+        "effectiveDateTime": "2026-09-14T00:38:06Z",
+        "performer": [
+          {
+            "reference": "Practitioner/pr-3"
+          }
+        ],
+        "valueQuantity": {
+          "value": 74,
+          "unit": "/min",
+          "system": "http://unitsofmeasure.org",
+          "code": "/min"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://openhis.example.invalid/fhir/Observation/obs-3-8310-5",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-3-8310-5",
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8310-5"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/p-3"
+        },
+        "effectiveDateTime": "2026-09-14T00:38:06Z",
+        "performer": [
+          {
+            "reference": "Practitioner/pr-3"
+          }
+        ],
+        "valueQuantity": {
+          "value": 36.5,
+          "unit": "Cel",
+          "system": "http://unitsofmeasure.org",
+          "code": "Cel"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://openhis.example.invalid/fhir/Observation/obs-3-59408-5",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-3-59408-5",
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "59408-5"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/p-3"
+        },
+        "effectiveDateTime": "2026-09-14T00:38:06Z",
+        "performer": [
+          {
+            "reference": "Practitioner/pr-3"
+          }
+        ],
+        "valueQuantity": {
+          "value": 98,
+          "unit": "%",
+          "system": "http://unitsofmeasure.org",
+          "code": "%"
+        }
+      }
+    }
+  ]
+}

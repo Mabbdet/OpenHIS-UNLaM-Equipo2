@@ -1,6 +1,21 @@
 # OpenHIS-UNLaM — Equipo 2
 
-## Estado actual — Entrega 7 / Sprint 4
+## Estado actual — Entrega 9 / Sprint 5
+
+Consulta consolidada y auditada de intervenciones, intercambio FHIR R4 JSON/XML con importación efectiva y herramientas DICOM de conversión/anonimización básica. **121 pruebas aprobadas, ninguna omitida.**
+
+```powershell
+python -m pip install -r requirements.txt
+python OpenHIS_app.pyw
+```
+
+Cuentas ficticias de demostración: `admin / admin123`, `medico_equipo2 / medico123`, `enfermero_equipo2 / enfermero123`, `administrativo_equipo2 / administrativo123`. Intervenciones y DICOM admiten admin/médico/enfermero; FHIR es de administrador. Todos los accesos independientes piden login.
+
+Entradas: `_Consulta_intervenciones.pyw`, `_Interoperabilidad_FHIR.pyw`, `_Herramientas_Dicom.pyw`. El menú principal también las integra. La importación reutiliza DNI activos/inactivos y conserva registros locales; el mismo recurso externo no se duplica al repetir el archivo. Auditoría Q/E/I/C y autor de los registros recibidos.
+
+Archivos de intercambio en `intercambio/`. Capturas, imagen sintética, DICOM y verificación de metadatos en `evidencias/entrega9/`; las cuatro capturas están embebidas en Scrum. La anonimización conserva solo años/sexo y atributos técnicos; requiere revisar datos incrustados en los píxeles. El perfil FHIR soportado y las limitaciones están en [docs/entrega-9.md](docs/entrega-9.md).
+
+## Referencia histórica — Entrega 7 / Sprint 4
 
 El sistema ahora exige login, limita los módulos por rol y registra autoría y auditoría. Ejecutar `python OpenHIS_app.pyw` o `python Menu_principal_app.pyw`.
 

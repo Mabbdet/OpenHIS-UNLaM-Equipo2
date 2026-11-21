@@ -1,5 +1,13 @@
 # Verificación de los incrementos
 
+## Entrega 9 — Intervenciones, FHIR y DICOM
+
+**121 pruebas aprobadas, ninguna omitida**, con `.venv/Scripts/python.exe -m pytest -q -rs -p no:cacheprovider`. Incluye 96 pruebas anteriores con la matriz de permisos ampliada, y 25 casos nuevos: ida/vuelta JSON/XML, persistencia y asociaciones, DNI inactivos, profesional externo incompleto, reimportaciones, duplicación de Observation, errores de formato/referencias/fechas/unidades, XML hostil, permisos y rollback si falla auditoría.
+
+Se ejecutaron los callbacks reales de consulta, registro de práctica, exportación/importación FHIR, conversión DICOM, anonimización y lectura de metadatos. DICOM conserva el hash de píxeles, regenera estudio/serie/instancia y elimina privados y secuencias. Se revisaron las cuatro capturas de las interfaces y las evidencias embebidas en Scrum.
+
+Base comparada con el respaldo anterior: ningún valor preexistente de pacientes, profesionales, signos, prescripciones, catálogos o auditoría fue sobrescrito. Las cuentas se conservan; su último acceso se actualizó al utilizarlas. Se agregaron una especialidad no informada, un profesional externo, un fármaco externo, una prescripción y dos prácticas (local y recibida). Integridad SQLite `ok`, sin violaciones de claves foráneas. Trabajo iniciado el 20 y cerrado el 21/11/2026 (Argentina); auditoría UTC.
+
 ## Entrega 7 — Seguridad y auditoría
 
 Ejecución del 20/11/2026 (Argentina): **96 pruebas aprobadas, ninguna omitida**, con `.venv/Scripts/python.exe -m pytest -q -rs -p no:cacheprovider`. Incluye regresión, los cuatro roles, login válido e inválido, bajas y reactivación de usuarios, último admin, revocación entre instancias, hash con sal y migración desde SHA-256, autoría, valores anteriores/nuevos y rollback ante fallo de auditoría. El menú de Entrega 5 se prueba con una sesión de administrador.
