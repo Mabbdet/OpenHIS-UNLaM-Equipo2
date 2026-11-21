@@ -1,0 +1,59 @@
+Corrección de compatibilidad FHIR - 21/11/2026 (Argentina)
+
+La app permite importar observaciones sin profesional informado y conserva
+esas mediciones al exportar nuevamente JSON o XML. No atribuye los signos al
+profesional de la receta. El usuario que realiza la importación queda registrado
+como autor del alta y en auditoría.
+
+MIGRACIÓN Y VALIDACIONES
+
+SignosVitales incorpora origen_fhir. Al iniciar la aplicación, la migración
+repetible agrega ese campo sin cambiar registros anteriores. SQLite acepta
+profesional desconocido en una nueva fila solo si identifica su origen FHIR.
+Las altas manuales siguen exigiendo un profesional. Se conservan la prohibición
+de quitar un profesional ya asociado y el origen de los signos externos sin él.
+
+Un performer ausente es distinto de uno declarado con referencia inválida.
+Las referencias rotas se rechazan. Prescripciones y prácticas siguen exigiendo
+su profesional. El modelo local admite un único responsable por observación:
+una lista con varios se rechaza explícitamente para evitar perder asociaciones.
+
+El preanálisis y el resultado auditado incluyen advertencias sobre observaciones
+sin responsable, fechas sin zona, titulaciones incompletas y ausencia de prácticas.
+El contenido original de cada recurso permanece en RecursosFHIR.
+
+Las fechas sin zona mantienen la convención UTC de la aplicación, ahora visible
+antes de confirmar. Esto no determina cuál era la zona real del emisor.
+No se inventan prácticas ni se completan datos clínicos faltantes del archivo.
+
+VERIFICACIÓN
+
+157 pruebas aprobadas, ninguna omitida, en 67,75 segundos:
+  .venv/Scripts/python.exe -m pytest -q -rs -p no:cacheprovider
+
+Quince casos nuevos cubren análisis/cancelación sin escritura, importación,
+reimportación, reexportación JSON/XML y recepción en otra base, referencias
+inválidas, prescriptor obligatorio, protección de altas locales, migración desde
+el trigger anterior, conservación del origen y de identidades inactivas,
+advertencias y auditoría.
+
+El ZIP original de Lautaro se probó con el código corregido sobre una copia de
+la base. Ingresaron tres pacientes, dos profesionales, tres prescripciones y
+diez observaciones agrupadas en tres registros. La reimportación no agregó
+duplicados. La reexportación conservó las diez mediciones en JSON y XML; esas
+salidas pasaron el JSON Schema oficial y pudieron importarse en otra base.
+
+El ZIP propio del Equipo 2 mantiene sus tres archivos validados con el esquema
+JSON oficial. Esa comprobación no equivale al validador integral de perfiles
+y terminologías de HL7 ni prueba la recepción en la app del otro grupo.
+
+Resultado detallado: intercambio/verificacion_compatibilidad_fhir.json.
+El informe analisis_interoperabilidad_lautaro describe el estado previo a esta
+corrección. La base real, ambos ZIP y los cambios anteriores del usuario se
+conservaron intactos; la importación de Lautaro se ejecutó en copias temporales.
+
+REFERENCIAS
+
+https://hl7.org/fhir/R4/observation-definitions.html#Observation.performer
+https://hl7.org/fhir/R4/datatypes.html#dateTime
+https://hl7.org/fhir/R4/downloads.html

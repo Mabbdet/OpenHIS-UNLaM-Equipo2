@@ -48,7 +48,8 @@ def ampliar_esquema(conexion):
     relaciones = conexion.execute("PRAGMA foreign_key_list(SignosVitales)").fetchall()
     if not any(fila["from"] == "medico_id" and fila["table"] == "Profesionales" for fila in relaciones):
         # No se inventa quién registró una medición histórica sin autor.
-        # La FK acepta esos NULL heredados, pero los triggers prohíben nuevas altas sin médico.
+        # La FK acepta NULL históricos. Las altas locales requieren médico;
+        # ampliar_intercambio admite también signos externos con origen identificado.
         conexion.execute("BEGIN")
         secuencia = conexion.execute("SELECT seq FROM sqlite_sequence WHERE name='SignosVitales'").fetchone()
         conexion.execute("""

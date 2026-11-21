@@ -122,6 +122,40 @@ def leer(archivo, _contenido=None):
         raise ErrorValidacion(f'Intercambio FHIR inválido: {error}') from error
 
 
+def _referencia_profesional(recurso):
+    if recurso['resourceType'] != 'Observation':
+        return recurso.get('requester', {}).get('reference')
+    responsables = recurso.get('performer', [])
+    if not isinstance(responsables, list) or len(responsables) > 1:
+        raise ErrorValidacion('El modelo local admite un solo profesional por Observation.')
+    if not responsables:
+        return None
+    referencia = responsables[0].get('reference') if isinstance(responsables[0], dict) else None
+    if not isinstance(referencia, str) or not referencia:
+        raise ErrorValidacion('El performer declarado requiere una referencia a un profesional.')
+    return referencia
+
+
+def _advertencias(bundle):
+    recursos = [e['resource'] for e in bundle['entry']]
+    avisos = []
+    desconocidos = sum(r['resourceType'] == 'Observation' and not r.get('performer') for r in recursos)
+    if desconocidos:
+        avisos.append(f'{desconocidos} observaciones sin profesional informado: se conservará como desconocido, sin atribuirlas al prescriptor.')
+    sin_zona = 0
+    for r in recursos:
+        valor = r.get('effectiveDateTime') if r['resourceType'] == 'Observation' else r.get('authoredOn')
+        if valor and len(str(valor)) > 10 and datetime.fromisoformat(str(valor).replace('Z', '+00:00')).tzinfo is None:
+            sin_zona += 1
+    if sin_zona:
+        avisos.append(f'{sin_zona} fechas sin zona horaria: se interpretarán como UTC según la convención local. El emisor no informó la zona original.')
+    if any(r['resourceType'] == 'Practitioner' and any(not q.get('code') for q in r.get('qualification', [])) for r in recursos):
+        avisos.append('Hay titulaciones sin code en el archivo recibido; la especialidad ausente permanecerá no informada.')
+    if not any(r['resourceType'] == 'ServiceRequest' for r in recursos):
+        avisos.append('El lote no contiene prácticas (ServiceRequest).')
+    return avisos
+
+
 def validar(bundle):
     if not isinstance(bundle, dict) or bundle.get('resourceType') != 'Bundle' or bundle.get('type') != 'collection':
         raise ErrorValidacion('Se requiere un Bundle FHIR de tipo collection.')
@@ -163,9 +197,11 @@ def validar(bundle):
                 raise ErrorValidacion('Género FHIR no válido.')
         else:
             paciente = mapa.get(r.get('subject', {}).get('reference'))
-            ref_prof = r.get('requester', {}).get('reference') or next(iter(r.get('performer', [])), {}).get('reference')
+            ref_prof = _referencia_profesional(r)
             profesional = mapa.get(ref_prof)
-            if not paciente or paciente['resourceType'] != 'Patient' or not profesional or profesional['resourceType'] != 'Practitioner':
+            if not paciente or paciente['resourceType'] != 'Patient':
+                raise ErrorValidacion('Las referencias deben resolver a Patient y Practitioner incluidos en el Bundle.')
+            if (t != 'Observation' or ref_prof is not None) and (not profesional or profesional['resourceType'] != 'Practitioner'):
                 raise ErrorValidacion('Las referencias deben resolver a Patient y Practitioner incluidos en el Bundle.')
             fecha(r.get('effectiveDateTime') if t == 'Observation' else r.get('authoredOn'))
             if t == 'Observation':
@@ -236,14 +272,13 @@ def exportar(repo, paciente_id, destino, formato='json'):
                 **({'dispenseRequest':{'quantity':{'value':f['cantidad']}}} if f['cantidad'] is not None else {}),
                 **({'note':[{'text':f['indicaciones']}]} if f['indicaciones'] else {})})
         for f in signos:
-            if not f['medico_id']: continue
             for code,(campo,unidad) in LOINC.items():
                 if f[campo] is not None:
                     recursos.append({'resourceType':'Observation','id':f"obs-{f['id']}-{code}",
                         'status':'final' if f['activo'] else 'entered-in-error',
                         'code':{'coding':[{'system':'http://loinc.org','code':code}]},
                         'subject':{'reference':'Patient/p-'+str(paciente_id)},'effectiveDateTime':fecha(f['fecha_hora']),
-                        'performer':[{'reference':'Practitioner/pr-'+str(f['medico_id'])}],
+                        **({'performer':[{'reference':'Practitioner/pr-'+str(f['medico_id'])}]} if f['medico_id'] else {}),
                         'valueQuantity':{'value':f[campo],'unit':unidad,'system':'http://unitsofmeasure.org','code':unidad}})
         bundle={'resourceType':'Bundle','id':str(uuid4()),'identifier':{'system':'urn:openhis:equipo2','value':str(uuid4())},
                 'type':'collection','timestamp':datetime.now(timezone.utc).isoformat(),
@@ -276,7 +311,7 @@ def _importar(repo, archivo, origen, _conexion=None, _bundle=None, _huella_esper
     if not origen: raise ErrorValidacion('Identifique la institución de origen del intercambio.')
     bundle=leer(archivo) if _bundle is None else _bundle
     mapa=validar(bundle);s=repo._servicio
-    resultado={'creados':{},'reutilizados':{},'omitidos':0,'conflictos':[]}
+    resultado={'creados':{},'reutilizados':{},'omitidos':0,'conflictos':[], 'advertencias':_advertencias(bundle)}
     with (s._repo.conectar() if _conexion is None else nullcontext(_conexion)) as c:
         c.execute('BEGIN IMMEDIATE');actor=s._actor(c,repo._sesion,'FHIR')
         if _huella_esperada is not None and huella_base(c)!=_huella_esperada:
@@ -324,7 +359,8 @@ def _importar(repo, archivo, origen, _conexion=None, _bundle=None, _huella_esper
             if r['resourceType']!='Observation':continue
             if c.execute('SELECT 1 FROM RecursosFHIR WHERE origen=? AND tipo=? AND id_externo=?',(origen,'Observation',r['id'])).fetchone():continue
             pid=resueltos[r['subject']['reference']]
-            pro=resueltos[r['performer'][0]['reference']]
+            referencia_profesional = _referencia_profesional(r)
+            pro=resueltos[referencia_profesional] if referencia_profesional else None
             momento=fecha(r['effectiveDateTime']);activo=int(r['status']!='entered-in-error')
             g=grupos.setdefault((pid,pro,momento,activo),{'valores':{},'ids':{},'resueltos':None})
             campo=LOINC[r['code']['coding'][0]['code']][0];valor=r['valueQuantity']['value']
@@ -340,8 +376,8 @@ def _importar(repo, archivo, origen, _conexion=None, _bundle=None, _huella_esper
                 if anterior[0]!=serial: raise ErrorValidacion('El ID externo ya existe con contenido distinto. Importación cancelada.')
                 resultado['omitidos']+=1;continue
             pid=resueltos[r['subject']['reference']]
-            profesional_ref=r.get('requester',{}).get('reference') or r['performer'][0]['reference']
-            pro=resueltos[profesional_ref]
+            profesional_ref=_referencia_profesional(r)
+            pro=resueltos[profesional_ref] if profesional_ref else None
             activo=int(r.get('status') not in ('cancelled','revoked','stopped','entered-in-error'))
             if t=='ServiceRequest':
                 cc=r.get('code',{});coding=cc.get('coding',[{}])[0]
@@ -383,7 +419,7 @@ def _importar(repo, archivo, origen, _conexion=None, _bundle=None, _huella_esper
                         if existente:resueltos_obs[campo]=(existente,True)
                         else:pendientes[campo]=valor
                     if pendientes:
-                        nuevo_id=insertar('SignosVitales',dict(paciente_id=pid,medico_id=pro,fecha_hora=momento,**pendientes,motivo_consulta='Observaciones FHIR agrupadas',activo=activo))
+                        nuevo_id=insertar('SignosVitales',dict(paciente_id=pid,medico_id=pro,fecha_hora=momento,**pendientes,motivo_consulta='Observaciones FHIR agrupadas',activo=activo,origen_fhir=origen))
                         for campo in pendientes:resueltos_obs[campo]=(nuevo_id,False)
                     grupo['resueltos']=resueltos_obs
                 tabla='SignosVitales';i,omitido=grupo['resueltos'][grupo['ids'][r['id']]]

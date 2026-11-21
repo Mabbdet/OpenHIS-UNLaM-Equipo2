@@ -61,3 +61,22 @@ def ampliar_intercambio(c):
         );
         CREATE INDEX IF NOT EXISTS idx_practicas_paciente ON Practicas(paciente_id,fecha_solicitud);
     """)
+    # El responsable de una observación externa es opcional. Las altas locales
+    # conservan el requisito de seleccionar un profesional.
+    columnas = {r['name'] for r in c.execute('PRAGMA table_info(SignosVitales)')}
+    if 'origen_fhir' not in columnas:
+        c.execute('ALTER TABLE SignosVitales ADD COLUMN origen_fhir TEXT')
+    trigger = c.execute("SELECT sql FROM sqlite_master WHERE type='trigger' AND name='signos_medico_requerido'").fetchone()
+    if trigger and 'origen_fhir' not in trigger[0]:
+        c.execute('DROP TRIGGER signos_medico_requerido')
+    c.executescript("""
+        CREATE TRIGGER IF NOT EXISTS signos_medico_requerido
+        BEFORE INSERT ON SignosVitales
+        WHEN NEW.medico_id IS NULL AND COALESCE(trim(NEW.origen_fhir),'')=''
+        BEGIN SELECT RAISE(ABORT, 'Seleccione un profesional para registrar signos vitales.'); END;
+        CREATE TRIGGER IF NOT EXISTS signos_conservar_origen_fhir
+        BEFORE UPDATE OF origen_fhir ON SignosVitales
+        WHEN NEW.medico_id IS NULL AND COALESCE(trim(OLD.origen_fhir),'')<>''
+             AND COALESCE(trim(NEW.origen_fhir),'')=''
+        BEGIN SELECT RAISE(ABORT, 'Conserve el origen FHIR del signo sin profesional informado.'); END;
+    """)
