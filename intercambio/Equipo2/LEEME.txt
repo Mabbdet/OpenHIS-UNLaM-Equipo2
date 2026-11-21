@@ -1,0 +1,39 @@
+OpenHIS-UNLaM - Equipo 2
+Exportación FHIR R4 en JSON
+
+Tres archivos, uno por paciente, generados con el exportador de nuestra app.
+Datos ficticios de práctica. Emisor / institución de origen: Equipo 2.
+
+CONTENIDO
+FHIR_40123456_Equipo2.json
+  María González - DNI 40123456
+  1 Patient, 2 Practitioner, 3 MedicationRequest, 5 Observation
+FHIR_41123456_Equipo2.json
+  Juan Pérez - DNI 41123456
+  1 Patient, 1 Practitioner, 1 MedicationRequest, 5 Observation
+FHIR_42123456_Equipo2.json
+  Ana López - DNI 42123456
+  1 Patient, 2 Practitioner, 2 ServiceRequest, 2 MedicationRequest, 9 Observation
+
+El archivo FHIR_42123456_Equipo2.json (Ana López) contiene Patient,
+Practitioner, ServiceRequest y MedicationRequest, además de Observation:
+es el caso con el contenido obligatorio del práctico integrador.
+María González y Juan Pérez son casos adicionales con signos y prescripciones;
+no tienen prácticas registradas en nuestra app.
+
+Se conservan todos los profesionales y el historial del paciente, incluidas
+prescripciones inactivas y datos externos ya incorporados. Los datos
+desconocidos permanecen desconocidos. Cada Bundle contiene sus referencias.
+
+IMPORTACIÓN
+Descomprimir el ZIP e importar los archivos .json, uno por paciente.
+Identificar el origen como Equipo 2 y conservarlo al repetir una importación.
+Los identificadores fullUrl usan un dominio de ejemplo: no se descargan.
+
+VERIFICACIÓN
+JSON y referencias validados con la app. Los tres archivos se importaron
+en una instalación vacía de prueba; al repetirlos no se crearon duplicados.
+
+NOMBRE DEL PAQUETE
+La consigna propone el apellido del alumno como nombre sugerido.
+Este paquete se identifica como Equipo 2.

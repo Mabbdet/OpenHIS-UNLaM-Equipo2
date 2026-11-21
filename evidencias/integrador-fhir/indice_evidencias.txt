@@ -1,0 +1,39 @@
+Integrador FHIR - Capturas y reflexión
+
+Las cinco capturas se incorporaron a Bitácora desde la fila 892.
+La reflexión individual de dos párrafos está desde la fila 1060 y también en
+docs/reflexion-integrador-fhir.txt.
+
+01_importacion_real.jpg
+  Base principal. La pantalla muestra el resumen guardado de la importación
+  realizada y la comprobación de los recursos que permanecen en Salud.db.
+  No representa una segunda alta de esos registros.
+
+02_asociaciones_reales.jpg
+  Base principal. Consulta de Bart Simpson (HC 7, DNI 44895843), con los signos
+  recibidos y la prescripción asociada a Julius Hibbert. La ausencia de prácticas
+  coincide con el contenido del archivo del remitente.
+
+03_reimportacion_sin_duplicados.jpg
+  Base principal. Reimportación del JSON de Bart confirmada desde la interfaz:
+  cero altas, paciente y profesional reutilizados, cuatro recursos omitidos.
+  Los conteos antes/después están en reimportacion_gui_real.json.
+
+04_inactivos_sin_duplicados.jpg
+  Copia temporal de prueba. Se desactivaron el paciente HC 7 y el profesional
+  ID 9 y se repitió la importación. Se conservaron ambos ID y estados inactivos,
+  sin crear fichas ni intervenciones duplicadas. La base principal conservó sus
+  estados. Resultado completo: inactivos_verificacion.json.
+
+05_servicerequest_local.jpg
+  Base de demostración. Consulta de la práctica E9-PRAC-01 y la prescripción,
+  asociadas a Ana López y Sofía Demo. Es un ejemplo propio del Equipo 2,
+  identificado como tal; no es una práctica recibida de Lautaro ni del grupo 7.
+  Resultado: captura_practica_local_verificacion.json.
+
+Se conservaron las 24 imágenes anteriores y se agregaron estas cinco.
+Las fórmulas, valores y combinaciones anteriores se mantienen, incluida la
+referencia rota histórica HU-UNLaM!I20, ajena a este trabajo.
+
+El envío del correo fue informado como realizado por Alejandro. Su captura
+no está incorporada a los archivos de estas evidencias.

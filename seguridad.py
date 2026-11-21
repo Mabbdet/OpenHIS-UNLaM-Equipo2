@@ -18,6 +18,12 @@ from esquema_seguridad import TABLAS_AUDITADAS
 
 ROLES = ("admin", "medico", "enfermero", "administrativo")
 PERMISOS = {
+    'Agenda profesional': ('admin', 'administrativo'),
+    'Configurar agenda': ('admin',),
+    'Turnos': ('admin', 'administrativo'),
+    'Agenda y recordatorios': ('admin', 'administrativo'),
+    'Historia clínica': ('admin', 'medico', 'enfermero'),
+    'Registrar HCE': ('admin', 'medico'),
     'Intervenciones': ('admin','medico','enfermero'),
     'FHIR': ('admin',),
     'DICOM': ('admin','medico','enfermero'),

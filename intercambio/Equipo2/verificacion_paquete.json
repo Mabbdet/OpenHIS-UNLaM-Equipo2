@@ -1,0 +1,145 @@
+{
+  "fecha_utc": "2026-11-21T03:49:51.808893+00:00",
+  "emisor": "Equipo 2",
+  "zip": "intercambio/[OpenHIS-UNLaM]Exportacion-FHIR-Equipo-2.zip",
+  "sha256_zip": "871970fdf184d86b8569c32ee2f825cf2ec9c47094373be4ece09d8fe7760aa2",
+  "recursos_por_archivo": [
+    {
+      "archivo": "FHIR_40123456_Equipo2.json",
+      "paciente": "María González",
+      "dni": "40123456",
+      "recursos": {
+        "Patient": 1,
+        "Practitioner": 2,
+        "MedicationRequest": 3,
+        "Observation": 5
+      },
+      "sha256": "ed2170c78f08133d05e9b6c60984c0008145eaf966321b0cf0bdf157aeb666e6",
+      "contenido_obligatorio_integrador": false
+    },
+    {
+      "archivo": "FHIR_41123456_Equipo2.json",
+      "paciente": "Juan Pérez",
+      "dni": "41123456",
+      "recursos": {
+        "Patient": 1,
+        "Practitioner": 1,
+        "MedicationRequest": 1,
+        "Observation": 5
+      },
+      "sha256": "5ed677b40c54870a094dc38160407fac8fe28db297d28c30df969a220430cee5",
+      "contenido_obligatorio_integrador": false
+    },
+    {
+      "archivo": "FHIR_42123456_Equipo2.json",
+      "paciente": "Ana López",
+      "dni": "42123456",
+      "recursos": {
+        "Patient": 1,
+        "Practitioner": 2,
+        "ServiceRequest": 2,
+        "MedicationRequest": 2,
+        "Observation": 9
+      },
+      "sha256": "0b51ec34ae764a0c8b2011aba2d48cdf78e96f2a8290d60b236228f11546d1bc",
+      "contenido_obligatorio_integrador": true
+    }
+  ],
+  "primera_importacion": [
+    {
+      "archivo": "FHIR_40123456_Equipo2.json",
+      "resultado": {
+        "creados": {
+          "Pacientes": 1,
+          "Especialidades": 1,
+          "Profesionales": 2,
+          "Farmacos": 1,
+          "Prescripciones": 3,
+          "SignosVitales": 1
+        },
+        "reutilizados": {},
+        "omitidos": 0,
+        "conflictos": []
+      }
+    },
+    {
+      "archivo": "FHIR_41123456_Equipo2.json",
+      "resultado": {
+        "creados": {
+          "Pacientes": 1,
+          "Profesionales": 1,
+          "Farmacos": 1,
+          "Prescripciones": 1,
+          "SignosVitales": 1
+        },
+        "reutilizados": {},
+        "omitidos": 0,
+        "conflictos": []
+      }
+    },
+    {
+      "archivo": "FHIR_42123456_Equipo2.json",
+      "resultado": {
+        "creados": {
+          "Pacientes": 1,
+          "Profesionales": 2,
+          "Practicas": 2,
+          "Farmacos": 1,
+          "Prescripciones": 2,
+          "SignosVitales": 2
+        },
+        "reutilizados": {},
+        "omitidos": 0,
+        "conflictos": []
+      }
+    }
+  ],
+  "segunda_importacion": [
+    {
+      "archivo": "FHIR_40123456_Equipo2.json",
+      "resultado": {
+        "creados": {},
+        "reutilizados": {
+          "Pacientes": 1,
+          "Profesionales": 2
+        },
+        "omitidos": 8,
+        "conflictos": []
+      }
+    },
+    {
+      "archivo": "FHIR_41123456_Equipo2.json",
+      "resultado": {
+        "creados": {},
+        "reutilizados": {
+          "Pacientes": 1,
+          "Profesionales": 1
+        },
+        "omitidos": 6,
+        "conflictos": []
+      }
+    },
+    {
+      "archivo": "FHIR_42123456_Equipo2.json",
+      "resultado": {
+        "creados": {},
+        "reutilizados": {
+          "Pacientes": 1,
+          "Profesionales": 2
+        },
+        "omitidos": 13,
+        "conflictos": []
+      }
+    }
+  ],
+  "reimportacion_sin_duplicados": true,
+  "integridad_receptor": "ok",
+  "violaciones_claves_foraneas": [],
+  "fuente": "BD/Salud.db",
+  "sha256_bd_antes": "734526a1581fe48e30b34b7b492a7c256fd51e493cfb312feb5436e576d1ab02",
+  "sha256_bd_despues": "734526a1581fe48e30b34b7b492a7c256fd51e493cfb312feb5436e576d1ab02",
+  "base_de_la_app_sin_cambios": true,
+  "cambios_previos_sin_commit_preservados": true,
+  "zip_crc": "ok",
+  "envio_realizado": false
+}

@@ -1,5 +1,9 @@
 # Plan de proyecto — OpenHIS-UNLaM — Equipo 2
 
+## Ampliación opcional — Turnero web
+
+Implementado el 21/11/2026 en `develop-EntregaFinal`: portal de pacientes sobre la misma base del turnero telefónico, acceso individual habilitado por el personal, consulta de disponibilidad y gestión de reservas propias. Canales WEB/TELEFONO con auditoría, control transaccional de horarios y sesiones revocables. Verificación: 202 casos de regresión completa más dos casos adicionales del escritorio; cuatro capturas y verificación del flujo real en `evidencias/turnero-web/`. Uso y alcance en `docs/turnero-web.txt`. Funciona localmente. El cierre documental de turnero telefónico/HCE en Scrum sigue pendiente.
+
 ## Actualización — Entrega 10 / Cierre técnico del Epic 2
 
 Trabajo del 21/11/2026 (Argentina), rama `develop-Entrega10` desde `0b31f12`. Fuente: `Sist-Info-Salud-10.pdf`, páginas 7–27 y 42–45. HU-08/HU-09/HU-10: tercera pestaña DICOM con imagen y metadatos completos, conversión vinculada a fichas, auditoría de visualizaciones e importación FHIR con análisis previo y confirmación explícita. Las observaciones se agrupan sin sobrescribir registros históricos; los fármacos se reutilizan por código o nombre.
@@ -30,7 +34,7 @@ Estado: planificación inicial conservada como historial, con actualización de 
 
 ## Actualización — Entrega 5 / Cierre de Sprint 3
 
-Fuente: `Sist-Info-Salud-5.pdf`, páginas 89–90 y ejemplos docentes. Alejandro continúa como único responsable de implementación, pruebas y documentación.
+Fuente: `Sist-Info-Salud-5.pdf`, páginas 89–90 y ejemplos docentes. Equipo: Alejandro, Scrum Master y desarrollador, y Leonel, desarrollador. Ambos comparten implementación, pruebas y documentación. María Susana Burioni figura como Product Owner.
 
 - Rama `develop-Entrega5` desde `develop` en `8a12cfc`, integración local después de las verificaciones, sin push automático.
 - Bajas lógicas, reactivaciones individuales, filtros por estado y conservación de relaciones en pacientes, profesionales, signos y prescripciones. No hay cascadas de estado.
@@ -44,7 +48,7 @@ Matriz de requisitos y límites en `docs/entrega-5.md`; resultados en `docs/veri
 
 ## Actualización — Entrega 4 / Sprint 3
 
-La solicitud posterior amplía el alcance con `Guia_Entregas_1_2_3_y_4_OpenHIS_UNLaM.md`. Alejandro es el único integrante y asume desarrollo, coordinación, documentación y pruebas; el profesor figura como Product Owner. Los pendientes y exclusiones del plan inicial que aparecen más abajo corresponden a su fecha de elaboración.
+La solicitud posterior amplía el alcance con `Guia_Entregas_1_2_3_y_4_OpenHIS_UNLaM.md`. Alejandro y Leonel comparten desarrollo, documentación y pruebas; el primero coordina como Scrum Master y el profesor figura como Product Owner. Los pendientes y exclusiones del plan inicial que aparecen más abajo corresponden a su fecha de elaboración.
 
 - Rama `develop-Entrega4` creada desde `develop`, con integración después de las verificaciones, siguiendo el procedimiento de las entregas anteriores.
 - HU-04: especialidades, SNOMED local y fármacos; HU-05: profesionales y especialidad; asociación obligatoria del profesional en los nuevos signos vitales.
@@ -134,7 +138,7 @@ Definir un responsable y un revisor por tarea. Una persona puede asumir varias f
 | Interfaz | Tkinter, formularios, selección de pacientes, mensajes y navegación. |
 | Calidad y evidencias | Ejecutar criterios de aceptación, verificar datos y completar Bitácora. |
 
-Estas funciones no sustituyen los roles Scrum que deba documentar el equipo. Nombres y roles quedan pendientes; no se inventan integrantes.
+Alejandro asume el rol de Scrum Master y participa del desarrollo junto con Leonel. Ambos comparten pruebas y documentación; María Susana Burioni figura como Product Owner.
 
 La documentación y los casos de prueba pueden avanzar mientras se desarrolla la consola. El trabajo de GUI comienza cuando esté acordado cómo acceder a los datos. Las capturas se obtienen al aprobar cada funcionalidad, no al final de todo el proyecto.
 

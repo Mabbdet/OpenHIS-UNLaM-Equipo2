@@ -1,0 +1,155 @@
+{
+  "resourceType": "Bundle",
+  "id": "1c2a6a6a-e33e-4c9a-9e26-70f37a5542d1",
+  "type": "collection",
+  "identifier": {
+    "system": "urn:openhis:equipo2:demostracion-local",
+    "value": "ServiceRequest-propio"
+  },
+  "meta": {
+    "tag": [
+      {
+        "system": "urn:openhis:origen",
+        "code": "demostracion-local",
+        "display": "Demostración local del Equipo 2; no recibido de otro grupo"
+      }
+    ]
+  },
+  "timestamp": "2026-11-21T14:46:54.580338+00:00",
+  "entry": [
+    {
+      "fullUrl": "https://openhis.example.invalid/fhir/Patient/p-3",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "p-3",
+        "identifier": [
+          {
+            "system": "urn:openhis:dni",
+            "value": "42123456"
+          }
+        ],
+        "active": true,
+        "name": [
+          {
+            "family": "López",
+            "given": [
+              "Ana"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1999-02-18"
+      }
+    },
+    {
+      "fullUrl": "https://openhis.example.invalid/fhir/Practitioner/pr-3",
+      "resource": {
+        "resourceType": "Practitioner",
+        "id": "pr-3",
+        "identifier": [
+          {
+            "system": "urn:openhis:dni",
+            "value": "29000003"
+          }
+        ],
+        "active": true,
+        "name": [
+          {
+            "family": "Demo",
+            "given": [
+              "Sofía"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1985-01-15",
+        "qualification": [
+          {
+            "identifier": [
+              {
+                "value": "DEMO-MAT-3"
+              }
+            ],
+            "code": {
+              "text": "Pediatría"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "https://openhis.example.invalid/fhir/ServiceRequest/sr-1",
+      "resource": {
+        "resourceType": "ServiceRequest",
+        "id": "sr-1",
+        "status": "active",
+        "intent": "order",
+        "code": {
+          "coding": [
+            {
+              "system": "urn:openhis:practicas",
+              "code": "E9-PRAC-01",
+              "display": "Práctica sintética de intercambio Equipo 2"
+            }
+          ],
+          "text": "Práctica sintética de intercambio Equipo 2"
+        },
+        "subject": {
+          "reference": "Patient/p-3"
+        },
+        "authoredOn": "2026-11-21T02:54:18Z",
+        "requester": {
+          "reference": "Practitioner/pr-3"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://openhis.example.invalid/fhir/MedicationRequest/mr-3",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "mr-3",
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "urn:openhis:farmacos",
+              "code": "DEMO-FAR-3"
+            }
+          ],
+          "text": "Fármaco ficticio 3"
+        },
+        "subject": {
+          "reference": "Patient/p-3"
+        },
+        "authoredOn": "2026-09-14T01:55:44Z",
+        "requester": {
+          "reference": "Practitioner/pr-3"
+        },
+        "dosageInstruction": [
+          {
+            "text": "Dosis de prueba",
+            "timing": {
+              "code": {
+                "text": "Frecuencia de prueba"
+              }
+            },
+            "route": {
+              "text": "Vía de prueba"
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "quantity": {
+            "value": 1
+          }
+        },
+        "note": [
+          {
+            "text": "DEMO-PRES-3: registro ficticio sin uso clínico"
+          }
+        ]
+      }
+    }
+  ]
+}

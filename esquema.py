@@ -91,6 +91,8 @@ def ampliar_esquema(conexion):
     ampliar_seguridad(conexion)
     from esquema_intercambio import ampliar_intercambio
     ampliar_intercambio(conexion)
+    from esquema_final import ampliar_final
+    ampliar_final(conexion)
     # La reconstrucción puntual de Profesionales conserva datos y restablece índices.
     ampliar_estados(conexion)
 

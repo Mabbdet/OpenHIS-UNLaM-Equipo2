@@ -1,0 +1,16 @@
+{
+  "capturas_nuevas": 5,
+  "imagenes_previas_conservadas": 24,
+  "imagenes_finales": 29,
+  "hojas_formulas_valores_y_combinaciones_previas_conservados": true,
+  "rango_capturas": "Bitácora!C892:H1056",
+  "rango_reflexion": "Bitácora!C1060:H1077",
+  "parrafos_reflexion": 2,
+  "datos_clinicos_y_estados_de_base_principal_conservados": true,
+  "cambios_esperados": "ultimo_acceso de la cuenta y nuevas filas de auditoría por accesos, consulta y reimportación",
+  "fichas_inactivas_probadas_solo_en_copia": true,
+  "integridad": "ok",
+  "revision_visual": "Se revisaron las cinco imágenes embebidas y la reflexión; sin recortes en la hoja.",
+  "sha256_planilla_anterior": "83660a963e9b645cadf8934ec533e5f98719dd0c7cd7fbdebcd19291aed6c9d4",
+  "sha256_planilla_final": "0ed745e785e7691716cfee8af52486dd77987a0ba27bc4b80e31b3f588cf8ab5"
+}

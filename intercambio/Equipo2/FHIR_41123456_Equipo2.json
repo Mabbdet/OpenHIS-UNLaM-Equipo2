@@ -1,0 +1,275 @@
+{
+  "resourceType": "Bundle",
+  "id": "03dec76c-69a7-465d-aacc-a693a636c132",
+  "identifier": {
+    "system": "urn:openhis:equipo2",
+    "value": "e7c008de-987c-4607-9b3c-3381edc6e3f5"
+  },
+  "type": "collection",
+  "timestamp": "2026-11-21T03:49:50.521415+00:00",
+  "entry": [
+    {
+      "fullUrl": "https://openhis.example.invalid/fhir/Patient/p-2",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "p-2",
+        "identifier": [
+          {
+            "system": "urn:openhis:dni",
+            "value": "41123456"
+          }
+        ],
+        "active": true,
+        "name": [
+          {
+            "family": "Pérez",
+            "given": [
+              "Juan"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1998-06-23"
+      }
+    },
+    {
+      "fullUrl": "https://openhis.example.invalid/fhir/Practitioner/pr-2",
+      "resource": {
+        "resourceType": "Practitioner",
+        "id": "pr-2",
+        "identifier": [
+          {
+            "system": "urn:openhis:dni",
+            "value": "29000002"
+          }
+        ],
+        "active": true,
+        "name": [
+          {
+            "family": "Demo",
+            "given": [
+              "Martín"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1985-01-15",
+        "qualification": [
+          {
+            "identifier": [
+              {
+                "value": "DEMO-MAT-2"
+              }
+            ],
+            "code": {
+              "text": "Cardiología"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "https://openhis.example.invalid/fhir/MedicationRequest/mr-2",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "mr-2",
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "urn:openhis:farmacos",
+              "code": "DEMO-FAR-2"
+            }
+          ],
+          "text": "Fármaco ficticio 2"
+        },
+        "subject": {
+          "reference": "Patient/p-2"
+        },
+        "authoredOn": "2026-09-14T01:55:44Z",
+        "requester": {
+          "reference": "Practitioner/pr-2"
+        },
+        "dosageInstruction": [
+          {
+            "text": "Dosis de prueba",
+            "timing": {
+              "code": {
+                "text": "Frecuencia de prueba"
+              }
+            },
+            "route": {
+              "text": "Vía de prueba"
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "quantity": {
+            "value": 1
+          }
+        },
+        "note": [
+          {
+            "text": "DEMO-PRES-2: registro ficticio sin uso clínico"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "https://openhis.example.invalid/fhir/Observation/obs-2-8480-6",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-2-8480-6",
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8480-6"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/p-2"
+        },
+        "effectiveDateTime": "2026-09-14T00:38:06Z",
+        "performer": [
+          {
+            "reference": "Practitioner/pr-2"
+          }
+        ],
+        "valueQuantity": {
+          "value": 120,
+          "unit": "mm[Hg]",
+          "system": "http://unitsofmeasure.org",
+          "code": "mm[Hg]"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://openhis.example.invalid/fhir/Observation/obs-2-8462-4",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-2-8462-4",
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8462-4"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/p-2"
+        },
+        "effectiveDateTime": "2026-09-14T00:38:06Z",
+        "performer": [
+          {
+            "reference": "Practitioner/pr-2"
+          }
+        ],
+        "valueQuantity": {
+          "value": 80,
+          "unit": "mm[Hg]",
+          "system": "http://unitsofmeasure.org",
+          "code": "mm[Hg]"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://openhis.example.invalid/fhir/Observation/obs-2-8867-4",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-2-8867-4",
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8867-4"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/p-2"
+        },
+        "effectiveDateTime": "2026-09-14T00:38:06Z",
+        "performer": [
+          {
+            "reference": "Practitioner/pr-2"
+          }
+        ],
+        "valueQuantity": {
+          "value": 73,
+          "unit": "/min",
+          "system": "http://unitsofmeasure.org",
+          "code": "/min"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://openhis.example.invalid/fhir/Observation/obs-2-8310-5",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-2-8310-5",
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8310-5"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/p-2"
+        },
+        "effectiveDateTime": "2026-09-14T00:38:06Z",
+        "performer": [
+          {
+            "reference": "Practitioner/pr-2"
+          }
+        ],
+        "valueQuantity": {
+          "value": 36.5,
+          "unit": "Cel",
+          "system": "http://unitsofmeasure.org",
+          "code": "Cel"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://openhis.example.invalid/fhir/Observation/obs-2-59408-5",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-2-59408-5",
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "59408-5"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/p-2"
+        },
+        "effectiveDateTime": "2026-09-14T00:38:06Z",
+        "performer": [
+          {
+            "reference": "Practitioner/pr-2"
+          }
+        ],
+        "valueQuantity": {
+          "value": 98,
+          "unit": "%",
+          "system": "http://unitsofmeasure.org",
+          "code": "%"
+        }
+      }
+    }
+  ]
+}

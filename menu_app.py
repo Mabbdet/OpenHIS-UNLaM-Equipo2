@@ -10,6 +10,7 @@ from seguridad import Seguridad, PERMISOS
 from seguridad_app import AuditoriaApp, LoginApp, UsuariosApp
 from entrega9_app import IntervencionesApp, FHIRApp, DICOMApp
 from entrega10_app import FHIRConfirmApp, DICOMVisorApp
+from final_app import AgendaProfesionalApp, GestionTurnosApp, RecordatoriosApp, HistoriaClinicaApp
 from signos_app import SignosApp
 from ventanas_clinicas import ProfesionalesApp, PrescripcionesApp, TablasMaestrasApp, VentanaBase
 
@@ -17,7 +18,9 @@ MODULOS = {"Pacientes": lambda raiz, repo: AplicacionPacientes(raiz, repo, modo=
            "Profesionales": ProfesionalesApp, "Signos vitales": SignosApp,
            "Prescripciones": PrescripcionesApp, "Tablas maestras": TablasMaestrasApp,
            "Usuarios": UsuariosApp, "Auditoría": AuditoriaApp,
-           'Intervenciones': IntervencionesApp, 'FHIR': FHIRConfirmApp, 'DICOM': DICOMVisorApp}
+           'Intervenciones': IntervencionesApp, 'FHIR': FHIRConfirmApp, 'DICOM': DICOMVisorApp,
+           'Agenda profesional': AgendaProfesionalApp, 'Turnos': GestionTurnosApp,
+           'Agenda y recordatorios': RecordatoriosApp, 'Historia clínica': HistoriaClinicaApp}
 
 
 class MenuApp(VentanaBase):
@@ -39,7 +42,7 @@ class MenuApp(VentanaBase):
                 self.botones[nombre] = boton
         if al_salir:
             ttk.Button(self.cuerpo, text="Cerrar sesión", command=al_salir).pack(fill="x", pady=12)
-        ttk.Label(self.cuerpo, text="Proyecto académico · Alejandro · Entrega 10", foreground="#526773").pack(anchor="w", pady=12)
+        ttk.Label(self.cuerpo, text="Proyecto académico · Alejandro y Leonel · Entrega final", foreground="#526773").pack(anchor="w", pady=12)
 
     def abrir(self, nombre):
         self.repositorio.autorizar(nombre)

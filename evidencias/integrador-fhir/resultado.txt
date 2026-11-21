@@ -1,0 +1,26 @@
+Integrador FHIR - Importación real de Lautaro
+
+Se importaron en BD/Salud.db los tres JSON recibidos de Lautaro:
+- 3 pacientes y 2 profesionales.
+- 3 fármacos y 3 prescripciones asociadas al paciente y prescriptor correctos.
+- 10 observaciones agrupadas en 3 registros de signos.
+
+El profesional de los signos permanece desconocido; no se asignó el prescriptor.
+Las fechas recibidas sin zona se interpretaron como UTC, con la advertencia
+visible en el análisis y conservada en auditoría. Los recursos originales se
+guardaron sin modificarlos. No se crearon prácticas ausentes del intercambio.
+
+La segunda importación no agregó duplicados. Se conservaron todos los datos
+anteriores, salvo las actualizaciones esperadas del último acceso de la cuenta
+utilizada. SQLite: integridad ok y ninguna violación de claves foráneas.
+
+Punto 1: completado en la base real, con respaldo previo.
+Punto 3: demostración técnica local realizada y aclarada. Los archivos de
+Lautaro y del grupo 7 no incluyeron ServiceRequest. Se adjuntó un Bundle propio
+y se verificó su importación/reimportación en una base de prueba. La recepción
+de una práctica de otro grupo permanece pendiente. Ver aclaracion_servicerequest.txt.
+Punto 4: envío realizado, según lo informado por Alejandro; la captura del
+correo no está incorporada a estas evidencias.
+
+Detalle de archivos, operaciones, advertencias, IDs y hashes:
+evidencias/integrador-fhir/importacion_lautaro.json

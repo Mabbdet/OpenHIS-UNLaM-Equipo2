@@ -1,5 +1,15 @@
 # Verificación de los incrementos
 
+## Entrega final — Turnero web opcional
+
+Verificación del 21/11/2026: **204 pruebas aprobadas, ninguna omitida**. Regresión completa de 202 casos en 236,18 s y dos casos adicionales de habilitación/revocación desde escritorio en 7,41 s, sin cambios posteriores al código de producción. Comandos: `.venv/Scripts/python.exe -m pytest -q -rs -p no:cacheprovider` y `.venv/Scripts/python.exe -m pytest tests/test_acceso_web_gui.py -q -rs -p no:cacheprovider`.
+
+Los casos nuevos comprueban aislamiento entre pacientes, campos manipulados, competencia entre reserva web y telefónica, reprogramación atómica, cancelación de recordatorios, CSRF, logout, vencimiento, revocación al renovar clave o dar de baja fichas, cuenta técnica desactivada, permisos de emisión de claves y migración del esquema antiguo conservando relaciones y secuencia. Se ejecutaron los callbacks reales del escritorio para habilitar y revocar acceso. JavaScript pasó la comprobación de sintaxis de Node.
+
+Prueba real del navegador sobre una copia ficticia: ingreso, búsqueda, reserva a las 08:00, confirmación, reprogramación a las 08:30, cancelación con motivo y salida. Se conserva el turno original y su vínculo con el nuevo. SQLite: integridad `ok`, sin violaciones de claves foráneas. El SHA-256 de la base principal coincide con el respaldo anterior a este incremento. La vista móvil de 390 px no produjo desborde horizontal. Cuatro capturas contienen solo el portal y se guardan en `evidencias/turnero-web/`, junto con `verificacion.json`.
+
+Alcance e instrucciones en `docs/turnero-web.txt`. Los cambios siguen locales en `develop-EntregaFinal`. La incorporación de las evidencias de turnero telefónico y HCE al Scrum continúa pendiente.
+
 ## Entrega 10 — Visor DICOM y confirmación FHIR
 
 **142 pruebas aprobadas, ninguna omitida**, en 97,25 s, con `.venv/Scripts/python.exe -m pytest -q -rs -p no:cacheprovider`. Incluye las 121 anteriores y 21 nuevas: análisis sin escritura, cancelación/confirmación gráfica, archivo/base/permisos modificados, agrupación y contradicciones de Observations, dosis estructuradas y reutilización de fármacos, píxeles 8/16 bits, signed, MONOCHROME1, endian y RGB planar, archivos sin imagen/comprimidos y metadatos con secuencias.
@@ -78,4 +88,4 @@ Las pruebas se centran en comportamientos sencillos y utilizan bases temporales.
 
 Los tests usan datos ficticios y bases temporales. Las capturas usan la base demo entregada; sus datos no son indicaciones terapéuticas. El renderizador de Excel omite las imágenes en su previsualización: se revisaron los PNG y se comprobaron sus archivos y anclajes dentro del XLSX exportado.
 
-Alejandro es el único integrante. La asociación al profesional en signos quedó implementada en esta entrega. Continúan pendientes la validación real de vigencia de matrícula, el contraste con los PDFs originales y las capturas de las entregas anteriores. Reportes/XML y FHIR quedan fuera del incremento actual. Los tests y el merge no acreditan esos pendientes.
+El equipo está integrado por Alejandro y Leonel, con el primero como Scrum Master. La asociación al profesional en signos quedó implementada en esta entrega. Continúan pendientes la validación real de vigencia de matrícula, el contraste con los PDFs originales y las capturas de las entregas anteriores. Reportes/XML y FHIR quedan fuera del incremento actual. Los tests y el merge no acreditan esos pendientes.

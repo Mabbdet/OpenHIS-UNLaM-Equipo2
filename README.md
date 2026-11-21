@@ -1,6 +1,17 @@
 # OpenHIS-UNLaM — Equipo 2
 
-## Estado actual — Entrega 10 / Cierre técnico del Epic 2
+## Turnero web — Ampliación opcional de la entrega final
+
+Portal de pacientes con clave individual: disponibilidad por especialidad/profesional/fecha, reserva, confirmación, reprogramación y cancelación. Comparte horarios y auditoría con el turnero telefónico; cada paciente accede únicamente a sus propios turnos. El personal habilita o revoca las claves desde **Turnos → Habilitar / renovar acceso web**. **204 pruebas aprobadas, ninguna omitida** (202 de regresión completa y dos adicionales del escritorio).
+
+```powershell
+.venv/Scripts/python.exe -m pip install -r requirements.txt
+.venv/Scripts/python.exe turnero_web.py
+```
+
+Abrir [http://127.0.0.1:5000](http://127.0.0.1:5000). Funciona localmente en esta computadora. Instrucciones, permisos, migración y alcance en [docs/turnero-web.txt](docs/turnero-web.txt). Capturas y prueba real del navegador en `evidencias/turnero-web/`, realizadas sobre una copia ficticia de la base. El cierre de evidencias de turnero telefónico y HCE en Scrum continúa pendiente.
+
+## Referencia histórica — Entrega 10 / Cierre técnico del Epic 2
 
 Visor DICOM con metadatos completos y vista previa de imágenes sin comprimir; conversión con datos de pacientes/profesionales. FHIR incorpora análisis sin escritura, revisión de acciones y confirmación explícita antes de importar, con agrupación de mediciones. **142 pruebas aprobadas, ninguna omitida.**
 
@@ -44,7 +55,7 @@ Matriz de requisitos, permisos, cuentas y límites en [docs/entrega-7.md](docs/e
 
 ## Referencia del incremento anterior — Entrega 5
 
-Sistema hospitalario educativo desarrollado por Alejandro con Python, Tkinter y SQLite. Entrega 5 amplía el Sprint 3: pacientes, profesionales, signos vitales independientes y prescripciones con bajas reversibles, XML académico y HTML imprimible.
+Sistema hospitalario educativo desarrollado por Alejandro y Leonel con Python, Tkinter y SQLite. Entrega 5 amplía el Sprint 3: pacientes, profesionales, signos vitales independientes y prescripciones con bajas reversibles, XML académico y HTML imprimible.
 
 ## Ejecución
 
@@ -106,4 +117,4 @@ Las ramas `develop-Entrega1` a `develop-Entrega5` son acumulativas. Cada entrega
 
 Consultar `docs/entrega-5.md`, `docs/verificacion.md`, `docs/reflexion-entrega-5.md` y `PLAN_PROYECTO.md`. Scrum conserva las cuatro capturas de Entrega 4 y agrega ocho capturas de altas/bajas, la vista previa XML y una revisión estática del HTML. La apariencia e impresión del HTML en navegador quedan pendientes de verificación: la herramienta bloqueó abrir el archivo local. La revisión estática confirma el contenido, pero usa otro motor de estilos.
 
-Alejandro asume implementación, coordinación, documentación y pruebas. Las fechas y estados heredados de Scrum se conservaron; no acreditan avance por sí solos. Los documentos de entregas anteriores describen su estado histórico.
+El equipo está integrado por Alejandro, Scrum Master y desarrollador, y Leonel, desarrollador. Ambos comparten implementación, documentación y pruebas. María Susana Burioni figura como Product Owner. Las fechas y estados heredados de Scrum se conservaron; no acreditan avance por sí solos. Los documentos de entregas anteriores describen su estado histórico.

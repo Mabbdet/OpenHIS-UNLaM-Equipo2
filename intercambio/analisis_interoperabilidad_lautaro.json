@@ -1,0 +1,734 @@
+{
+  "alcance": "Análisis y ensayo aislado; no se cambia la app ni se importan datos en BD/Salud.db.",
+  "fuente_esquema": "https://hl7.org/fhir/R4/fhir.schema.json.zip",
+  "sha256_esquema": "75e5560da3cf503895a44c8ca7af17a83b4cca6c2cb5ba1883d2aec0d1cb5ac6",
+  "herramienta": "jsonschema 4.26.0 / Draft 6",
+  "limite_validacion": "JSON Schema y referencias locales; no equivale al validador integral de perfiles/terminologías FHIR.",
+  "recibidos": [
+    {
+      "archivo": "FHIR_44895843_35734835_daSilva.json",
+      "sha256": "98b7d99bc0470b6317aef1e27ce9db5612ae44903de4e12116ab04e2a654f96f",
+      "recursos": {
+        "Patient": 1,
+        "Observation": 3,
+        "Practitioner": 1,
+        "MedicationRequest": 1
+      },
+      "json_schema_bundle_sin_errores": false,
+      "errores_json_schema_recursos": [
+        {
+          "recurso": "Observation/obs-4-8480-6",
+          "ruta": "entry/1/resource/effectiveDateTime",
+          "regla": "pattern",
+          "mensaje": "'2026-10-28 00:29:22' does not match '^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1])(T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\\\\.[0-9]+)?(Z|(\\\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00)))?)?)?$'"
+        },
+        {
+          "recurso": "Observation/obs-4-8462-4",
+          "ruta": "entry/2/resource/effectiveDateTime",
+          "regla": "pattern",
+          "mensaje": "'2026-10-28 00:29:22' does not match '^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1])(T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\\\\.[0-9]+)?(Z|(\\\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00)))?)?)?$'"
+        },
+        {
+          "recurso": "Observation/obs-4-8867-4",
+          "ruta": "entry/3/resource/effectiveDateTime",
+          "regla": "pattern",
+          "mensaje": "'2026-10-28 00:29:22' does not match '^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1])(T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\\\\.[0-9]+)?(Z|(\\\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00)))?)?)?$'"
+        },
+        {
+          "recurso": "Practitioner/practitioner-3",
+          "ruta": "entry/4/resource/qualification/0",
+          "regla": "required",
+          "mensaje": "'code' is a required property"
+        },
+        {
+          "recurso": "MedicationRequest/medrx-3",
+          "ruta": "entry/5/resource/authoredOn",
+          "regla": "pattern",
+          "mensaje": "'2026-10-28 00:26:08' does not match '^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1])(T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\\\\.[0-9]+)?(Z|(\\\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00)))?)?)?$'"
+        }
+      ],
+      "referencias_declaradas_resueltas": true,
+      "referencias": [
+        {
+          "ruta": "/entry/1/resource/subject/reference",
+          "referencia": "Patient/patient-7",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/2/resource/subject/reference",
+          "referencia": "Patient/patient-7",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/3/resource/subject/reference",
+          "referencia": "Patient/patient-7",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/5/resource/subject/reference",
+          "referencia": "Patient/patient-7",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/5/resource/requester/reference",
+          "referencia": "Practitioner/practitioner-3",
+          "resuelta": true
+        }
+      ],
+      "validacion_local_actual": {
+        "aceptado": false,
+        "motivo": "Las referencias deben resolver a Patient y Practitioner incluidos en el Bundle."
+      },
+      "observations_sin_performer": 3,
+      "entradas_sin_fullUrl": 6,
+      "cumple_recursos_obligatorios_integrador": false
+    },
+    {
+      "archivo": "FHIR_25793706_12345678_daSilva.json",
+      "sha256": "c55551323d0476b1202ff03fa0cc7e8560dc981e15bcf9ad3781fc179e3d8f6b",
+      "recursos": {
+        "Patient": 1,
+        "Observation": 3,
+        "Practitioner": 1,
+        "MedicationRequest": 1
+      },
+      "json_schema_bundle_sin_errores": false,
+      "errores_json_schema_recursos": [
+        {
+          "recurso": "Observation/obs-3-8480-6",
+          "ruta": "entry/1/resource/effectiveDateTime",
+          "regla": "pattern",
+          "mensaje": "'2026-10-28 00:28:58' does not match '^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1])(T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\\\\.[0-9]+)?(Z|(\\\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00)))?)?)?$'"
+        },
+        {
+          "recurso": "Observation/obs-3-8867-4",
+          "ruta": "entry/2/resource/effectiveDateTime",
+          "regla": "pattern",
+          "mensaje": "'2026-10-28 00:28:58' does not match '^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1])(T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\\\\.[0-9]+)?(Z|(\\\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00)))?)?)?$'"
+        },
+        {
+          "recurso": "Observation/obs-3-59408-5",
+          "ruta": "entry/3/resource/effectiveDateTime",
+          "regla": "pattern",
+          "mensaje": "'2026-10-28 00:28:58' does not match '^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1])(T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\\\\.[0-9]+)?(Z|(\\\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00)))?)?)?$'"
+        },
+        {
+          "recurso": "Practitioner/practitioner-1",
+          "ruta": "entry/4/resource/qualification/0",
+          "regla": "required",
+          "mensaje": "'code' is a required property"
+        },
+        {
+          "recurso": "MedicationRequest/medrx-4",
+          "ruta": "entry/5/resource/authoredOn",
+          "regla": "pattern",
+          "mensaje": "'2026-10-28 00:28:16' does not match '^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1])(T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\\\\.[0-9]+)?(Z|(\\\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00)))?)?)?$'"
+        }
+      ],
+      "referencias_declaradas_resueltas": true,
+      "referencias": [
+        {
+          "ruta": "/entry/1/resource/subject/reference",
+          "referencia": "Patient/patient-10",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/2/resource/subject/reference",
+          "referencia": "Patient/patient-10",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/3/resource/subject/reference",
+          "referencia": "Patient/patient-10",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/5/resource/subject/reference",
+          "referencia": "Patient/patient-10",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/5/resource/requester/reference",
+          "referencia": "Practitioner/practitioner-1",
+          "resuelta": true
+        }
+      ],
+      "validacion_local_actual": {
+        "aceptado": false,
+        "motivo": "Las referencias deben resolver a Patient y Practitioner incluidos en el Bundle."
+      },
+      "observations_sin_performer": 3,
+      "entradas_sin_fullUrl": 6,
+      "cumple_recursos_obligatorios_integrador": false
+    },
+    {
+      "archivo": "FHIR_36689468_12345678_daSilva.json",
+      "sha256": "11ced41109ae731e360a3243ecb5fe346b8ee727903078d61e214435862004ed",
+      "recursos": {
+        "Patient": 1,
+        "Observation": 4,
+        "Practitioner": 1,
+        "MedicationRequest": 1
+      },
+      "json_schema_bundle_sin_errores": false,
+      "errores_json_schema_recursos": [
+        {
+          "recurso": "Observation/obs-2-8480-6",
+          "ruta": "entry/1/resource/effectiveDateTime",
+          "regla": "pattern",
+          "mensaje": "'2026-10-28 00:21:36' does not match '^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1])(T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\\\\.[0-9]+)?(Z|(\\\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00)))?)?)?$'"
+        },
+        {
+          "recurso": "Observation/obs-2-8867-4",
+          "ruta": "entry/2/resource/effectiveDateTime",
+          "regla": "pattern",
+          "mensaje": "'2026-10-28 00:21:36' does not match '^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1])(T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\\\\.[0-9]+)?(Z|(\\\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00)))?)?)?$'"
+        },
+        {
+          "recurso": "Observation/obs-2-8310-5",
+          "ruta": "entry/3/resource/effectiveDateTime",
+          "regla": "pattern",
+          "mensaje": "'2026-10-28 00:21:36' does not match '^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1])(T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\\\\.[0-9]+)?(Z|(\\\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00)))?)?)?$'"
+        },
+        {
+          "recurso": "Observation/obs-2-59408-5",
+          "ruta": "entry/4/resource/effectiveDateTime",
+          "regla": "pattern",
+          "mensaje": "'2026-10-28 00:21:36' does not match '^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1])(T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\\\\.[0-9]+)?(Z|(\\\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00)))?)?)?$'"
+        },
+        {
+          "recurso": "Practitioner/practitioner-1",
+          "ruta": "entry/5/resource/qualification/0",
+          "regla": "required",
+          "mensaje": "'code' is a required property"
+        },
+        {
+          "recurso": "MedicationRequest/medrx-2",
+          "ruta": "entry/6/resource/authoredOn",
+          "regla": "pattern",
+          "mensaje": "'2026-09-09 01:15:00' does not match '^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1])(T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\\\\.[0-9]+)?(Z|(\\\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00)))?)?)?$'"
+        }
+      ],
+      "referencias_declaradas_resueltas": true,
+      "referencias": [
+        {
+          "ruta": "/entry/1/resource/subject/reference",
+          "referencia": "Patient/patient-6",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/2/resource/subject/reference",
+          "referencia": "Patient/patient-6",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/3/resource/subject/reference",
+          "referencia": "Patient/patient-6",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/4/resource/subject/reference",
+          "referencia": "Patient/patient-6",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/6/resource/subject/reference",
+          "referencia": "Patient/patient-6",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/6/resource/requester/reference",
+          "referencia": "Practitioner/practitioner-1",
+          "resuelta": true
+        }
+      ],
+      "validacion_local_actual": {
+        "aceptado": false,
+        "motivo": "Las referencias deben resolver a Patient y Practitioner incluidos en el Bundle."
+      },
+      "observations_sin_performer": 4,
+      "entradas_sin_fullUrl": 7,
+      "cumple_recursos_obligatorios_integrador": false
+    }
+  ],
+  "nuestros": [
+    {
+      "archivo": "FHIR_40123456_Equipo2.json",
+      "sha256": "ed2170c78f08133d05e9b6c60984c0008145eaf966321b0cf0bdf157aeb666e6",
+      "recursos": {
+        "Patient": 1,
+        "Practitioner": 2,
+        "MedicationRequest": 3,
+        "Observation": 5
+      },
+      "json_schema_bundle_sin_errores": true,
+      "errores_json_schema_recursos": [],
+      "referencias_declaradas_resueltas": true,
+      "referencias": [
+        {
+          "ruta": "/entry/3/resource/subject/reference",
+          "referencia": "Patient/p-1",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/3/resource/requester/reference",
+          "referencia": "Practitioner/pr-6",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/4/resource/subject/reference",
+          "referencia": "Patient/p-1",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/4/resource/requester/reference",
+          "referencia": "Practitioner/pr-6",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/5/resource/subject/reference",
+          "referencia": "Patient/p-1",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/5/resource/requester/reference",
+          "referencia": "Practitioner/pr-1",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/6/resource/subject/reference",
+          "referencia": "Patient/p-1",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/6/resource/performer/0/reference",
+          "referencia": "Practitioner/pr-1",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/7/resource/subject/reference",
+          "referencia": "Patient/p-1",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/7/resource/performer/0/reference",
+          "referencia": "Practitioner/pr-1",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/8/resource/subject/reference",
+          "referencia": "Patient/p-1",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/8/resource/performer/0/reference",
+          "referencia": "Practitioner/pr-1",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/9/resource/subject/reference",
+          "referencia": "Patient/p-1",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/9/resource/performer/0/reference",
+          "referencia": "Practitioner/pr-1",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/10/resource/subject/reference",
+          "referencia": "Patient/p-1",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/10/resource/performer/0/reference",
+          "referencia": "Practitioner/pr-1",
+          "resuelta": true
+        }
+      ],
+      "validacion_local_actual": {
+        "aceptado": true
+      },
+      "observations_sin_performer": 0,
+      "entradas_sin_fullUrl": 0,
+      "cumple_recursos_obligatorios_integrador": false
+    },
+    {
+      "archivo": "FHIR_41123456_Equipo2.json",
+      "sha256": "5ed677b40c54870a094dc38160407fac8fe28db297d28c30df969a220430cee5",
+      "recursos": {
+        "Patient": 1,
+        "Practitioner": 1,
+        "MedicationRequest": 1,
+        "Observation": 5
+      },
+      "json_schema_bundle_sin_errores": true,
+      "errores_json_schema_recursos": [],
+      "referencias_declaradas_resueltas": true,
+      "referencias": [
+        {
+          "ruta": "/entry/2/resource/subject/reference",
+          "referencia": "Patient/p-2",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/2/resource/requester/reference",
+          "referencia": "Practitioner/pr-2",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/3/resource/subject/reference",
+          "referencia": "Patient/p-2",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/3/resource/performer/0/reference",
+          "referencia": "Practitioner/pr-2",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/4/resource/subject/reference",
+          "referencia": "Patient/p-2",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/4/resource/performer/0/reference",
+          "referencia": "Practitioner/pr-2",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/5/resource/subject/reference",
+          "referencia": "Patient/p-2",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/5/resource/performer/0/reference",
+          "referencia": "Practitioner/pr-2",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/6/resource/subject/reference",
+          "referencia": "Patient/p-2",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/6/resource/performer/0/reference",
+          "referencia": "Practitioner/pr-2",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/7/resource/subject/reference",
+          "referencia": "Patient/p-2",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/7/resource/performer/0/reference",
+          "referencia": "Practitioner/pr-2",
+          "resuelta": true
+        }
+      ],
+      "validacion_local_actual": {
+        "aceptado": true
+      },
+      "observations_sin_performer": 0,
+      "entradas_sin_fullUrl": 0,
+      "cumple_recursos_obligatorios_integrador": false
+    },
+    {
+      "archivo": "FHIR_42123456_Equipo2.json",
+      "sha256": "0b51ec34ae764a0c8b2011aba2d48cdf78e96f2a8290d60b236228f11546d1bc",
+      "recursos": {
+        "Patient": 1,
+        "Practitioner": 2,
+        "ServiceRequest": 2,
+        "MedicationRequest": 2,
+        "Observation": 9
+      },
+      "json_schema_bundle_sin_errores": true,
+      "errores_json_schema_recursos": [],
+      "referencias_declaradas_resueltas": true,
+      "referencias": [
+        {
+          "ruta": "/entry/3/resource/subject/reference",
+          "referencia": "Patient/p-3",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/3/resource/requester/reference",
+          "referencia": "Practitioner/pr-3",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/4/resource/subject/reference",
+          "referencia": "Patient/p-3",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/4/resource/requester/reference",
+          "referencia": "Practitioner/pr-8",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/5/resource/subject/reference",
+          "referencia": "Patient/p-3",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/5/resource/requester/reference",
+          "referencia": "Practitioner/pr-8",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/6/resource/subject/reference",
+          "referencia": "Patient/p-3",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/6/resource/requester/reference",
+          "referencia": "Practitioner/pr-3",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/7/resource/subject/reference",
+          "referencia": "Patient/p-3",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/7/resource/performer/0/reference",
+          "referencia": "Practitioner/pr-3",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/8/resource/subject/reference",
+          "referencia": "Patient/p-3",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/8/resource/performer/0/reference",
+          "referencia": "Practitioner/pr-3",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/9/resource/subject/reference",
+          "referencia": "Patient/p-3",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/9/resource/performer/0/reference",
+          "referencia": "Practitioner/pr-3",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/10/resource/subject/reference",
+          "referencia": "Patient/p-3",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/10/resource/performer/0/reference",
+          "referencia": "Practitioner/pr-3",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/11/resource/subject/reference",
+          "referencia": "Patient/p-3",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/11/resource/performer/0/reference",
+          "referencia": "Practitioner/pr-3",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/12/resource/subject/reference",
+          "referencia": "Patient/p-3",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/12/resource/performer/0/reference",
+          "referencia": "Practitioner/pr-3",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/13/resource/subject/reference",
+          "referencia": "Patient/p-3",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/13/resource/performer/0/reference",
+          "referencia": "Practitioner/pr-3",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/14/resource/subject/reference",
+          "referencia": "Patient/p-3",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/14/resource/performer/0/reference",
+          "referencia": "Practitioner/pr-3",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/15/resource/subject/reference",
+          "referencia": "Patient/p-3",
+          "resuelta": true
+        },
+        {
+          "ruta": "/entry/15/resource/performer/0/reference",
+          "referencia": "Practitioner/pr-3",
+          "resuelta": true
+        }
+      ],
+      "validacion_local_actual": {
+        "aceptado": true
+      },
+      "observations_sin_performer": 0,
+      "entradas_sin_fullUrl": 0,
+      "cumple_recursos_obligatorios_integrador": true
+    }
+  ],
+  "ensayos_copia": [
+    {
+      "archivo": "FHIR_44895843_35734835_daSilva.json",
+      "original_rechazado": "Intercambio FHIR inválido: Las referencias deben resolver a Patient y Practitioner incluidos en el Bundle.",
+      "analisis_sin_escritura": true,
+      "resultado_ensayo": {
+        "creados": {
+          "Pacientes": 1,
+          "Profesionales": 1,
+          "SignosVitales": 1,
+          "Farmacos": 1,
+          "Prescripciones": 1
+        },
+        "reutilizados": {},
+        "omitidos": 0,
+        "conflictos": []
+      }
+    },
+    {
+      "archivo": "FHIR_25793706_12345678_daSilva.json",
+      "original_rechazado": "Intercambio FHIR inválido: Las referencias deben resolver a Patient y Practitioner incluidos en el Bundle.",
+      "analisis_sin_escritura": true,
+      "resultado_ensayo": {
+        "creados": {
+          "Pacientes": 1,
+          "Profesionales": 1,
+          "SignosVitales": 1,
+          "Farmacos": 1,
+          "Prescripciones": 1
+        },
+        "reutilizados": {},
+        "omitidos": 0,
+        "conflictos": []
+      }
+    },
+    {
+      "archivo": "FHIR_36689468_12345678_daSilva.json",
+      "original_rechazado": "Intercambio FHIR inválido: Las referencias deben resolver a Patient y Practitioner incluidos en el Bundle.",
+      "analisis_sin_escritura": true,
+      "resultado_ensayo": {
+        "creados": {
+          "Pacientes": 1,
+          "SignosVitales": 1,
+          "Farmacos": 1,
+          "Prescripciones": 1
+        },
+        "reutilizados": {
+          "Profesionales": 1
+        },
+        "omitidos": 0,
+        "conflictos": []
+      }
+    }
+  ],
+  "rechazo_sqlite_con_profesional_desconocido": "Seleccione un profesional para registrar signos vitales.",
+  "restriccion_relajada_solo_en_copia_experimental": "signos_medico_requerido",
+  "ensayos_parciales_codigo_actual": [
+    {
+      "archivo": "FHIR_44895843_35734835_daSilva.json",
+      "alcance": "Copia filtrada sin Observations; no equivale a importar el archivo completo.",
+      "resultado": {
+        "creados": {
+          "Pacientes": 1,
+          "Profesionales": 1,
+          "Farmacos": 1,
+          "Prescripciones": 1
+        },
+        "reutilizados": {},
+        "omitidos": 0,
+        "conflictos": []
+      }
+    },
+    {
+      "archivo": "FHIR_25793706_12345678_daSilva.json",
+      "alcance": "Copia filtrada sin Observations; no equivale a importar el archivo completo.",
+      "resultado": {
+        "creados": {
+          "Pacientes": 1,
+          "Profesionales": 1,
+          "Farmacos": 1,
+          "Prescripciones": 1
+        },
+        "reutilizados": {},
+        "omitidos": 0,
+        "conflictos": []
+      }
+    },
+    {
+      "archivo": "FHIR_36689468_12345678_daSilva.json",
+      "alcance": "Copia filtrada sin Observations; no equivale a importar el archivo completo.",
+      "resultado": {
+        "creados": {
+          "Pacientes": 1,
+          "Farmacos": 1,
+          "Prescripciones": 1
+        },
+        "reutilizados": {
+          "Profesionales": 1
+        },
+        "omitidos": 0,
+        "conflictos": []
+      }
+    }
+  ],
+  "incrementos_en_copia": {
+    "Pacientes": 3,
+    "Profesionales": 2,
+    "Farmacos": 3,
+    "SignosVitales": 3,
+    "Prescripciones": 3,
+    "Practicas": 0,
+    "RecursosFHIR": 13
+  },
+  "signos_agrupados_sin_profesional": 3,
+  "observaciones_preservadas": 10,
+  "reimportacion_sin_duplicados": true,
+  "reexportacion_actual": [
+    {
+      "dni": "44895843",
+      "observations_exportadas_actualmente": 0
+    },
+    {
+      "dni": "25793706",
+      "observations_exportadas_actualmente": 0
+    },
+    {
+      "dni": "36689468",
+      "observations_exportadas_actualmente": 0
+    }
+  ],
+  "supuestos_ensayo": [
+    "Observations sin performer se guardan con medico_id NULL; no se atribuyen al prescriptor.",
+    "Fechas sin zona se interpretan como UTC por la convención actual; el archivo no informa la zona real.",
+    "Especialidad ausente se representa como no informada; no se inventa una especialidad.",
+    "No se crean prácticas ausentes ni se alteran dosis/mediciones recibidas."
+  ],
+  "originales_y_base_sin_cambios": true,
+  "envio_realizado": false,
+  "referencias_oficiales": [
+    "https://hl7.org/fhir/R4/observation-definitions.html#Observation.performer",
+    "https://hl7.org/fhir/R4/datatypes.html#dateTime",
+    "https://hl7.org/fhir/R4/practitioner-definitions.html#Practitioner.qualification.code",
+    "https://hl7.org/fhir/R4/bundle-definitions.html#Bundle.entry.fullUrl"
+  ]
+}

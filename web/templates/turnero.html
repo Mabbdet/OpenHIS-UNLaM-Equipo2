@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Portal de turnos del Hospital Universitario San Justo. OpenHIS UNLaM, Equipo 2.">
+  <title>Mis turnos · Hospital Universitario San Justo</title>
+  <link rel="stylesheet" href="{{ url_for('static',filename='turnero.css') }}">
+  <script src="{{ url_for('static',filename='turnero.js') }}" defer></script>
+</head>
+<body>
+  <header class="cabecera">
+    <a class="marca" href="/" aria-label="Hospital Universitario San Justo, inicio"><span class="simbolo" aria-hidden="true">+</span><span>Hospital Universitario<br><strong>San Justo</strong></span></a>
+    <div class="institucion">OpenHIS · UNLaM<span>Portal de pacientes</span></div>
+  </header>
+  <main>
+    <div id="aviso" class="aviso" role="status" aria-live="polite" hidden></div>
+    <section id="ingreso" class="ingreso">
+      <div class="introduccion">
+        <p class="sobretitulo">TU ATENCIÓN, ORGANIZADA</p>
+        <h1>Un lugar para<br>gestionar tus turnos.</h1>
+        <p class="bajada">Encontrá un horario disponible, reservá tu consulta y llevá el seguimiento de tus próximos turnos.</p>
+        <ol class="pasos"><li><span>01</span>Elegí especialidad y fecha</li><li><span>02</span>Reservá el horario que te sirva</li><li><span>03</span>Confirmá desde tus turnos</li></ol>
+        <p class="nota">Proyecto académico · Equipo 2<br>Hospital Universitario San Justo</p>
+      </div>
+      <form id="form-ingreso" class="tarjeta login">
+        <p class="sobretitulo">ACCESO PERSONAL</p><h2>Ingresá al portal</h2>
+        <p>Usá tu DNI y la clave que te entregó el personal del hospital.</p>
+        <label for="dni">DNI</label><input id="dni" name="dni" inputmode="numeric" autocomplete="username" pattern="[0-9]+" maxlength="20" placeholder="Sin puntos ni espacios" required>
+        <label for="clave">Clave de acceso</label><input id="clave" name="clave" type="password" autocomplete="current-password" maxlength="256" required>
+        <button class="primario" type="submit">Ingresar</button>
+        <div class="ayuda"><strong>¿Todavía no tenés acceso?</strong><br>Solicitá tu clave al personal de recepción. Para renovarla, comunicate con el hospital.</div>
+      </form>
+    </section>
+    <section id="portal" hidden>
+      <div class="bienvenida"><div><p class="sobretitulo">PORTAL DE PACIENTES</p><h1>Hola, <span id="nombre"></span>.</h1><p>Gestioná tu atención desde un mismo lugar.</p></div><button id="salir" class="secundario">Cerrar sesión</button></div>
+      <nav class="navegacion" aria-label="Secciones del portal"><button id="nav-reservar" aria-current="page">Reservar un turno</button><button id="nav-turnos">Mis turnos <span id="cantidad">0</span></button></nav>
+      <section id="reserva" aria-labelledby="titulo-reserva">
+        <div class="titulo-seccion"><div><p class="sobretitulo" id="modo">NUEVA CONSULTA</p><h2 id="titulo-reserva">Encontrá tu próximo turno</h2></div><p>Horarios de Argentina · UTC−03</p></div>
+        <form id="form-buscar" class="tarjeta filtros">
+          <div><label for="especialidad">Especialidad</label><select id="especialidad"><option value="">Todas las especialidades</option></select></div>
+          <div><label for="profesional">Profesional</label><select id="profesional"><option value="">Cualquier profesional</option></select></div>
+          <div><label for="fecha">Fecha</label><input id="fecha" type="date" required></div>
+          <button type="submit" class="primario">Buscar horarios</button>
+        </form>
+        <div class="resultados-cabecera"><h3 id="titulo-resultados">Disponibilidad</h3><span id="cuenta-huecos"></span></div>
+        <div id="huecos" class="huecos"><div class="vacio"><strong>Tu próximo turno empieza acá</strong><p>Elegí una fecha y buscá los horarios disponibles.</p></div></div>
+        <section id="seleccion" class="tarjeta seleccion" hidden>
+          <div><p class="sobretitulo">HORARIO ELEGIDO</p><h3 id="detalle-horario"></h3><p id="detalle-profesional"></p></div>
+          <form id="form-reservar"><label for="motivo">Motivo <span id="etiqueta-motivo">de la consulta</span></label><textarea id="motivo" rows="2" maxlength="2000" required placeholder="Describí brevemente el motivo"></textarea><p id="nota-reserva">La reserva queda solicitada. Confirmala luego en Mis turnos.</p><div class="acciones"><button type="submit" id="boton-reservar" class="primario">Reservar turno</button><button type="button" id="cancelar-reprogramacion" class="secundario" hidden>Cancelar cambio</button></div></form>
+        </section>
+      </section>
+      <section id="mis-turnos" aria-labelledby="titulo-turnos" hidden><div class="titulo-seccion"><div><p class="sobretitulo">TU AGENDA</p><h2 id="titulo-turnos">Mis turnos</h2></div><button id="actualizar" class="secundario">Actualizar</button></div><div id="lista-turnos" class="lista-turnos"></div></section>
+    </section>
+  </main>
+  <footer><span>Hospital Universitario San Justo</span><span>OpenHIS · Equipo 2 · Demostración académica local</span></footer>
+  <dialog id="dialogo"><form id="form-accion"><p class="sobretitulo">GESTIÓN DE TURNOS</p><h2 id="titulo-dialogo"></h2><p id="detalle-dialogo"></p><div id="campo-razon"><label for="razon">Motivo de cancelación</label><textarea id="razon" rows="3" maxlength="2000"></textarea></div><div class="acciones"><button type="submit" class="primario">Confirmar operación</button><button id="cerrar-dialogo" type="button" class="secundario">Volver</button></div></form></dialog>
+</body>
+</html>

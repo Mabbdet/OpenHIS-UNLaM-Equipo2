@@ -1,0 +1,191 @@
+{
+  "fecha_utc": "2026-11-21T14:30:19.095609+00:00",
+  "base": "BD/Salud.db",
+  "origen": "Grupo Lautaro",
+  "respaldo": ".trabajo-local/integrador-fhir-real/previos/BD/Salud.db",
+  "sha256_bd_antes": "b0c5149248ac16d2bb5fbcfb28a4ecb40537d3fcba9d9c4a2b9c6bf23b12d3a4",
+  "sha256_bd_despues": "f13234e4ab8a9078fdb28e00fcf1288668d28e4dc6bd1e3aae3ff935558f9b3f",
+  "primera_importacion": [
+    {
+      "archivo": "intercambio/recibidos/Lautaro/FHIR_44895843_35734835_daSilva.json",
+      "sha256": "98b7d99bc0470b6317aef1e27ce9db5612ae44903de4e12116ab04e2a654f96f",
+      "preanalisis_sin_escritura": true,
+      "resultado": {
+        "creados": {
+          "Pacientes": 1,
+          "Profesionales": 1,
+          "SignosVitales": 1,
+          "Farmacos": 1,
+          "Prescripciones": 1
+        },
+        "reutilizados": {},
+        "omitidos": 0,
+        "conflictos": [],
+        "advertencias": [
+          "3 observaciones sin profesional informado: se conservará como desconocido, sin atribuirlas al prescriptor.",
+          "4 fechas sin zona horaria: se interpretarán como UTC según la convención local. El emisor no informó la zona original.",
+          "Hay titulaciones sin code en el archivo recibido; la especialidad ausente permanecerá no informada.",
+          "El lote no contiene prácticas (ServiceRequest)."
+        ]
+      }
+    },
+    {
+      "archivo": "intercambio/recibidos/Lautaro/FHIR_25793706_12345678_daSilva.json",
+      "sha256": "c55551323d0476b1202ff03fa0cc7e8560dc981e15bcf9ad3781fc179e3d8f6b",
+      "preanalisis_sin_escritura": true,
+      "resultado": {
+        "creados": {
+          "Pacientes": 1,
+          "Profesionales": 1,
+          "SignosVitales": 1,
+          "Farmacos": 1,
+          "Prescripciones": 1
+        },
+        "reutilizados": {},
+        "omitidos": 0,
+        "conflictos": [],
+        "advertencias": [
+          "3 observaciones sin profesional informado: se conservará como desconocido, sin atribuirlas al prescriptor.",
+          "4 fechas sin zona horaria: se interpretarán como UTC según la convención local. El emisor no informó la zona original.",
+          "Hay titulaciones sin code en el archivo recibido; la especialidad ausente permanecerá no informada.",
+          "El lote no contiene prácticas (ServiceRequest)."
+        ]
+      }
+    },
+    {
+      "archivo": "intercambio/recibidos/Lautaro/FHIR_36689468_12345678_daSilva.json",
+      "sha256": "11ced41109ae731e360a3243ecb5fe346b8ee727903078d61e214435862004ed",
+      "preanalisis_sin_escritura": true,
+      "resultado": {
+        "creados": {
+          "Pacientes": 1,
+          "SignosVitales": 1,
+          "Farmacos": 1,
+          "Prescripciones": 1
+        },
+        "reutilizados": {
+          "Profesionales": 1
+        },
+        "omitidos": 0,
+        "conflictos": [],
+        "advertencias": [
+          "4 observaciones sin profesional informado: se conservará como desconocido, sin atribuirlas al prescriptor.",
+          "5 fechas sin zona horaria: se interpretarán como UTC según la convención local. El emisor no informó la zona original.",
+          "Hay titulaciones sin code en el archivo recibido; la especialidad ausente permanecerá no informada.",
+          "El lote no contiene prácticas (ServiceRequest)."
+        ]
+      }
+    }
+  ],
+  "reimportacion": [
+    {
+      "archivo": "FHIR_44895843_35734835_daSilva.json",
+      "resultado": {
+        "creados": {},
+        "reutilizados": {
+          "Pacientes": 1,
+          "Profesionales": 1
+        },
+        "omitidos": 4,
+        "conflictos": [],
+        "advertencias": [
+          "3 observaciones sin profesional informado: se conservará como desconocido, sin atribuirlas al prescriptor.",
+          "4 fechas sin zona horaria: se interpretarán como UTC según la convención local. El emisor no informó la zona original.",
+          "Hay titulaciones sin code en el archivo recibido; la especialidad ausente permanecerá no informada.",
+          "El lote no contiene prácticas (ServiceRequest)."
+        ]
+      }
+    },
+    {
+      "archivo": "FHIR_25793706_12345678_daSilva.json",
+      "resultado": {
+        "creados": {},
+        "reutilizados": {
+          "Pacientes": 1,
+          "Profesionales": 1
+        },
+        "omitidos": 4,
+        "conflictos": [],
+        "advertencias": [
+          "3 observaciones sin profesional informado: se conservará como desconocido, sin atribuirlas al prescriptor.",
+          "4 fechas sin zona horaria: se interpretarán como UTC según la convención local. El emisor no informó la zona original.",
+          "Hay titulaciones sin code en el archivo recibido; la especialidad ausente permanecerá no informada.",
+          "El lote no contiene prácticas (ServiceRequest)."
+        ]
+      }
+    },
+    {
+      "archivo": "FHIR_36689468_12345678_daSilva.json",
+      "resultado": {
+        "creados": {},
+        "reutilizados": {
+          "Pacientes": 1,
+          "Profesionales": 1
+        },
+        "omitidos": 5,
+        "conflictos": [],
+        "advertencias": [
+          "4 observaciones sin profesional informado: se conservará como desconocido, sin atribuirlas al prescriptor.",
+          "5 fechas sin zona horaria: se interpretarán como UTC según la convención local. El emisor no informó la zona original.",
+          "Hay titulaciones sin code en el archivo recibido; la especialidad ausente permanecerá no informada.",
+          "El lote no contiene prácticas (ServiceRequest)."
+        ]
+      }
+    }
+  ],
+  "incrementos": {
+    "Pacientes": 3,
+    "Especialidades": 0,
+    "SnomedCT": 0,
+    "Farmacos": 3,
+    "Prescripciones": 3,
+    "SignosVitales": 3,
+    "Profesionales": 2,
+    "Practicas": 0,
+    "RecursosFHIR": 13
+  },
+  "signos_nuevos_ids": [
+    8,
+    7,
+    6
+  ],
+  "prescripciones_nuevas_ids": [
+    12,
+    10,
+    11
+  ],
+  "observaciones_conservadas": 10,
+  "reimportacion_sin_duplicados": true,
+  "filas_y_valores_anteriores_conservados": true,
+  "excepcion": "Usuarios.ultimo_acceso y nuevas filas de auditoría",
+  "integridad_sqlite": "ok",
+  "violaciones_claves_foraneas": [],
+  "archivos_originales_y_zip_equipo2_intactos": true,
+  "sha256_zip_recibido": "52759046aa5ad1ff27ba6aa35d036949c94f17a70d5d17c16224940aba3e30c9",
+  "sha256_zip_equipo2": "871970fdf184d86b8569c32ee2f825cf2ec9c47094373be4ece09d8fe7760aa2",
+  "punto_1": "Completado en la base real",
+  "punto_3": "Pendiente: los paquetes recibidos no contienen ServiceRequest",
+  "paquetes_revisados_para_practicas": [
+    {
+      "paquete": "[OpenHIS-UNLaM]Exportacion-FHIR-daSilva-Lautaro.zip",
+      "recursos": {
+        "Patient": 3,
+        "Observation": 10,
+        "Practitioner": 3,
+        "MedicationRequest": 3
+      },
+      "practicas_ServiceRequest": 0
+    },
+    {
+      "paquete": "pacientes-grupo7.zip",
+      "recursos": {
+        "Patient": 3,
+        "Observation": 15,
+        "Practitioner": 3,
+        "MedicationRequest": 3
+      },
+      "practicas_ServiceRequest": 0
+    }
+  ],
+  "punto_4": "Envío realizado, informado por Alejandro en el chat; no se dispone aquí de la captura del correo"
+}

@@ -1,0 +1,80 @@
+TURNERO WEB. AMPLIACIÓN OPCIONAL DE LA ENTREGA FINAL
+OpenHIS-UNLaM. Equipo 2. 21/11/2026.
+
+Alcance
+Portal para pacientes, conectado a la misma BD/Salud.db que la aplicación de
+escritorio. Permite buscar disponibilidad por fecha, especialidad y profesional;
+solicitar un turno, confirmarlo, reprogramarlo y cancelarlo con motivo. Cada
+paciente consulta únicamente sus propios turnos. También ve sus reservas
+telefónicas. La HCE y las fichas de otros pacientes no se exponen por la web.
+Los estados históricos se conservan, incluso al cancelar o reprogramar.
+
+Inicio
+1. Desde la carpeta del proyecto:
+   .venv/Scripts/python.exe -m pip install -r requirements.txt
+   .venv/Scripts/python.exe turnero_web.py
+2. Abrir http://127.0.0.1:5000 en el navegador de esta computadora.
+3. En la aplicación de escritorio, ingresar como administrador o administrativo.
+   Abrir Turnos, seleccionar el paciente y pulsar
+   "Habilitar / renovar acceso web". La clave individual se muestra una vez.
+4. El paciente ingresa al portal con su DNI y esa clave. Una reserva nueva
+   queda SOLICITADA; se confirma desde Mis turnos. Reprogramar crea una nueva
+   solicitud y conserva el turno anterior como REPROGRAMADO.
+5. "Deshabilitar acceso web" revoca la clave y las sesiones del paciente.
+   Renovar la clave también invalida las sesiones anteriores.
+
+El servidor usa Waitress, cuatro hilos y escucha exclusivamente en 127.0.0.1.
+Puede cambiarse el puerto con --puerto 5001 y la base con --bd RUTA.
+No publica el sistema en Internet ni permite acceso desde otros equipos.
+Para una publicación futura se requiere configurar alojamiento y HTTPS;
+el servidor local no constituye un despliegue público.
+
+Reglas compartidas
+La disponibilidad y las reservas reutilizan turnos.py. La reserva se revalida
+dentro de BEGIN IMMEDIATE y los triggers de SQLite rechazan superposiciones
+tanto del profesional como del paciente. Un horario ocupado por teléfono queda
+ocupado en la web y viceversa. Se respetan bloqueos, vigencias y fichas activas.
+Cancelar o reprogramar también cancela los recordatorios locales pendientes.
+No se envían mensajes, correos ni WhatsApp.
+
+Canales y migración
+Turnos admite TELEFONO y WEB en solicitud y confirmación. Los turnos existentes
+conservan todos sus valores; no se cambia su canal por abrirlos desde la web.
+La confirmación web se registra como WEB aunque la solicitud haya sido por
+teléfono. La migración amplía los CHECK de la tabla antigua, conserva IDs,
+relaciones, índices, triggers y secuencia, y comprueba las claves foráneas.
+AccesosPortal guarda hashes PBKDF2, estado y versión de acceso. No guarda claves
+en texto. ConfiguracionPortal vincula una cuenta técnica con nombre aleatorio,
+rol administrativo y contraseña aleatoria no entregada a los pacientes.
+El paciente no recibe una cuenta de personal ni una sesión de escritorio.
+
+Autorización y auditoría
+La identidad del paciente se toma de una sesión almacenada en el servidor.
+El paciente_id enviado por el navegador no decide sobre qué ficha se opera.
+Se revalidan paciente activo, acceso activo, versión y cuenta técnica antes de
+cada operación, dentro de la misma transacción que el cambio. La renovación
+de clave, la baja de la ficha o la deshabilitación del servicio revocan el acceso.
+Las operaciones se auditan con la cuenta técnica y el paciente afectado;
+el registro del turno conserva su paciente y canal WEB. Emitir y revocar claves
+se audita con el usuario del personal que lo hizo, sin incluir la clave ni el hash.
+Las sesiones duran 30 minutos y se invalidan al reiniciar el proceso o al salir.
+Se incluyen CSRF, cookies HttpOnly y SameSite=Strict, límites de cuerpo HTTP y
+de intentos de ingreso, validación del Host, política CSP y respuestas sin caché.
+En HTTP local la cookie no lleva Secure; para HTTPS debe activarse esa opción.
+La interfaz crea textos con textContent y no inserta motivos como HTML.
+
+Verificación
+tests/test_turnero_web.py cubre reserva y confirmación, teléfono/web concurrentes,
+aislamiento entre pacientes, manipulación de campos, cancelación y recordatorios,
+reprogramación con rollback, CSRF, logout, vencimiento, revocaciones, permisos
+para emitir claves, ausencia de secretos en auditoría y migración con relaciones.
+Las pruebas del navegador usan una copia de la base con datos ficticios.
+Las capturas evidencias/turnero-web/*.jpg contienen solo contenido del portal;
+no incluyen escritorio ni ventanas de otras aplicaciones. La demostración del
+navegador no cambia los turnos de BD/Salud.db.
+
+Fuente de alcance: Sist-Info-Salud-13.pdf, página 60: el turnero web es opcional;
+el cierre obligatorio sigue siendo turnero telefónico, HCE y evidencias en Scrum.
+Documentación técnica de referencia:
+https://flask.palletsprojects.com/en/stable/web-security/
+https://flask.palletsprojects.com/en/stable/config/

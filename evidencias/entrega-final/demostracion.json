@@ -1,0 +1,22 @@
+{
+  "entorno": "BD/Salud.db; datos ficticios del Equipo 2. Ningún mensaje enviado.",
+  "fecha_turnos": "2026-11-22",
+  "auditoria_previa_max_id": 95,
+  "franja_id": 1,
+  "bloqueo_id": 1,
+  "turnos": {
+    "confirmado": 1,
+    "solicitado": 2,
+    "cancelado": 3,
+    "reprogramado": 4,
+    "nueva_solicitud": 5
+  },
+  "recordatorios": [
+    1
+  ],
+  "consulta_id": 1,
+  "antecedente_modificado_id": 1,
+  "antecedente_anulado_id": 2,
+  "integridad": "ok",
+  "claves_foraneas": []
+}

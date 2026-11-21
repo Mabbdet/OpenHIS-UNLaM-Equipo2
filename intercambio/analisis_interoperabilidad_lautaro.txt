@@ -1,0 +1,93 @@
+Análisis de interoperabilidad FHIR - Equipo 2 / archivos de Lautaro
+
+RESULTADO
+
+Los tres JSON del ZIP de Equipo 2 pasan el JSON Schema oficial de HL7 FHIR R4
+y la comprobación de referencias internas. El archivo de Ana López incluye los
+cuatro tipos de recursos obligatorios del integrador; los otros dos son casos
+adicionales con signos y prescripciones.
+
+El ZIP de Lautaro contiene tres pacientes, dos profesionales distintos, tres
+prescripciones y diez observaciones. No contiene prácticas (ServiceRequest).
+La importación completa requiere resolver restricciones de nuestra app y
+diferencias de formato del archivo recibido.
+
+RESTRICCIONES DE NUESTRA APP
+
+1. El validador exige un profesional para cada observación. En FHIR R4,
+   Observation.performer es opcional (cardinalidad 0..*). Las referencias de
+   paciente y prescriptor que Lautaro sí declara resuelven correctamente.
+   El mensaje actual de referencias mezcla esa ausencia con una referencia rota.
+
+2. SQLite también exige medico_id en los signos nuevos mediante el trigger
+   signos_medico_requerido. Cambiar solo el validador no alcanza.
+
+3. El exportador omite signos sin medico_id. Una futura adaptación de la
+   importación debe conservar esas mediciones al reexportar.
+
+El profesional que prescribe no identifica necesariamente a quien tomó los
+signos. El ensayo conservó al responsable de las observaciones como desconocido,
+separado del usuario autenticado que registra la importación.
+
+DIFERENCIAS DEL ZIP RECIBIDO
+
+- El JSON Schema oficial detectó 16 errores: diez effectiveDateTime y tres
+  authoredOn con formato de fecha/hora fuera de FHIR, y tres apariciones de
+  Practitioner.qualification sin el campo obligatorio code.
+- Las fechas recibidas usan espacios y no informan zona horaria. Cuando una
+  fecha FHIR incluye hora, requiere T y zona. Nuestro importador las tolera y
+  asume UTC por su convención local; eso no confirma la zona usada por el emisor.
+- Las entradas no incluyen fullUrl. Nuestra app puede resolver sus referencias
+  relativas mediante el mapa local de tipo/ID; nuestro exportador incluye fullUrl.
+- Ningún archivo incluye ServiceRequest. Esto no obliga a rechazar los otros
+  recursos, pero deja sin evidencia de prácticas importadas al integrador.
+- La especialidad del profesional no se informa; nuestra app la representa como
+  no informada. Las dosis y mediciones recibidas no se modificaron en el ensayo.
+
+PRUEBAS EJECUTADAS
+
+Importador original, sobre un respaldo:
+  Los tres archivos completos fueron rechazados antes de escribir.
+  En copias filtradas sin Observation se importaron los tres pacientes, los dos
+  profesionales y las tres prescripciones. Ese resultado es parcial.
+
+Ensayo completo experimental:
+  Se adaptaron únicamente una copia del módulo FHIR y un respaldo de SQLite
+  para permitir profesional desconocido en las observaciones.
+  Se crearon tres pacientes, dos profesionales, tres fármacos, tres
+  prescripciones y tres filas de signos, conservando diez observaciones.
+  El profesional compartido por dos archivos se reutilizó por DNI.
+  Repetir las importaciones no agregó duplicados.
+  Integridad SQLite: ok; sin violaciones de claves foráneas.
+  La reexportación con el código actual omitió las diez observaciones,
+  confirmando la tercera restricción de nuestra app.
+
+ALCANCE
+
+La aplicación instalada no fue modificada. BD/Salud.db, el ZIP recibido,
+nuestro ZIP y los cambios previos del usuario conservaron sus hashes.
+No se realizó importación de Lautaro en la base del proyecto ni envío de correo.
+El código y las bases experimentales están en .trabajo-local/analisis-fhir/.
+El detalle reproducible del resultado está en analisis_interoperabilidad_lautaro.json.
+
+La validación externa fue con JSON Schema oficial y referencias internas;
+no se ejecutó el validador integral de perfiles y terminologías de HL7.
+La recepción de nuestro ZIP por la aplicación del otro grupo sigue sin probarse.
+
+REFERENCIAS
+
+Esquema oficial descargado de:
+https://hl7.org/fhir/R4/fhir.schema.json.zip
+https://hl7.org/fhir/R4/downloads.html
+
+Observation.performer:
+https://hl7.org/fhir/R4/observation-definitions.html#Observation.performer
+
+Formato dateTime:
+https://hl7.org/fhir/R4/datatypes.html#dateTime
+
+Practitioner.qualification.code:
+https://hl7.org/fhir/R4/practitioner-definitions.html#Practitioner.qualification.code
+
+Bundle.entry.fullUrl:
+https://hl7.org/fhir/R4/bundle-definitions.html#Bundle.entry.fullUrl

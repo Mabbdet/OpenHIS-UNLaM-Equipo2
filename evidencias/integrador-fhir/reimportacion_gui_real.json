@@ -1,0 +1,35 @@
+{
+  "entorno": "BASE REAL: BD/Salud.db",
+  "antes": {
+    "Pacientes": 9,
+    "Profesionales": 10,
+    "SignosVitales": 8,
+    "Prescripciones": 12,
+    "Practicas": 2,
+    "RecursosFHIR": 24
+  },
+  "despues": {
+    "Pacientes": 9,
+    "Profesionales": 10,
+    "SignosVitales": 8,
+    "Prescripciones": 12,
+    "Practicas": 2,
+    "RecursosFHIR": 24
+  },
+  "resultado": {
+    "creados": {},
+    "reutilizados": {
+      "Pacientes": 1,
+      "Profesionales": 1
+    },
+    "omitidos": 4,
+    "conflictos": [],
+    "advertencias": [
+      "3 observaciones sin profesional informado: se conservará como desconocido, sin atribuirlas al prescriptor.",
+      "4 fechas sin zona horaria: se interpretarán como UTC según la convención local. El emisor no informó la zona original.",
+      "Hay titulaciones sin code en el archivo recibido; la especialidad ausente permanecerá no informada.",
+      "El lote no contiene prácticas (ServiceRequest)."
+    ]
+  },
+  "sin_duplicados": true
+}

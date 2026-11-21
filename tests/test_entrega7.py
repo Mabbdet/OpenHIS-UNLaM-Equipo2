@@ -58,8 +58,8 @@ def test_bootstrap_unico_login_logout_y_sesion_falsa(seguridad, repositorio):
 
 
 @pytest.mark.parametrize("rol,permitidos", [
-    ("admin", set(MODULOS)), ("medico", {"Pacientes", "Signos vitales", "Prescripciones", "Intervenciones", "DICOM"}),
-    ("enfermero", {"Pacientes", "Signos vitales", "Intervenciones", "DICOM"}), ("administrativo", {"Pacientes", "Profesionales"})])
+    ("admin", set(MODULOS)), ("medico", {"Pacientes", "Signos vitales", "Prescripciones", "Intervenciones", "DICOM", "Historia clínica"}),
+    ("enfermero", {"Pacientes", "Signos vitales", "Intervenciones", "DICOM", "Historia clínica"}), ("administrativo", {"Pacientes", "Profesionales", "Agenda profesional", "Turnos", "Agenda y recordatorios"})])
 def test_menu_y_acceso_directo_por_rol(seguridad, raiz_tk, rol, permitidos):
     s, admin = seguridad
     alta(s, admin, "prueba", rol)

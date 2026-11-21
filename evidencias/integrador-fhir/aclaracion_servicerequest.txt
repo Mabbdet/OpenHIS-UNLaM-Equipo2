@@ -1,0 +1,24 @@
+Aclaración sobre ServiceRequest - Equipo 2
+
+Los archivos que recibimos de Lautaro y del grupo 7 no incluyeron recursos
+ServiceRequest. Por ese motivo, el intercambio recibido no permitió comprobar
+la importación de una solicitud de práctica enviada por otro grupo.
+
+Para mostrar el funcionamiento, incluimos una demostración propia a partir de
+una práctica ya registrada en nuestra app: código E9-PRAC-01, asociada a Ana
+López y a Sofía Demo. El Bundle incluye Patient, Practitioner, ServiceRequest
+y MedicationRequest, con sus referencias internas completas.
+
+La demostración se importó en una base de prueba: se creó una práctica
+asociada al paciente y al profesional correctos. Al repetir la importación
+no se generaron duplicados. El archivo pasó el JSON Schema oficial de FHIR R4.
+
+Esta evidencia corresponde a una demostración local del Equipo 2. La recepción
+de un ServiceRequest de otro grupo permanece pendiente. La base real y los ZIP
+originales no se modificaron para esta demostración.
+
+Archivo de ejemplo:
+intercambio/Equipo2/FHIR_ServiceRequest_demostracion_local_Equipo2.json
+
+Resultado verificable:
+evidencias/integrador-fhir/demostracion_servicerequest_local.json
