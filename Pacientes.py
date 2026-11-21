@@ -1,6 +1,7 @@
 """Entrega 2: registro y búsqueda por consola. Ejecutar: python Pacientes.py."""
 
 import sqlite3
+from getpass import getpass
 
 from datos import CAMPOS_PACIENTE, ETIQUETAS, ErrorValidacion, Repositorio
 
@@ -28,7 +29,23 @@ def buscar_paciente(repositorio):
 
 
 def menu():
-    repositorio = conectar_bd()
+    from seguridad import Seguridad
+    servicio = Seguridad()
+    sesion = None
+    try:
+        if servicio.requiere_admin_inicial():
+            servicio.crear_admin_inicial(input("Administrador inicial: ").strip(), getpass("Contraseña inicial: "), input("Nombre completo: "))
+        sesion = servicio.autenticar(input("Usuario: "), getpass("Contraseña: "))
+        _menu_autenticado(servicio.repositorio(sesion))
+    except (ErrorValidacion, sqlite3.Error) as error:
+        print(f"ERROR: {error}")
+    except (EOFError, KeyboardInterrupt):
+        print("\nPrograma finalizado.")
+    finally:
+        servicio.cerrar_sesion(sesion)
+
+
+def _menu_autenticado(repositorio):
     while True:
         print("\nHOSPITAL UNIVERSITARIO SAN JUSTO\n1. Registrar nuevo paciente\n2. Buscar paciente por DNI\n3. Salir")
         try:

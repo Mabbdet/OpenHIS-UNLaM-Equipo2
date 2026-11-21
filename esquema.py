@@ -1,4 +1,4 @@
-"""Ampliación de SQLite para Entrega 4, preservando los registros anteriores."""
+"""Migraciones acumulativas de SQLite, preservando los registros anteriores."""
 
 
 def ampliar_esquema(conexion):
@@ -86,6 +86,8 @@ def ampliar_esquema(conexion):
         BEGIN SELECT RAISE(ABORT, 'No se puede quitar el profesional del registro.'); END;
     """)
     ampliar_estados(conexion)
+    from esquema_seguridad import ampliar_seguridad
+    ampliar_seguridad(conexion)
 
 
 def ampliar_estados(conexion):

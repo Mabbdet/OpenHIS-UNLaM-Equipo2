@@ -1,5 +1,19 @@
 # OpenHIS-UNLaM — Equipo 2
 
+## Estado actual — Entrega 7 / Sprint 4
+
+El sistema ahora exige login, limita los módulos por rol y registra autoría y auditoría. Ejecutar `python OpenHIS_app.pyw` o `python Menu_principal_app.pyw`.
+
+La base incluida tiene cuentas ficticias de demostración: `admin / admin123`, `medico_equipo2 / medico123`, `enfermero_equipo2 / enfermero123` y `administrativo_equipo2 / administrativo123`. En una base nueva se crea el administrador desde la pantalla inicial. Las entradas independientes y la consola también piden credenciales.
+
+El administrador gestiona usuarios, contraseñas, roles y estados. Las tres tablas maestras admiten alta, modificación y baja lógica con auditoría. No puede desactivarse ni degradarse al último administrador activo. Cada alta identifica a su autor; el log conserva cambios y accesos. Los registros históricos mantienen autor desconocido. Contraseñas con PBKDF2-HMAC-SHA256 y sal, sin texto legible ni hashes en auditoría.
+
+Entrega 7 verificada con **96 pruebas aprobadas, ninguna omitida**. Tres usuarios nuevos de distintos roles, dos capturas reales embebidas en Scrum y reflexión completada. La consigna renumera seguridad como HU-07 y FHIR como HU-09; FHIR queda para una entrega posterior.
+
+Matriz de requisitos, permisos, cuentas y límites en [docs/entrega-7.md](docs/entrega-7.md). Reflexión en [docs/reflexion-entrega-7.md](docs/reflexion-entrega-7.md).
+
+## Referencia del incremento anterior — Entrega 5
+
 Sistema hospitalario educativo desarrollado por Alejandro con Python, Tkinter y SQLite. Entrega 5 amplía el Sprint 3: pacientes, profesionales, signos vitales independientes y prescripciones con bajas reversibles, XML académico y HTML imprimible.
 
 ## Ejecución

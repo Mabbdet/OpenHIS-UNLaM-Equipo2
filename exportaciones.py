@@ -101,4 +101,10 @@ def exportar_prescripcion(repositorio, prescripcion_id, formato, destino=RAIZ):
     ruta = directorio / nombre
     with ruta.open("x", encoding="utf-8") as archivo:
         archivo.write(contenido)
+    if hasattr(repositorio, "registrar_exportacion"):
+        try:
+            repositorio.registrar_exportacion(prescripcion_id, ruta, formato)
+        except Exception:
+            ruta.unlink(missing_ok=True)
+            raise
     return ruta, contenido

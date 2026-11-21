@@ -329,8 +329,6 @@ class Repositorio:
     def guardar_catalogo(self, catalogo, entrada, registro_id=None):
         tabla, campos, etiqueta = CATALOGOS[catalogo]
         datos = textos(entrada, campos, ("codigo", etiqueta))
-        if registro_id is not None and catalogo != "especialidades":
-            raise ErrorValidacion("Esta tabla admite alta y listado en la entrega actual.")
         try:
             with self.conectar() as conexion:
                 if registro_id is None:
@@ -341,7 +339,7 @@ class Repositorio:
                 asignaciones = ", ".join(f"{campo}=:{campo}" for campo in campos)
                 cursor = conexion.execute(f"UPDATE {tabla} SET {asignaciones} WHERE id=:id", datos)
                 if cursor.rowcount != 1:
-                    raise ErrorValidacion("La especialidad no existe.")
+                    raise ErrorValidacion("El registro del catálogo no existe.")
                 return registro_id
         except sqlite3.IntegrityError as error:
             if "UNIQUE" in str(error):
@@ -349,10 +347,15 @@ class Repositorio:
             raise
 
     def desactivar_especialidad(self, especialidad_id):
+        return self.desactivar_catalogo("especialidades", especialidad_id)
+
+    def desactivar_catalogo(self, catalogo, registro_id):
+        tabla = CATALOGOS[catalogo][0]
         with self.conectar() as conexion:
-            cursor = conexion.execute("UPDATE Especialidades SET activo=0 WHERE id=? AND activo=1", (especialidad_id,))
+            cursor = conexion.execute(f"UPDATE {tabla} SET activo=0 WHERE id=? AND activo=1", (registro_id,))
             if cursor.rowcount != 1:
-                raise ErrorValidacion("La especialidad no existe o ya está inactiva.")
+                raise ErrorValidacion("El registro del catálogo no existe o ya está inactivo.")
+        return registro_id
 
     @staticmethod
     def _especialidad_activa(conexion, especialidad_id):

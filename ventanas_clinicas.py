@@ -142,9 +142,8 @@ class TablasMaestrasApp(VentanaBase):
             barra = ttk.Frame(pagina)
             barra.pack(fill="x", pady=(0, 10))
             ttk.Button(barra, text="Registrar", command=lambda c=catalogo: self.registrar(c)).pack(side="left", padx=4)
-            if catalogo == "especialidades":
-                ttk.Button(barra, text="Modificar", command=self.modificar).pack(side="left", padx=4)
-                ttk.Button(barra, text="Desactivar", command=self.desactivar).pack(side="left", padx=4)
+            ttk.Button(barra, text="Modificar", command=lambda c=catalogo: self.modificar(c)).pack(side="left", padx=4)
+            ttk.Button(barra, text="Desactivar", command=lambda c=catalogo: self.desactivar(c)).pack(side="left", padx=4)
             if catalogo == "snomed":
                 self.filtros[catalogo] = tk.StringVar(raiz)
                 ttk.Label(barra, text="Término:").pack(side="left", padx=(14, 4))
@@ -186,20 +185,20 @@ class TablasMaestrasApp(VentanaBase):
             lambda datos: self.repositorio.guardar_catalogo(catalogo, datos), requeridos=("codigo", etiqueta),
             al_guardar=lambda registro_id: self.refrescar(catalogo, registro_id))
 
-    def modificar(self):
+    def modificar(self, catalogo="especialidades"):
         def abrir():
-            fila = self.seleccionado(self.tablas["especialidades"], self.filas["especialidades"])
-            return FormularioClinico(self.raiz, "Modificar especialidad", CATALOGOS["especialidades"][1],
-                lambda datos: self.repositorio.guardar_catalogo("especialidades", datos, fila["id"]), inicial=fila,
-                requeridos=("codigo", "nombre"), al_guardar=lambda registro_id: self.refrescar("especialidades", registro_id))
+            fila = self.seleccionado(self.tablas[catalogo], self.filas[catalogo])
+            return FormularioClinico(self.raiz, f"Modificar {catalogo}", CATALOGOS[catalogo][1],
+                lambda datos: self.repositorio.guardar_catalogo(catalogo, datos, fila["id"]), inicial=fila,
+                requeridos=("codigo", CATALOGOS[catalogo][2]), al_guardar=lambda registro_id: self.refrescar(catalogo, registro_id))
         return self.intentar(abrir)
 
-    def desactivar(self):
+    def desactivar(self, catalogo="especialidades"):
         def aplicar():
-            fila = self.seleccionado(self.tablas["especialidades"], self.filas["especialidades"])
-            if messagebox.askyesno("Desactivar especialidad", f"¿Desactivar {fila['nombre']}?\nNo se podrá asignar a nuevos profesionales.", parent=self.raiz):
-                self.repositorio.desactivar_especialidad(fila["id"])
-                self.refrescar("especialidades", fila["id"])
+            fila = self.seleccionado(self.tablas[catalogo], self.filas[catalogo])
+            if messagebox.askyesno("Desactivar registro", f"¿Desactivar {fila[CATALOGOS[catalogo][2]]}?\nSe conservarán las relaciones existentes y no podrá usarse en nuevas altas.", parent=self.raiz):
+                self.repositorio.desactivar_catalogo(catalogo, fila["id"])
+                self.refrescar(catalogo, fila["id"])
                 messagebox.showinfo("Operación exitosa", "Especialidad desactivada.", parent=self.raiz)
         self.intentar(aplicar)
 
@@ -441,11 +440,5 @@ class PrescripcionesApp(VentanaBase):
 
 
 def ejecutar_clinica(tipo):
-    raiz = tk.Tk()
-    try:
-        {"maestras": TablasMaestrasApp, "profesionales": ProfesionalesApp, "prescripciones": PrescripcionesApp}[tipo](raiz)
-    except (ErrorValidacion, sqlite3.Error) as error:
-        mostrar_error(raiz, error)
-        raiz.destroy()
-        return
-    raiz.mainloop()
+    from menu_app import ejecutar_modulo
+    ejecutar_modulo({"maestras": "Tablas maestras", "profesionales": "Profesionales", "prescripciones": "Prescripciones"}[tipo])

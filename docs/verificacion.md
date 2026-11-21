@@ -1,5 +1,13 @@
 # Verificación de los incrementos
 
+## Entrega 7 — Seguridad y auditoría
+
+Ejecución del 20/11/2026 (Argentina): **96 pruebas aprobadas, ninguna omitida**, con `.venv/Scripts/python.exe -m pytest -q -rs -p no:cacheprovider`. Incluye regresión, los cuatro roles, login válido e inválido, bajas y reactivación de usuarios, último admin, revocación entre instancias, hash con sal y migración desde SHA-256, autoría, valores anteriores/nuevos y rollback ante fallo de auditoría. El menú de Entrega 5 se prueba con una sesión de administrador.
+
+Se comprobó el formulario real de alta de usuario, filtros de auditoría, apertura de módulos por rol, modificación/baja de los tres catálogos y ciclo real de login/logout en las ocho entradas del menú. El acceso antiguo al historial conserva sus permisos. Las capturas de Usuarios y Auditoría se revisaron visualmente. Scrum conserva sus 14 imágenes y agrega dos, sin cambiar las fórmulas existentes; `HU-UNLaM!I20` sigue con su referencia rota histórica.
+
+La base entregada conserva los registros clínicos y sus estados anteriores; agrega cuatro cuentas ficticias (admin y tres usuarios nuevos de roles distintos), auditoría y una especialidad ficticia inactiva para demostrar A/M/B. Integridad SQLite: `ok`, sin infracciones de claves foráneas. La auditoría guarda UTC.
+
 ## Entrega 5 / Ampliación y cierre de Sprint 3
 
 | Verificación ejecutada | Resultado |

@@ -209,6 +209,7 @@ class AplicacionPacientes:
         estilo.configure("Treeview", font=("Segoe UI", 10), rowheight=28)
         estilo.configure("Treeview.Heading", font=("Segoe UI", 10, "bold"))
         contenido = ttk.Frame(raiz, padding=20)
+        self.cuerpo = contenido
         contenido.pack(fill="both", expand=True)
         ttk.Label(contenido, text="HOSPITAL UNIVERSITARIO SAN JUSTO", style="Titulo.TLabel").pack(anchor="w")
         ttk.Label(contenido, text="Sistema de gestión de pacientes").pack(anchor="w", pady=(2, 16))
@@ -328,6 +329,8 @@ class AplicacionPacientes:
         from ventanas_clinicas import TablasMaestrasApp, ProfesionalesApp, PrescripcionesApp
         ventana = tk.Toplevel(self.raiz)
         try:
+            if hasattr(self.repositorio, "autorizar"):
+                self.repositorio.autorizar({"maestras": "Tablas maestras", "profesionales": "Profesionales", "prescripciones": "Prescripciones"}[tipo])
             clase = {"maestras": TablasMaestrasApp, "profesionales": ProfesionalesApp, "prescripciones": PrescripcionesApp}[tipo]
             return clase(ventana, self.repositorio)
         except (ErrorValidacion, sqlite3.Error) as error:
@@ -380,6 +383,8 @@ class AplicacionPacientes:
 
     def signos(self):
         try:
+            if hasattr(self.repositorio, "autorizar"):
+                self.repositorio.autorizar("Signos vitales")
             return VentanaSignos(self, self.seleccionado())
         except (ErrorValidacion, sqlite3.Error) as error:
             mostrar_error(self.raiz, error)
@@ -396,11 +401,5 @@ class AplicacionPacientes:
 
 
 def ejecutar(modo="signos"):
-    raiz = tk.Tk()
-    try:
-        AplicacionPacientes(raiz, modo=modo)
-    except sqlite3.Error as error:
-        mostrar_error(raiz, error)
-        raiz.destroy()
-        return
-    raiz.mainloop()
+    from menu_app import ejecutar_modulo
+    ejecutar_modulo("Pacientes", modo=modo)

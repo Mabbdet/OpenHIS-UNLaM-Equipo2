@@ -189,10 +189,15 @@ def test_flujo_gui_alta_baja_reactivacion(repositorio, caso, datos_paciente, rai
 
 
 def test_menu_abre_modulos_independientes(repositorio, raiz_tk):
-    menu = MenuApp(raiz_tk, repositorio)
+    from seguridad import Seguridad
+    servicio = Seguridad(repositorio.ruta)
+    servicio.crear_admin_inicial("admin", "AdminTest123", "Administrador prueba")
+    sesion = servicio.autenticar("admin", "AdminTest123")
+    seguro = servicio.repositorio(sesion)
+    menu = MenuApp(raiz_tk, seguro)
     for nombre in ("Pacientes", "Profesionales", "Signos vitales", "Prescripciones", "Tablas maestras"):
         app = menu.abrir(nombre)
-        assert app.repositorio is repositorio
+        assert app.repositorio is seguro
         assert app.raiz.winfo_exists()
         assert menu.abrir(nombre) is app
         app.raiz.destroy()

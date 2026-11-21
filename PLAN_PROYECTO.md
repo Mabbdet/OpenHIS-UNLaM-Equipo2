@@ -1,5 +1,15 @@
 # Plan de proyecto — OpenHIS-UNLaM — Equipo 2
 
+## Actualización — Entrega 7 / Sprint 4 / HU-07
+
+Fuente: `Sist-Info-Salud-7.pdf`, páginas 4–10, 37–44 y 175–176. Login, gestión de usuarios, cuatro roles y auditoría implementados. Cada alta identifica al usuario autenticado; las operaciones y su log se confirman juntas. Hash PBKDF2-HMAC-SHA256 con sal, sesiones en memoria, protección del último admin y revocación de sesiones.
+
+Se crearon tres cuentas nuevas de roles distintos, se incorporaron dos capturas reales a Scrum y se redactó la reflexión. Resultado: 96 pruebas aprobadas sin omisiones. Rama `develop-Entrega7`, desde `5bea6ef`, con integración local a `develop` después de verificar; sin push automático.
+
+Cambio de numeración docente: HU-07 es seguridad; HU-09 es FHIR. Sprint 5 reúne HU-08/HU-09. Las secciones previas y la numeración antigua de Epic 3 se conservan como historia. Las entregas 9, 10 y final y la práctica FHIR se reservan para los siguientes incrementos. Arduino e IA ya fueron realizados; la rúbrica es para la exposición oral.
+
+Detalle: `docs/entrega-7.md`. Se conservaron las correcciones previas sin commit y los archivos Arduino externos al incremento.
+
 Estado: planificación inicial conservada como historial, con actualización de Entrega 5.
 
 ## Actualización — Entrega 5 / Cierre de Sprint 3
