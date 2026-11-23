@@ -1,8 +1,18 @@
 # Plan de proyecto — OpenHIS-UNLaM — Equipo 2
 
+## Estado consolidado al 22/11/2026
+
+Las entregas numeradas 1, 2, 3, 4, 5, 7, 9 y 10 y la entrega final están implementadas y revisadas. Agenda profesional, turnero telefónico, recordatorios locales e historia clínica están integrados al menú con permisos por rol. La HCE incluye consultas, evolución, antecedentes, cronología y auditoría. El portal web de pacientes amplía la gestión de turnos.
+
+La revisión completa aprobó 204 pruebas. Scrum registra las 23 historias, los 10 sprints y 30 tareas únicas con sus responsables. Alejandro es Scrum Master y ambos participan en desarrollo, pruebas y documentación.
+
+El correo de intercambio del 21/11/2026 y la impresión desde navegador del 22/11/2026 están acreditados en evidencias y Bitácora. El ejemplo híbrido combina los recursos de Bart Simpson recibidos de Lautaro con un ServiceRequest sintético del Equipo 2. Se verificaron importación, asociaciones y reimportación tanto en un receptor vacío como en uno con el archivo original ya importado. La procedencia de la solicitud está identificada en el recurso y en `intercambio/hibrido/README.txt`.
+
+La revisión y sus nuevos comprobantes se encuentran en `develop-revisionFinal`. Las secciones siguientes conservan el contexto de cada incremento. El estado consolidado y la hoja Revisión de Scrum reúnen el resultado actual.
+
 ## Ampliación opcional — Turnero web
 
-Implementado el 21/11/2026 en `develop-EntregaFinal`: portal de pacientes sobre la misma base del turnero telefónico, acceso individual habilitado por el personal, consulta de disponibilidad y gestión de reservas propias. Canales WEB/TELEFONO con auditoría, control transaccional de horarios y sesiones revocables. Verificación: 202 casos de regresión completa más dos casos adicionales del escritorio; cuatro capturas y verificación del flujo real en `evidencias/turnero-web/`. Uso y alcance en `docs/turnero-web.txt`. Funciona localmente. El cierre documental de turnero telefónico/HCE en Scrum sigue pendiente.
+Implementado el 21/11/2026 en `develop-EntregaFinal`: portal de pacientes sobre la misma base del turnero telefónico, acceso individual habilitado por el personal, consulta de disponibilidad y gestión de reservas propias. Canales WEB/TELEFONO con auditoría, control transaccional de horarios y sesiones revocables. Verificación: 202 casos de regresión completa más dos casos adicionales del escritorio; cuatro capturas y verificación del flujo real en `evidencias/turnero-web/`. Uso y alcance en `docs/turnero-web.txt`. Funciona localmente. El 22/11 se incorporaron a la Bitácora las evidencias del turnero telefónico y la HCE. La hoja Reparto identifica al responsable principal de cada tarea.
 
 ## Actualización — Entrega 10 / Cierre técnico del Epic 2
 
@@ -10,13 +20,13 @@ Trabajo del 21/11/2026 (Argentina), rama `develop-Entrega10` desde `0b31f12`. Fu
 
 142 pruebas aprobadas sin omisiones. El análisis real mantuvo idéntico el archivo SQLite; la confirmación agregó una fila de signos para cuatro Observations. La base conserva todas las filas anteriores. Cuatro capturas y cierre incorporados a Scrum, conservando veinte imágenes previas y fórmulas. Detalle en `docs/entrega-10.md`; reflexión en `docs/reflexion-entrega-10.md`.
 
-Antes de empezar se publicaron `develop-Entrega5`, `develop-Entrega7`, `develop-Entrega9` y `develop`, sin coautoría ni menciones adicionales. Entrega 10 se verifica y se integra localmente a `develop`, conservando las correcciones anteriores sin commit y los archivos Arduino. Su publicación no es automática. Epic 3 (turnos e HCE) permanece pendiente. Las secciones siguientes describen estados históricos.
+Antes de empezar se publicaron `develop-Entrega5`, `develop-Entrega7`, `develop-Entrega9` y `develop`, sin coautoría ni menciones adicionales. La entrega 10 se verificó e integró a la línea de desarrollo. Epic 3, con turnos e HCE, se implementó posteriormente en la entrega final.
 
 ## Actualización — Entrega 9 / Sprint 5
 
 HU-08, HU-09 y HU-10 implementadas desde `develop` en `b6a31ab`, en la rama `develop-Entrega9`. Consulta consolidada con auditoría Q; Bundle FHIR R4 JSON/XML con importación transaccional y no duplicación por DNI; conversión JPG/PNG a Secondary Capture y anonimización básica con verificación de años, sexo, UID y píxeles.
 
-Se completaron las pruebas de los tres módulos y la regresión: 121 aprobadas sin omisiones. Cuatro capturas reales y resultados incorporados a Scrum. Demostración con institución externa sintética; no se realizó envío por correo. Trabajo iniciado el 20/11/2026 y cerrado el 21/11/2026 (Argentina). Las etapas de Entrega 10 y final permanecen pendientes.
+Se completaron las pruebas de los tres módulos y la regresión con 121 aprobadas sin omisiones. Cuatro capturas reales y resultados incorporados a Scrum. La entrega 9 empleó una institución externa sintética. El integrador posterior incorporó los archivos de Lautaro y el comprobante del envío por correo. Trabajo iniciado el 20/11/2026 y cerrado el 21/11/2026 (Argentina). La entrega 10 y la final se completaron en los incrementos siguientes.
 
 Detalle y límites en `docs/entrega-9.md`; reflexión en `docs/reflexion-entrega-9.md`. Se conservaron las correcciones previas sin commit y los archivos Arduino. Integración local a develop después de verificar, sin push automático.
 
@@ -26,11 +36,11 @@ Fuente: `Sist-Info-Salud-7.pdf`, páginas 4–10, 37–44 y 175–176. Login, ge
 
 Se crearon tres cuentas nuevas de roles distintos, se incorporaron dos capturas reales a Scrum y se redactó la reflexión. Resultado: 96 pruebas aprobadas sin omisiones. Rama `develop-Entrega7`, desde `5bea6ef`, con integración local a `develop` después de verificar; sin push automático.
 
-Cambio de numeración docente: HU-07 es seguridad; HU-09 es FHIR. Sprint 5 reúne HU-08/HU-09. Las secciones previas y la numeración antigua de Epic 3 se conservan como historia. Las entregas 9, 10 y final y la práctica FHIR se reservan para los siguientes incrementos. Arduino e IA ya fueron realizados; la rúbrica es para la exposición oral.
+Cambio de numeración docente. HU-07 es seguridad y HU-09 es FHIR. Sprint 5 reúne HU-08/HU-09. Las entregas 9, 10 y final y el integrador FHIR se desarrollaron después de este incremento. Arduino e IA ya fueron realizados y la rúbrica corresponde a la exposición oral.
 
 Detalle: `docs/entrega-7.md`. Se conservaron las correcciones previas sin commit y los archivos Arduino externos al incremento.
 
-Estado: planificación inicial conservada como historial, con actualización de Entrega 5.
+Los apartados iniciales de planificación se conservan como historial. El estado consolidado del inicio reúne los incrementos implementados.
 
 ## Actualización — Entrega 5 / Cierre de Sprint 3
 
@@ -39,9 +49,9 @@ Fuente: `Sist-Info-Salud-5.pdf`, páginas 89–90 y ejemplos docentes. Equipo: A
 - Rama `develop-Entrega5` desde `develop` en `8a12cfc`, integración local después de las verificaciones, sin push automático.
 - Bajas lógicas, reactivaciones individuales, filtros por estado y conservación de relaciones en pacientes, profesionales, signos y prescripciones. No hay cascadas de estado.
 - Cuatro ejecutables independientes y menú común `OpenHIS_app.pyw`. Historial completo de signos y validación de fichas activas para nuevas intervenciones.
-- HU-06 amplía prescripciones con XML académico y HTML imprimible. FHIR real permanece pendiente; el espacio de nombres propio no prueba interoperabilidad.
+- HU-06 amplía prescripciones con XML académico y HTML imprimible. El intercambio FHIR R4 se incorporó en las entregas 9 y 10.
 - Resultado de pytest: 66 aprobadas sin omisiones. Ocho capturas de altas/bajas y evidencia XML agregadas a Bitácora, conservando las cuatro imágenes de Entrega 4.
-- HTML verificado mediante renderizado estático; apariencia e impresión en navegador pendientes por bloqueo de acceso local de la herramienta. La evidencia identifica esta limitación.
+- HTML verificado mediante renderizado estático e impresión desde navegador acreditada el 22/11/2026. PDF de dos páginas A4 y captura del diálogo en `evidencias/entrega5/`; comprobante en la Bitácora desde la fila 1480.
 - La base agrega un paciente, un profesional, un signo y una prescripción ficticios, todos finalmente inactivos. Se respaldaron base y Scrum antes de modificarlos.
 
 Matriz de requisitos y límites en `docs/entrega-5.md`; resultados en `docs/verificacion.md`; reflexión de dos párrafos en `docs/reflexion-entrega-5.md`. Las secciones anteriores se conservan como historial y no describen las reglas actuales de baja.
@@ -58,7 +68,7 @@ La solicitud posterior amplía el alcance con `Guia_Entregas_1_2_3_y_4_OpenHIS_U
 - Cuatro capturas reales de Sprint 3 embebidas en `scrum/Planilla Scrum.xlsx`, junto con objetivos, resultados y responsable actualizados. Reflexión de dos párrafos en `docs/reflexion-sprint-3.md`.
 - La migración conserva el historial anterior. Se bloquean bajas que romperían referencias y se anulan prescripciones mediante baja lógica.
 
-El alcance y sus límites se detallan en `docs/entrega-4.md`; las verificaciones, en `docs/verificacion.md`. No se inventan fechas de ejecución a partir de los estados heredados de la plantilla. Continúan pendientes los PDFs originales y las capturas de las entregas anteriores.
+El alcance y sus límites se detallan en `docs/entrega-4.md` y las verificaciones en `docs/verificacion.md`. Las fuentes y páginas utilizadas se registran en las matrices de cada entrega. La revisión final incorporó las capturas de las entregas 2 y 3.
 
 ## Decisiones posteriores a la planificación inicial
 
@@ -66,8 +76,8 @@ El alcance y sus límites se detallan en `docs/entrega-4.md`; las verificaciones
 - Ramas acumulativas solicitadas: `develop-Entrega1` (documentación), `develop-Entrega2` (consola) y `develop-Entrega3` (GUI, CRUD y signos vitales). Cada incremento se verifica y se integra a `develop` antes de iniciar la siguiente rama desde `develop` actualizado. Los pendientes de presentación académica se documentan por separado y no se dan por cumplidos mediante los tests.
 - Pruebas sencillas con `pytest`, sobre bases temporales.
 - Se revisó `C:/Users/Ale/Downloads/Planilla-Scrum-Profe.xlsx`, ignorando los estados. Su Sprint 3 asigna explícitamente la integración del profesional en signos vitales a HU-04/HU-05; en Sprint 2 se conserva `medico_id` preparado, sin afirmar que exista esa integración.
-- La planilla ubica HU-04 a HU-08 en Epic 2 y HU-09 a HU-11 en Epic 3. Se registra la diferencia con la numeración de la guía; no se implementan esas historias ahora.
-- El objetivo de Sprint 2 debe explicitar GUI además de signos, motivo, modificación y baja. Los PDFs originales y las fechas efectivas de entrega siguen pendientes de verificación.
+- La numeración inicial de la plantilla se concilió con las consignas posteriores. La hoja Reparto consolida HU-01 a HU-23 con su sprint y entrega.
+- El Sprint 2 incluye GUI, signos, motivo, modificación y baja. La Bitácora cuenta con capturas reproducidas de esas operaciones.
 
 El inventario y los pendientes de las secciones siguientes describen la revisión inicial; los archivos y verificaciones de cada rama se detallan en su README.
 
@@ -179,19 +189,19 @@ Formato propuesto para trazabilidad: `fuente/sección → epic → HU o requisit
 
 Un requisito queda terminado cuando está implementado, probado y documentado con la evidencia correspondiente. Una captura de un mensaje de éxito no reemplaza la comprobación de persistencia o de integridad.
 
-## 8. Pendientes y ambigüedades
+## 8. Resolución de las dudas iniciales
 
 | Punto | Estado y tratamiento |
 |---|---|
-| PDFs originales | No disponibles en el repositorio. Contrastar las afirmaciones de la guía antes de cerrar requisitos. |
-| Plantilla Scrum | No disponible. Verificar si existe una planilla provista por la cátedra antes de definir otra estructura. |
-| Fechas, plataforma y formato de E1 | No especificados en la fuente disponible. Mantener pendientes y no inventar condiciones. |
-| Integrantes y disponibilidad | Pendientes. El calendario y la asignación nominal dependen de estos datos. |
-| HU-04 a HU-09 | La guía lista sus IDs, pero no desarrolla sus textos y criterios. Recuperarlos del PDF; no presentarlos como definidos. |
-| Epics 4 a 8 | La guía indica HHUU por definir. Distinguir historias propuestas por el equipo de historias tomadas de la consigna. |
-| Asociación al médico en HU-03 | El criterio la pide, pero la guía describe `medico_id` como preparación futura. Un campo vacío no demuestra cumplimiento. Revisar el PDF y documentar la solución o el pendiente, sin construir por defecto todo el módulo de profesionales. |
-| Baja física o lógica | Plan provisional: eliminación física según la versión final descrita. La baja lógica aparece como alternativa y no se incorpora automáticamente. |
-| Tres versiones de GUI | La guía pide entregar las tres. Verificar si deben ser independientes o si se admiten módulos auxiliares compartidos. |
+| PDFs originales | Las matrices de las entregas y la hoja Revisión registran el documento y las páginas utilizados. |
+| Plantilla Scrum | Incorporada y revisada en `scrum/Planilla Scrum.xlsx`, con backlog, Bitácora, referencias, reparto y revisión. |
+| Fechas, plataforma y formato de E1 | La confirmación administrativa de presentación corresponde al campus y a la cátedra. |
+| Integrantes y disponibilidad | Alejandro y Leonel. Responsables registrados en la planilla Scrum. |
+| HU-04 a HU-09 | Implementadas en los incrementos 4, 5, 7 y 9, con ampliaciones en la entrega 10. |
+| Epics 4 a 8 | Los ejes conceptuales se relacionan con las historias implementadas en el Documento de Visión actualizado. |
+| Asociación al médico en HU-03 | Implementada desde la entrega 4. Los datos externos sin autor informado conservan esa ausencia. |
+| Baja física o lógica | La entrega 5 incorporó bajas lógicas reversibles y conservación del historial. |
+| Tres versiones de GUI | Conservadas junto con los accesos independientes y el menú actual, utilizando módulos compartidos. |
 | Validaciones y reglas clínicas | Separar validación de formato numérico de rangos clínicos no especificados. No inventar umbrales médicos. |
 
 ## 9. Organización de archivos propuesta

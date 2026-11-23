@@ -42,7 +42,7 @@ Los tipos I/C se admiten en el esquema docente para futuras importaciones y conf
 | Tablas maestras | Sí | No | No | No |
 | Usuarios y auditoría | Sí | No | No | No |
 
-Los listados de profesionales y catálogos también sirven como datos de referencia de los formularios clínicos. Ese acceso no autoriza modificar esas tablas. El módulo de interoperabilidad FHIR independiente de la consigna todavía no existe; exportar una receta académica XML/HTML mantiene los permisos de Prescripciones.
+Los listados de profesionales y catálogos también sirven como datos de referencia de los formularios clínicos. Ese acceso no autoriza modificar esas tablas. Las entregas 9 y 10 incorporaron el módulo FHIR, con acceso de administrador. La exportación de recetas académicas XML/HTML mantiene los permisos de Prescripciones.
 
 ## Uso y cuentas de demostración
 
@@ -67,7 +67,7 @@ La migración conserva los 6 pacientes, 7 profesionales, 4 signos y 8 prescripci
 
 Las capturas provienen de las pantallas reales de Usuarios y Auditoría, conectadas a `BD/Salud.db`. Registran tres altas de usuarios, cambios en el catálogo ficticio y accesos de los distintos roles. Las marcas de tiempo de la base son UTC; el trabajo y la documentación se fechan el 20/11/2026 en Argentina.
 
-Scrum conserva sus tres pestañas y las 14 imágenes anteriores, y agrega dos capturas desde la fila 480 de Bitácora. Se actualiza HU-07 y el objetivo del Sprint 4. HU-09/FHIR queda pendiente en el Sprint 5. Las historias antiguas de Epic 3 se identifican como plan inicial para no confundirlas con la nueva numeración. La fórmula rota preexistente `HU-UNLaM!I20` se conserva como incidencia histórica.
+En el cierre de la entrega 7, Scrum conservó las 14 imágenes anteriores y agregó dos capturas desde la fila 480 de Bitácora. HU-07 y Sprint 4 documentan seguridad. HU-09/FHIR se implementó después, en Sprint 5. La revisión final concilió las fórmulas y la numeración de las 23 historias y los 10 sprints.
 
 ## Verificación y límites
 

@@ -59,6 +59,6 @@ La imagen artificial está en `IMAGENES/RX/imagen_sintetica_e10.png`. `e10_vincu
 
 Antes de iniciar esta entrega se publicaron `develop-Entrega5`, `develop-Entrega7`, `develop-Entrega9` y `develop` en el remoto del proyecto. Los tres commits figuran a nombre de Ale, sin trailers de coautoría. Entrega 10 se integra localmente después de verificar; su publicación no se realiza automáticamente. Las correcciones anteriores sin commit y los archivos Arduino se conservan.
 
-Scrum mantiene sus fórmulas, pestañas y veinte imágenes previas, y agrega cuatro. La referencia rota histórica de `HU-UNLaM!I20` permanece fuera de este cambio. La entrega final (Epic 3: turnos e HCE) continúa pendiente.
+Al cerrar la entrega 10, Scrum conservó las veinte imágenes anteriores y agregó cuatro. La revisión final del 22/11/2026 concilió las fórmulas, las 23 historias y los 10 sprints. La entrega final implementó agenda profesional, turnero telefónico, recordatorios e HCE, y agregó el portal web opcional de pacientes. Sus evidencias están en `evidencias/entrega-final/`, `evidencias/turnero-web/` y la Bitácora.
 
 Referencias técnicas: [SQLite backup](https://docs.python.org/3/library/sqlite3.html#sqlite3.Connection.backup), [píxeles DICOM con pydicom](https://pydicom.github.io/pydicom/stable/guides/user/working_with_pixel_data.html), [Pillow Image](https://pillow.readthedocs.io/en/stable/reference/Image.html).

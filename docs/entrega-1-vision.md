@@ -1,6 +1,6 @@
 # OpenHIS-UNLaM — Documento de Visión
 
-Documento provisional del Equipo 2. Fuentes: guía del repositorio y Planilla-Scrum-Profe.xlsx aportada por el usuario. Pendiente de contraste con los PDFs originales. Integrantes y roles propios del equipo: no informados.
+Documento de Visión del Equipo 2, actualizado al cierre de la entrega final el 22/11/2026. La formulación inicial parte de la guía del repositorio y la plantilla Scrum. Las matrices de las entregas 4, 5, 7, 9 y 10 y la hoja Revisión de Scrum registran las fuentes utilizadas en cada incremento.
 
 ## Institución y problema
 
@@ -10,9 +10,9 @@ Sus sistemas independientes fragmentan la información entre admisión, turnos, 
 
 ## Objetivo y alcance actual
 
-Construir incrementalmente un sistema hospitalario educativo que centralice procesos administrativos y clínicos. El alcance de implementación actual es Epic 1: registrar y buscar pacientes, registrar motivo de consulta y signos vitales, y consultar su historial. Sprint 2 agrega interfaz gráfica, modificación de datos de contacto/cobertura y baja física con eliminación de signos asociados.
+Construir incrementalmente un sistema hospitalario educativo que centralice procesos administrativos y clínicos. El alcance implementado comprende gestión de pacientes y profesionales, signos vitales, prescripciones, catálogos, seguridad y auditoría, intercambio FHIR, herramientas DICOM, agenda profesional, turnero telefónico, recordatorios locales e historia clínica electrónica. El portal web de pacientes amplía la gestión de turnos. Desde la entrega 5, las bajas son lógicas y reversibles y conservan las intervenciones.
 
-Actores actuales: administrativo y médico. Actores futuros descritos en la planilla: recepcionista y paciente que solicita turnos por web. La asignación de camas aparece en la visión amplia de Epic 1, pero no está desarrollada como funcionalidad de estas entregas.
+El escritorio utiliza los roles de administrador, administrativo, médico y enfermero, con permisos específicos. El paciente dispone de acceso individual al portal para gestionar sus turnos. La asignación de camas pertenece a la visión conceptual del hospital y queda fuera del alcance implementado.
 
 ## Flujo y capas
 
@@ -29,16 +29,16 @@ Flujo conceptual: persona → admisión → paciente → turno → profesional �
 
 | Epic | Contenido | Tratamiento |
 |---|---|---|
-| 1 | Gestión de pacientes | HU-01, HU-02 y HU-03: implementación actual. |
-| 2 | Gestión de profesionales | La planilla desarrolla HU-04 a HU-08: tablas maestras, profesionales, prescripción, FHIR y consulta de intervenciones. Futuro. |
-| 3 | Gestión de turnos | La planilla desarrolla HU-09 a HU-11: agenda, reserva web y SMS. Futuro. |
-| 4 | Seguridad y autenticación | Historias por definir según la guía. |
-| 5 | Historia clínica electrónica | Historias por definir según la guía. |
-| 6 | Imágenes médicas / DICOM | Historias por definir según la guía. |
-| 7 | Interoperabilidad / HL7 / SNOMED | Historias por definir y relación con Epic 2 por conciliar. |
-| 8 | Inteligencia artificial | Historias por definir según la guía. |
+| 1 | Gestión de pacientes | HU-01 a HU-03 implementadas. |
+| 2 | Gestión de profesionales e intervenciones | HU-04 a HU-10 implementadas, incluidos catálogos, prescripciones, seguridad, consulta, FHIR y DICOM. |
+| 3 | Agenda, turnos e HCE | HU-11 a HU-23 implementadas en la entrega final. El portal web es una ampliación opcional. |
+| 4 | Seguridad y autenticación, eje conceptual | Cubierto por HU-07 y los permisos de los módulos posteriores. |
+| 5 | Historia clínica electrónica, eje conceptual | Cubierto por HU-19 a HU-23. |
+| 6 | Imágenes médicas / DICOM, eje conceptual | Cubierto por HU-10 y las herramientas de las entregas 9 y 10. |
+| 7 | Interoperabilidad / HL7 / SNOMED, eje conceptual | Intercambio FHIR y catálogo de terminología incorporados. |
+| 8 | Inteligencia artificial, eje conceptual | Trabajo independiente de OpenHIS, informado como realizado por Alejandro. |
 
-No se reasignan IDs silenciosamente: la guía ubica originalmente HU-07 a HU-09 en turnos; la planilla los organiza de otra manera.
+La numeración consolidada de las 23 historias figura en Scrum. HU-07 corresponde a seguridad, HU-09 a FHIR y HU-11 a HU-23 a agenda, turnos e HCE. Los recordatorios implementados se preparan en una cola local.
 
 ## Historias y aceptación del alcance actual
 
@@ -46,16 +46,19 @@ No se reasignan IDs silenciosamente: la guía ubica originalmente HU-07 a HU-09 
 |---|---|---|
 | HU-01 | Como administrativo, quiero registrar un nuevo paciente con sus datos personales para crear su ficha en el sistema. | Datos personales y contacto/cobertura; DNI no duplicado; número de HC único. El esquema incorpora apellido, sexo y fecha de nacimiento. |
 | HU-02 | Como administrativo, quiero buscar un paciente por DNI para acceder rápidamente a su ficha. | Búsqueda por DNI en menos de dos segundos; nombre completo, número de HC y detalle. |
-| HU-03 | Como médico, quiero registrar el motivo de consulta y los signos vitales del paciente en la admisión. | Presión arterial, frecuencia cardíaca, temperatura, motivo, fecha/hora automática y asociación al médico. La evolución incluye saturación e historial. La planilla programa la integración del profesional para Sprint 3; queda diferida y debe declararse como tal. |
+| HU-03 | Como médico, quiero registrar el motivo de consulta y los signos vitales del paciente en la admisión. | Presión arterial, frecuencia cardíaca, temperatura, motivo, fecha/hora automática y asociación al médico. La evolución incluye saturación e historial. La asociación al profesional se implementó en la entrega 4. |
 
 ## Incrementos
 
 - Entrega 1: visión y planificación.
 - Entrega 2 / Sprint 1: HU-01 y HU-02 por consola, Python y SQLite.
 - Entrega 3 / Sprint 2: Tkinter, CRUD de pacientes, HU-03 e historial.
-- Continuidad de la planilla: Sprint 3 profesionales y tablas maestras; Sprint 4 prescripción y FHIR; Sprint 5 consulta de intervenciones; Sprint 6 agenda; Sprint 7 reserva web y SMS.
+- Entregas 4 y 5 / Sprint 3. Profesionales, tablas maestras, prescripciones, bajas lógicas y reportes XML/HTML.
+- Entrega 7 / Sprint 4. Autenticación, permisos y auditoría.
+- Entregas 9 y 10 / Sprint 5. Intervenciones, intercambio FHIR, preanálisis y herramientas DICOM.
+- Entrega final / Sprints 6 a 10. Agenda, turnero telefónico, recordatorios e HCE, con ampliación opcional del portal web.
 
-La planificación detallada y sus estimaciones son propuestas en `PLAN_PROYECTO.md`. La planilla identifica a Mg. Bioing. María Susana Burioni como Product Owner; los nombres de ejemplo no se atribuyen al equipo. Scrum Master y desarrolladores del Equipo 2: pendientes de informar.
+La planificación detallada figura en `PLAN_PROYECTO.md`. El Equipo 2 está integrado por Alejandro, Scrum Master y desarrollador, y Leonel, desarrollador. Ambos comparten implementación, documentación y pruebas. La planilla Scrum identifica al responsable de cada tarea. Mg. Bioing. María Susana Burioni figura como Product Owner.
 
 ## Supuestos y límites
 

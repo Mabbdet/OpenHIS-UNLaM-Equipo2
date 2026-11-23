@@ -1,5 +1,24 @@
 # Verificación de los incrementos
 
+## Evidencias del Sprint 8 del 23/11/2026
+
+Se agregaron dos capturas de los módulos reales, tomadas sobre una copia de la base con datos ficticios del Equipo 2.
+
+- `evidencias/entrega-final/03_asistencia_sprint8.jpg` muestra un turno marcado como ATENDIDO desde Gestión de turnos.
+- `evidencias/entrega-final/04_recordatorios_sprint8.jpg` muestra la preparación de un recordatorio para un turno confirmado dentro de las próximas 24 horas y la cancelación del recordatorio del turno atendido.
+
+Se comprobaron los estados persistidos, la auditoría, la integridad de SQLite y las claves foráneas. El hash de la base principal se conservó durante el ensayo. Los resultados, las dimensiones y los hashes de las capturas están en `evidencias/entrega-final/verificacion_sprint8.json`.
+
+## Cierre de evidencias del 22/11/2026
+
+El comprobante del correo de intercambio FHIR está incorporado en la Bitácora desde la fila 1456. La impresión del HTML de la entrega 5 está acreditada con un PDF de dos páginas A4 y la captura del diálogo de impresión desde la fila 1480. La planilla conserva 42 imágenes, las fórmulas verificadas y los responsables de las tareas.
+
+El ejemplo `intercambio/hibrido/FHIR_44895843_hibrido_Equipo2.json` conserva los seis recursos originales del archivo de Bart Simpson recibido de Lautaro y agrega un ServiceRequest sintético del Equipo 2. Se ejecutó el flujo `preparar_importacion` / `confirmar_importacion` en dos bases temporales autenticadas, una vacía y otra con el archivo original importado previamente. El análisis y la cancelación conservaron los datos. En la segunda base la confirmación agregó únicamente una práctica, asociada a Bart Simpson y Julius Hibbert. La reimportación produjo cero altas y conservó las filas clínicas en ambos escenarios. SQLite pasó integridad y claves foráneas. Resultados, advertencias y hashes en `evidencias/integrador-fhir/verificacion_hibrido.json`.
+
+La verificación del ejemplo corresponde al contrato de importación de la aplicación. Los recursos recibidos conservan las advertencias de fechas sin zona, mediciones sin profesional informado y titulaciones sin código. La procedencia del ServiceRequest queda identificada como generación sintética del Equipo 2. El resumen del ensayo figura en la Bitácora desde la fila 1508.
+
+Los resultados de las pruebas y los conteos que figuran en los apartados siguientes corresponden al cierre de cada incremento.
+
 ## Entrega final — Turnero web opcional
 
 Verificación del 21/11/2026: **204 pruebas aprobadas, ninguna omitida**. Regresión completa de 202 casos en 236,18 s y dos casos adicionales de habilitación/revocación desde escritorio en 7,41 s, sin cambios posteriores al código de producción. Comandos: `.venv/Scripts/python.exe -m pytest -q -rs -p no:cacheprovider` y `.venv/Scripts/python.exe -m pytest tests/test_acceso_web_gui.py -q -rs -p no:cacheprovider`.
@@ -8,7 +27,7 @@ Los casos nuevos comprueban aislamiento entre pacientes, campos manipulados, com
 
 Prueba real del navegador sobre una copia ficticia: ingreso, búsqueda, reserva a las 08:00, confirmación, reprogramación a las 08:30, cancelación con motivo y salida. Se conserva el turno original y su vínculo con el nuevo. SQLite: integridad `ok`, sin violaciones de claves foráneas. El SHA-256 de la base principal coincide con el respaldo anterior a este incremento. La vista móvil de 390 px no produjo desborde horizontal. Cuatro capturas contienen solo el portal y se guardan en `evidencias/turnero-web/`, junto con `verificacion.json`.
 
-Alcance e instrucciones en `docs/turnero-web.txt`. Los cambios siguen locales en `develop-EntregaFinal`. La incorporación de las evidencias de turnero telefónico y HCE al Scrum continúa pendiente.
+Alcance e instrucciones en `docs/turnero-web.txt`. Revisión del 22/11 en `develop-revisionFinal` sobre la base `2fda27e`. La suite completa pasó en una ejecución (204 pruebas). La Bitácora conserva las 29 imágenes previas y agrega 11 de las entregas 2, 3 y final. Se verificaron las 23 historias, los 10 sprints, las fórmulas y el reparto de 30 tareas. La hoja Revisión identifica las fuentes y los pendientes documentales.
 
 ## Entrega 10 — Visor DICOM y confirmación FHIR
 
@@ -46,7 +65,7 @@ La base entregada conserva los registros clínicos y sus estados anteriores; agr
 | GUI | Apertura de menú y cinco módulos; callbacks reales de alta, baja y reactivación con bases temporales. Ocho capturas de altas/bajas sobre datos ficticios de la base entregada. |
 | Tkinter | Una raíz por sesión de pytest y ventanas aisladas por prueba evitan las cargas repetidas de Tcl/Tk. La ejecución completa final no omitió ninguna prueba. |
 | XML y HTML | XML parseable con diagnóstico opcional y caracteres especiales; HTML escapado; estados activa/anulada, nombres únicos y conservación de receta ante error de escritura. |
-| Revisión visual | Menú, cuatro módulos y vista previa XML revisados. HTML completo revisado con MuPDF estático. Apariencia e impresión en navegador pendientes por bloqueo de la herramienta al abrir URL local. |
+| Revisión visual | Menú, cuatro módulos y vista previa XML revisados. HTML revisado con MuPDF y, el 22/11/2026, PDF de impresión desde navegador comprobado visualmente en sus dos páginas A4. PDF y captura del diálogo en `evidencias/entrega5/`; Bitácora desde 1480. |
 | Base entregada | 6 pacientes (5 activos), 7 profesionales (6 activos), 4 signos (3 activos), 8 prescripciones (7 activas). Los cuatro registros nuevos quedaron inactivos. |
 | Conservación de Entrega 4 | Comparación contra respaldo: todos los valores de las columnas preexistentes y todas las filas anteriores siguen presentes en las siete tablas. |
 | Integridad final | `PRAGMA integrity_check`: `ok`. `PRAGMA foreign_key_check`: sin violaciones. Signo 4 y prescripción 8 conservan paciente 6 y profesional 7. |
@@ -88,4 +107,4 @@ Las pruebas se centran en comportamientos sencillos y utilizan bases temporales.
 
 Los tests usan datos ficticios y bases temporales. Las capturas usan la base demo entregada; sus datos no son indicaciones terapéuticas. El renderizador de Excel omite las imágenes en su previsualización: se revisaron los PNG y se comprobaron sus archivos y anclajes dentro del XLSX exportado.
 
-El equipo está integrado por Alejandro y Leonel, con el primero como Scrum Master. La asociación al profesional en signos quedó implementada en esta entrega. Continúan pendientes la validación real de vigencia de matrícula, el contraste con los PDFs originales y las capturas de las entregas anteriores. Reportes/XML y FHIR quedan fuera del incremento actual. Los tests y el merge no acreditan esos pendientes.
+El equipo está integrado por Alejandro y Leonel, con el primero como Scrum Master. La asociación al profesional en signos quedó implementada en la entrega 4. Reportes/XML y FHIR se incorporaron en los incrementos 5, 9 y 10. La revisión final agregó las capturas de las entregas 2 y 3. La validación de vigencia de matrícula requiere un registro institucional y permanece como limitación del alcance.

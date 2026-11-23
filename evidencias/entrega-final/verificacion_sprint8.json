@@ -1,0 +1,121 @@
+{
+  "fecha_ensayo": "2026-11-23T20:37:05",
+  "entorno": "Copia temporal de la base ficticia del Equipo 2",
+  "metodo": "Capturas de los módulos reales, tras accionar Atendido y Preparar recordatorios 24 h en la interfaz.",
+  "turno_atendido": {
+    "id": 1,
+    "paciente_id": 3,
+    "profesional_id": 3,
+    "fecha": "2026-11-22",
+    "estado": "ATENDIDO"
+  },
+  "turno_confirmado_con_recordatorio": {
+    "id": 6,
+    "paciente_id": 3,
+    "profesional_id": 3,
+    "fecha": "2026-11-23",
+    "hora_inicio": "23:00",
+    "estado": "CONFIRMADO"
+  },
+  "recordatorios": [
+    {
+      "id": 1,
+      "turno_id": 1,
+      "estado": "CANCELADA",
+      "resultado": "Turno atendido"
+    },
+    {
+      "id": 2,
+      "turno_id": 6,
+      "estado": "PENDIENTE",
+      "resultado": "Cola local; no se envió ningún mensaje."
+    }
+  ],
+  "auditoria_reciente": [
+    {
+      "tabla_afectada": "ColaNotificaciones",
+      "registro_id": null,
+      "tipo_accion": "Q"
+    },
+    {
+      "tabla_afectada": "ColaNotificaciones",
+      "registro_id": 2,
+      "tipo_accion": "A"
+    },
+    {
+      "tabla_afectada": "Turnos",
+      "registro_id": null,
+      "tipo_accion": "Q"
+    },
+    {
+      "tabla_afectada": "ColaNotificaciones",
+      "registro_id": 1,
+      "tipo_accion": "M"
+    },
+    {
+      "tabla_afectada": "Turnos",
+      "registro_id": 1,
+      "tipo_accion": "M"
+    },
+    {
+      "tabla_afectada": "Turnos",
+      "registro_id": null,
+      "tipo_accion": "Q"
+    },
+    {
+      "tabla_afectada": "Turnos",
+      "registro_id": null,
+      "tipo_accion": "Q"
+    },
+    {
+      "tabla_afectada": "ColaNotificaciones",
+      "registro_id": null,
+      "tipo_accion": "Q"
+    },
+    {
+      "tabla_afectada": "Turnos",
+      "registro_id": 6,
+      "tipo_accion": "A"
+    },
+    {
+      "tabla_afectada": "Turnos",
+      "registro_id": null,
+      "tipo_accion": "Q"
+    },
+    {
+      "tabla_afectada": "Turnos",
+      "registro_id": null,
+      "tipo_accion": "Q"
+    },
+    {
+      "tabla_afectada": "Turnos",
+      "registro_id": null,
+      "tipo_accion": "Q"
+    }
+  ],
+  "mensajes_enviados": false,
+  "capturas": [
+    {
+      "archivo": "evidencias/entrega-final/03_asistencia_sprint8.jpg",
+      "dimensiones": [
+        1202,
+        852
+      ],
+      "sha256": "eecca486a546b3bf44ccf1e9e52b134f09ddc9fe1b57e809f6b4bea04bf1e0b1",
+      "contenido": "Ventana de la aplicación en una copia de demostración, sin escritorio."
+    },
+    {
+      "archivo": "evidencias/entrega-final/04_recordatorios_sprint8.jpg",
+      "dimensiones": [
+        1252,
+        612
+      ],
+      "sha256": "aac294225764115accd62f63da303159f151bf0c4d530cb5fde3efdad195107f",
+      "contenido": "Ventana de la aplicación en una copia de demostración, sin escritorio."
+    }
+  ],
+  "bd_principal_sha256": "5bc47bb48ff3927881f6f8182b074b0cfc9321f3cd8b960f052e4d69cc2b3ffa",
+  "base_principal_conservada": true,
+  "integridad_sqlite": "ok",
+  "violaciones_claves_foraneas": []
+}
