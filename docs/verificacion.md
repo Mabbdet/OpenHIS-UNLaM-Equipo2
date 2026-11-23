@@ -1,5 +1,14 @@
 # Verificación de los incrementos
 
+## Evidencias del Sprint 8 del 23/11/2026
+
+Se agregaron dos capturas de los módulos reales, tomadas sobre una copia de la base con datos ficticios del Equipo 2.
+
+- `evidencias/entrega-final/03_asistencia_sprint8.jpg` muestra un turno marcado como ATENDIDO desde Gestión de turnos.
+- `evidencias/entrega-final/04_recordatorios_sprint8.jpg` muestra la preparación de un recordatorio para un turno confirmado dentro de las próximas 24 horas y la cancelación del recordatorio del turno atendido.
+
+Se comprobaron los estados persistidos, la auditoría, la integridad de SQLite y las claves foráneas. El hash de la base principal se conservó durante el ensayo. Los resultados, las dimensiones y los hashes de las capturas están en `evidencias/entrega-final/verificacion_sprint8.json`.
+
 ## Cierre de evidencias del 22/11/2026
 
 El comprobante del correo de intercambio FHIR está incorporado en la Bitácora desde la fila 1456. La impresión del HTML de la entrega 5 está acreditada con un PDF de dos páginas A4 y la captura del diálogo de impresión desde la fila 1480. La planilla conserva 42 imágenes, las fórmulas verificadas y los responsables de las tareas.
