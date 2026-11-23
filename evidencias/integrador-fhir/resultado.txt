@@ -15,12 +15,17 @@ anteriores, salvo las actualizaciones esperadas del último acceso de la cuenta
 utilizada. SQLite: integridad ok y ninguna violación de claves foráneas.
 
 Punto 1: completado en la base real, con respaldo previo.
-Punto 3: demostración técnica local realizada y aclarada. Los archivos de
-Lautaro y del grupo 7 no incluyeron ServiceRequest. Se adjuntó un Bundle propio
-y se verificó su importación/reimportación en una base de prueba. La recepción
-de una práctica de otro grupo permanece pendiente. Ver aclaracion_servicerequest.txt.
-Punto 4: envío realizado, según lo informado por Alejandro; la captura del
-correo no está incorporada a estas evidencias.
+Punto 3: demostración técnica local e híbrida realizada. El archivo de Bart
+recibido de Lautaro se combinó con un ServiceRequest sintético del Equipo 2.
+En un receptor con el original ya importado se creó únicamente la práctica,
+asociada al paciente y al profesional correctos. La reimportación produjo
+cero altas. También se verificó el híbrido en un receptor vacío.
+La solicitud añadida está identificada como propia. La evaluación del
+requisito de recepción externa corresponde a la cátedra.
+Ver aclaracion_servicerequest.txt y verificacion_hibrido.json.
+Punto 4: envío del ZIP del Equipo 2 documentado el 21/11/2026 a las 11:24:56.
+El comprobante muestra cuatro destinatarios y el archivo adjunto.
+Ver 06_correo_envio_pacientes.png.
 
 Detalle de archivos, operaciones, advertencias, IDs y hashes:
 evidencias/integrador-fhir/importacion_lautaro.json

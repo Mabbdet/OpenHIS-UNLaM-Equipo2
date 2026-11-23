@@ -1,6 +1,6 @@
 # Entrega 5 — Cierre del Sprint 3
 
-Fuente: `C:/Users/Ale/Downloads/Sist-Info-Salud-5.pdf`, entregables de páginas 89–90 y ejemplos de módulos/XML. Responsable: Alejandro. Incremento desarrollado en `develop-Entrega5`, desde `develop` en `8a12cfc`.
+Fuente: `C:/Users/Ale/Downloads/Sist-Info-Salud-5.pdf`, entregables de páginas 89–90 y ejemplos de módulos/XML. Equipo: Alejandro y Leonel; Scrum Master: Alejandro. Incremento desarrollado en `develop-Entrega5`, desde `develop` en `8a12cfc`.
 
 ## Matriz de requisitos y verificación
 
@@ -14,7 +14,7 @@ Fuente: `C:/Users/Ale/Downloads/Sist-Info-Salud-5.pdf`, entregables de páginas 
 | Cuatro módulos independientes | Los cuatro archivos `*_def_app.pyw` | Apertura y callbacks reales de los cuatro formularios |
 | Menú común | `OpenHIS_app.pyw`, `menu_app.py` | Apertura de los cinco módulos sobre el mismo repositorio |
 | XML del ejemplo docente | `exportaciones.py`: metadatos, paciente, profesional, fármaco, diagnóstico opcional, dosificación y administración | XML parseable, caracteres especiales, estados y vista previa real |
-| HTML imprimible | Detalle completo, estado y estilos de impresión | Escape de contenido y revisión estática con MuPDF; navegador pendiente |
+| HTML imprimible | Detalle completo, estado y estilos de impresión | Revisión estática y comprobación del PDF de dos páginas generado desde el navegador, con captura del diálogo de impresión |
 | Archivos únicos y errores de escritura | Carpetas respecto de raíz, timestamp/UUID y creación exclusiva | Exportaciones sucesivas no reemplazan archivos; un error conserva la receta |
 | Evidencias y reflexión | Bitácora, `evidencias/entrega5/` y reflexión de dos párrafos | Ocho capturas de altas/bajas, XML, HTML y conservación de capturas previas |
 
@@ -45,6 +45,6 @@ Los ejemplos generados están en `recetas/receta_8_20260921_232829_418332_7f1f2a
 
 Se aprobaron 66 pruebas de pytest sin omisiones. La apertura del menú y las cuatro interfaces se comprobó; los flujos de alta, baja y reactivación usan callbacks reales con bases temporales. Las ocho capturas documentan altas y bajas sobre la base entregada.
 
-El navegador integrado rechazó la URL local del HTML por su política de seguridad. Se revisó el contenido completo con un renderizador estático sin navegación ni ejecución de scripts. Queda pendiente comprobar la apariencia e impresión en el navegador del usuario. MuPDF utiliza otro motor de estilos y su imagen no acredita el diseño exacto de Chrome/Edge.
+El 22/11/2026 Alejandro imprimió desde su navegador el HTML de la prescripción 8 a PDF mediante Microsoft Print to PDF. Se incorporaron el archivo original de dos páginas A4 en `evidencias/entrega5/11_reporte_impreso.pdf` y la captura del diálogo en `12_impresion_navegador.png`. La revisión visual de ambas páginas comprobó que los datos están legibles y completos, con dosificación e indicaciones en la segunda página. Esta evidencia también está incorporada en la Bitácora desde la fila 1480.
 
-Scrum conserva fechas, estados, fórmulas y evidencias previas. La referencia rota heredada `HU-UNLaM!I20` permanece fuera del alcance de esta entrega. Las capturas anteriores a Entrega 4 siguen siendo un pendiente histórico. FHIR real, importación, autenticación, auditoría de accesos y validación oficial de matrícula quedan fuera del incremento.
+La revisión final del 22/11/2026 concilió las fórmulas de Scrum e incorporó las capturas de las entregas 2 y 3. Seguridad y auditoría se implementaron en la entrega 7, y FHIR e importación en las entregas 9 y 10. La validación de vigencia de matrícula requiere un registro institucional.

@@ -32,8 +32,18 @@ docs/reflexion-integrador-fhir.txt.
   Resultado: captura_practica_local_verificacion.json.
 
 Se conservaron las 24 imágenes anteriores y se agregaron estas cinco.
-Las fórmulas, valores y combinaciones anteriores se mantienen, incluida la
-referencia rota histórica HU-UNLaM!I20, ajena a este trabajo.
+En el cierre inicial se conservaron las fórmulas, valores y combinaciones
+anteriores. La revisión final posterior concilió las fórmulas de Scrum.
 
-El envío del correo fue informado como realizado por Alejandro. Su captura
-no está incorporada a los archivos de estas evidencias.
+06_correo_envio_pacientes.png
+  Comprobante del envío del 21/11/2026 a las 11:24:56. Se ve a Alejandro
+  Maudet como remitente, cuatro destinatarios con sus nombres ocultos y
+  el adjunto [OpenHIS-UNLaM]Exportacion-FHIR-Equipo-2.zip.
+  La captura también está en la fila 1456 de la Bitácora.
+
+verificacion_hibrido.json
+  Ensayo programático del 22/11/2026 con los recursos de Bart recibidos de
+  Lautaro y un ServiceRequest sintético del Equipo 2. Se probaron un receptor
+  vacío y otro con el original importado previamente. El segundo agregó
+  únicamente la práctica propia. Ambas reimportaciones produjeron cero altas.
+  Archivo en intercambio/hibrido/FHIR_44895843_hibrido_Equipo2.json.

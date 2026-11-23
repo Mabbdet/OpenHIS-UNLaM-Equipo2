@@ -1,6 +1,6 @@
 # Entrega 4 — Sprint 3 — Epic 2
 
-Responsable: Alejandro (equipo unipersonal). Rama de trabajo: `develop-Entrega4`, creada desde `develop`; integración después de las verificaciones.
+Equipo: Alejandro y Leonel. Scrum Master: Alejandro. Rama de trabajo: `develop-Entrega4`, creada desde `develop`; integración después de las verificaciones.
 
 Fuente de requisitos: `Guia_Entregas_1_2_3_y_4_OpenHIS_UNLaM.md`, secciones 60–88, y planilla del profesor aportada. El PDF original `Sist-Info-Salud-4.pdf` no está en el repositorio; no se afirma haberlo contrastado.
 
@@ -51,7 +51,7 @@ La baja de profesionales con signos o prescripciones asociados se bloquea para c
 - **Matrícula vigente:** se verifica matrícula obligatoria y única. La fuente no define registro oficial, jurisdicción, API ni procedimiento para comprobar vigencia. La UI lo informa; esa validación real sigue pendiente y no se confunde con unicidad. HU-05 conserva esta salvedad.
 - **HU-07 y HU-08:** FHIR/XML, importación externa, autenticación y auditoría de acceso no están implementados.
 - **Datos clínicos:** las prescripciones demo utilizan fármacos, dosis y vías explícitamente ficticios. No son indicaciones terapéuticas ni recetas utilizables.
-- **Planilla:** se creó una copia de `Planilla-Scrum-Profe.xlsx`, sin sobrescribir Downloads. Se actualizan los objetivos/comentarios de E4, el responsable Alejandro y los resultados/evidencias de Bitácora. Las fechas y estados heredados se conservan; no acreditan fechas reales de ejecución. Tampoco se trasladan automáticamente ediciones que solo se hayan realizado fuera del archivo recibido.
+- **Planilla:** se creó una copia de `Planilla-Scrum-Profe.xlsx`, sin sobrescribir Downloads. Se actualizan los objetivos/comentarios de E4, los responsables del equipo y los resultados/evidencias de Bitácora. Las fechas y estados heredados se conservan; no acreditan fechas reales de ejecución. Tampoco se trasladan automáticamente ediciones que solo se hayan realizado fuera del archivo recibido.
 - **Fórmulas previas:** se conserva la referencia rota de `HU-UNLaM!I20` y las sumas preexistentes de la plantilla ajenas a esta implementación; no se usan para certificar avance.
 
 ## Verificación
