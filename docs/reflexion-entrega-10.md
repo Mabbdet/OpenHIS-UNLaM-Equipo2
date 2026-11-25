@@ -1,5 +1,0 @@
-# Reflexión — Entrega 10
-
-El preanálisis permite revisar qué información se incorporará antes de modificar la base. Esto ayuda a detectar referencias rotas, datos faltantes o diferencias con registros existentes sin dejar una importación a medias. La confirmación separada y la comprobación de que el archivo y la base siguen vigentes reducen el riesgo de aplicar un plan distinto del que se revisó. También agrupamos las mediciones de un mismo momento para representar la toma de signos en una sola fila, conservando su paciente, profesional y referencias externas.
-
-El visor reúne la imagen y sus metadatos en la misma pantalla, lo que permite comprobar la identificación, las fechas y las condiciones técnicas del archivo. Registramos la visualización en auditoría y conservamos el archivo original. La previsualización sigue siendo básica: no reemplaza un visor diagnóstico ni garantiza que una imagen esté anonimizada. Antes de compartirla hay que revisar tanto los metadatos como el contenido de los píxeles. Las pruebas con patrones sintéticos permiten verificar estos comportamientos sin utilizar información clínica real.

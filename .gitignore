@@ -6,3 +6,11 @@ __pycache__/
 BD/*.db-journal
 BD/*.db-wal
 BD/*.db-shm
+/recetas/
+/reportes/
+/intercambio/*
+!/intercambio/.gitkeep
+/IMAGENES/RX/*
+!/IMAGENES/RX/DICOM/
+/IMAGENES/RX/DICOM/*
+!/IMAGENES/RX/DICOM/.gitkeep
